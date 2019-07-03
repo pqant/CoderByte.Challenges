@@ -55,6 +55,97 @@ var punchItems = []string{
 	"‽",
 	"※"}
 
+func main() {
+
+	items := []string{
+		"+d+=3=+s+",
+		"f++d+",
+		"+z+z+z+",    //true
+		"+a++",       //true
+		"+z+z+==+a+", //true
+	}
+	for _, value := range items {
+		fmt.Printf("%v-%v\n", value, SimpleSymbols(value))
+	}
+
+}
+
+// +d+=3=+s+    --> TRUE
+// f++d+        --> FALSE
+var splitter = 3
+
+func SimpleSymbols(str string) string {
+	if len(str) < 2 {
+		return "false"
+	}
+	for _, value := range str {
+		if value >= 97 && value <= 122 {
+			if !strings.Contains(str,fmt.Sprintf("+%v+",string(value))) {
+				return "false"
+			}
+		}
+	}
+	return "true"
+
+
+	var items []string
+	temp := ""
+	mod := len(str)%splitter == 0
+
+	isNumber := func(val rune) bool {
+		if int(val) >= 48 && int(val) <= 57 {
+			return true
+		}
+		return false
+	}
+
+	if mod {
+		for u := 0; u <= len(str); u++ {
+			if u != 0 && u%splitter == 0 {
+				items = append(items, temp)
+				temp = ""
+			}
+			if len(str) != u {
+				temp += string(str[u])
+			}
+		}
+	} else {
+		max := len(str) - len(str)%splitter
+		for u := 0; u <= max; u++ {
+			if u != 0 && u%splitter == 0 {
+				items = append(items, temp)
+				temp = ""
+			}
+			if len(str) != u {
+				temp += string(str[u])
+			}
+		}
+		staging := ""
+		for u := max; u < len(str); u++ {
+			staging += string(str[u])
+		}
+		items = append(items, staging)
+
+	}
+	exit := "false"
+	for _, value := range items {
+		if len(string(value)) != splitter {
+			return "false"
+		} else {
+			if isNumber(rune(string(value)[1])) {
+				continue
+			}
+			if string(value)[0] == '+' && string(value)[2] == '+' {
+				exit = "true"
+			} else {
+				exit = "false"
+			}
+		}
+	}
+	return exit
+
+}
+
 func SimpleAdding(num int) int {
 	if num <= 0 {
 		return 0
@@ -107,19 +198,6 @@ func LetterCapitalize(str string) string {
 		exit += string(value) + " "
 	}
 	return strings.TrimRight(exit, " ")
-
-}
-
-func main() {
-
-
-	items := []string{
-		"hello world",
-		"i ran there",
-	}
-	for _, value := range items {
-		fmt.Printf("%v-%v\n", value, LetterCapitalize(value))
-	}
 
 }
 
