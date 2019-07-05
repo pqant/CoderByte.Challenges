@@ -9,6 +9,10 @@ import (
 var vowels = []rune{'a', 'e', 'i', 'o', 'u'}
 
 func main() {
+	fmt.Printf("%v\n", ArrayAdditionI([]int{5, 7, 16, 1, 2}))
+	fmt.Printf("%v\n", ArrayAdditionI([]int{3, 5, -1, 8, 12}))
+
+	return
 
 	items := []string{
 		//"after badly",
@@ -80,6 +84,42 @@ var numbers = []string{
 	"7",
 	"8",
 	"9",
+}
+
+/*
+Have the function ArrayAdditionI(arr) take the array of numbers stored in arr and return the string true if any combination of numbers in the array (excluding the largest number) can be added up to equal the largest number in the array, otherwise return the string false. For example: if arr contains [4, 6, 23, 10, 1, 3] the output should return true because 4 + 6 + 10 + 3 = 23. The array will not be empty, will not contain all the same elements, and may contain negative numbers.
+*/
+func ArrayAdditionI(arr []int) string {
+	if len(arr) == 0 {
+		return "false"
+	}
+	index := 0
+	for _, value := range arr {
+		if value == arr[0] && index != 0 {
+			return "false"
+		}
+		index++
+	}
+	findMax := func(arr []int) int {
+		max := arr[0]
+		for u := 1; u < len(arr); u++ {
+			if arr[u] > max {
+				max = arr[u]
+			}
+		}
+		return max
+	}
+	maxNumber := findMax(arr)
+	getSumWithOutMax := func(max int, arr []int) int {
+		sum := 0
+		for _, value := range arr {
+			if value != max {
+				sum += value
+			}
+		}
+		return sum
+	}
+	return fmt.Sprintf("%v", getSumWithOutMax(maxNumber, arr) >= maxNumber)
 }
 
 func ABCheck(str string) string {
