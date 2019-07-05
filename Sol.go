@@ -12,6 +12,11 @@ func main() {
 	//fmt.Printf("%v\n", ArrayAdditionI([]int{5, 7, 16, 1, 2}))
 	//fmt.Printf("%v\n", ArrayAdditionI([]int{3, 5, -1, 8, 12}))
 
+	fmt.Printf("%v\n", TimeConvert(126))
+	fmt.Printf("%v\n", TimeConvert(45))
+
+	return
+
 	items := []string{
 		"567",
 		"2129",
@@ -107,7 +112,7 @@ func DashInsert(str string) string {
 	for index, value := range str {
 		if val, isNumber := checkNumber(string(value)); isNumber {
 			if !oddDetected && val%2 != 0 {
-				firstValue = fmt.Sprintf("%d",val)
+				firstValue = fmt.Sprintf("%d", val)
 				oddDetected = true
 				if index == len(str)-1 {
 					exit += firstValue
@@ -115,15 +120,15 @@ func DashInsert(str string) string {
 				continue
 			}
 			if oddDetected && val%2 != 0 {
-				exit += firstValue + "-" + fmt.Sprintf("%d",val)
+				exit += firstValue + "-" + fmt.Sprintf("%d", val)
 				firstValue = ""
 				continue
 			}
 			if val%2 == 0 {
 				if oddDetected {
-					exit += firstValue + fmt.Sprintf("%d",val)
+					exit += firstValue + fmt.Sprintf("%d", val)
 				} else {
-					exit += fmt.Sprintf("%d",val)
+					exit += fmt.Sprintf("%d", val)
 				}
 				oddDetected = false
 				firstValue = ""
@@ -133,6 +138,20 @@ func DashInsert(str string) string {
 		}
 	}
 
+	return exit
+}
+
+func TimeConvert(num int) string {
+	if num < 0 {
+		return "0:0"
+	}
+	exit := ""
+	hour := num / 60
+	if hour == 0 {
+		exit = fmt.Sprintf("%d:%d", hour, num)
+	} else {
+		exit = fmt.Sprintf("%d:%d", hour, num-(hour*60))
+	}
 	return exit
 }
 
