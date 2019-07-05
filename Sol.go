@@ -12,9 +12,10 @@ func main() {
 	//fmt.Printf("%v\n", ArrayAdditionI([]int{5, 7, 16, 1, 2}))
 	//fmt.Printf("%v\n", ArrayAdditionI([]int{3, 5, -1, 8, 12}))
 
-	fmt.Printf("%v\n", TimeConvert(126))
-	fmt.Printf("%v\n", TimeConvert(45))
-
+	fmt.Printf("%v\n", PowersofTwo(9))
+	fmt.Printf("%v\n", PowersofTwo(120))
+	fmt.Printf("%v\n", PowersofTwo(64))
+	fmt.Printf("%v\n", PowersofTwo(65536))
 	return
 
 	items := []string{
@@ -138,6 +139,22 @@ func DashInsert(str string) string {
 		}
 	}
 
+	return exit
+}
+
+func PowersofTwo(num int) string {
+	exit := "true"
+do:
+	for num != 0 {
+		if num%2 != 0 {
+			exit = "false"
+			break do
+		}
+		num /= 2
+		if num == 1 {
+			break do
+		}
+	}
 	return exit
 }
 
