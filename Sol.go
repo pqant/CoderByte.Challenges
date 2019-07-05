@@ -9,18 +9,16 @@ import (
 var vowels = []rune{'a', 'e', 'i', 'o', 'u'}
 
 func main() {
-	fmt.Printf("%v\n", ArrayAdditionI([]int{5, 7, 16, 1, 2}))
-	fmt.Printf("%v\n", ArrayAdditionI([]int{3, 5, -1, 8, 12}))
-
-	return
+	//fmt.Printf("%v\n", ArrayAdditionI([]int{5, 7, 16, 1, 2}))
+	//fmt.Printf("%v\n", ArrayAdditionI([]int{3, 5, -1, 8, 12}))
 
 	items := []string{
-		//"after badly",
-		//"Laura sobs",
-		"bzzza",
+		"Today, is the greatest day ever!",
+		"Hello apple pie",
+		"No words",
 	}
 	for _, value := range items {
-		fmt.Printf("%v-%v\n", value, ABCheck(value))
+		fmt.Printf("%v - %v\n", value, LetterCountI(value))
 	}
 
 }
@@ -84,6 +82,94 @@ var numbers = []string{
 	"7",
 	"8",
 	"9",
+}
+
+/*
+Have the function LetterCountI(str) take the str parameter being passed and return the first word with the greatest number of repeated letters. For example: "Today, is the greatest day ever!" should return greatest because it has 2 e's (and 2 t's) and it comes before ever which also has 2 e's. If there are no words with repeating letters return -1. Words will be separated by spaces.
+*/
+
+func LetterCountI(str string) string {
+	if len(str) == 0 {
+		return "-1"
+	}
+	words := strings.Split(str, " ")
+	if len(words) == 0 {
+		return "-1"
+	}
+	pool := make(map[int]map[string]int, len(words))
+	keepSeachFrequency := func(text string) bool {
+		for u := 0; u < len(text); u++ {
+			for y := u + 1; y < len(text); y++ {
+				if text[u] == text[y] {
+					return true
+				}
+			}
+		}
+		return false
+	}
+	isFirst := false
+	firstVal := ""
+	firstIndex := 0
+	distinct := func(text string) int {
+		totalCount := 0
+		for u := 0; u < len(text); u++ {
+			for y := u + 1; y < len(text); y++ {
+				if text[u] == text[y] {
+					totalCount--
+				}
+			}
+			totalCount++
+		}
+		return totalCount
+	}
+	convertAsciiInt := func(val int) string {
+		return fmt.Sprintf("%c", val)
+	}
+	for index, value := range words {
+		if keepSeachFrequency(value) {
+			pool[index] = make(map[string]int, distinct(value))
+			for _, char := range value {
+				strChar := convertAsciiInt(int(char))
+				count, isExist := (pool[index])[strChar]
+				if isExist {
+					(pool[index])[strChar] = count + 1
+					if !isFirst {
+						firstVal = strChar
+						firstIndex = index
+						isFirst = true
+					}
+				} else {
+					(pool[index])[strChar] = 1
+				}
+			}
+		}
+	}
+	findMaxFrequencyValue := func(result map[int]map[string]int, firstIndex int, firstValue string) int {
+		//"Today, is the greatest day ever!"
+		if len(result) == 0 || firstValue == "" {
+			return -1
+		}
+		max := (result[firstIndex])[firstVal]
+		activeIndex := firstIndex
+		for index, item := range result {
+			if activeIndex == index {
+				continue
+			}
+			for _, word := range item {
+				if word > max {
+					max = word
+					activeIndex = index
+				}
+			}
+		}
+		return activeIndex
+	}
+	getFirstMax := findMaxFrequencyValue(pool, firstIndex, firstVal)
+	if getFirstMax == -1 {
+		return "-1"
+	}
+
+	return words[getFirstMax]
 }
 
 /*
