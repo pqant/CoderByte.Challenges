@@ -58,23 +58,40 @@ var punchItems = []string{
 func main() {
 
 	items := []string{
-		"Hello World",
-		"one 22 three",
-		"Never eat shredded wheat or cake",    //true
+		"xooxxo",
+		"x",
+		"o",
+		"xoxooooooooooox",
 	}
 	for _, value := range items {
-		fmt.Printf("%v-%v\n", value, WordCount(value))
+		fmt.Printf("%v-%v\n", value, ExOh(value))
 	}
 
 }
 
+func ExOh(str string) string {
+	exit := "false"
+	if len(str) == 0 {
+		return exit
+	}
+	xCount, oCount := 0, 0
+	for u := 0; u < len(str); u++ {
+		if string(str[u]) == "x" {
+			xCount++
+		} else if string(str[u]) == "o" {
+			oCount++
+		}
+	}
+	exit = fmt.Sprintf("%v", xCount == oCount)
+	return exit
+}
 
 func WordCount(str string) string {
-	if len(str)==0 {
+	if len(str) == 0 {
 		return "0"
 	}
-	var items = strings.Split(str," ")
-	return fmt.Sprintf("%d",len(items))
+	var items = strings.Split(str, " ")
+	return fmt.Sprintf("%d", len(items))
 }
 
 // +d+=3=+s+    --> TRUE
