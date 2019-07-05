@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -10,15 +11,11 @@ var vowels = []rune{'a', 'e', 'i', 'o', 'u'}
 func main() {
 
 	items := []string{
-		"never odd or even",
-		"never odd44 or even",
-		"eye",
-		"hello",
 		"coderbyte",
-		"All cows eat grass and moo",
+		"hooplah",
 	}
 	for _, value := range items {
-		fmt.Printf("%v-%v\n", value, VowelCount(value))
+		fmt.Printf("%v-%v\n", value, AlphabetSoup(value))
 	}
 
 }
@@ -82,6 +79,108 @@ var numbers = []string{
 	"7",
 	"8",
 	"9",
+}
+
+//sort strings
+//Assume numbers and punctuation symbols will not be included in the string.
+func AlphabetSoup(str string) string {
+	if len(str) == 0 {
+		return ""
+	}
+	var (
+		punchItems = []string{
+			" ",
+			"’'",
+			"()[]{}<>",
+			":",
+			",",
+			"+",
+			"‒–—―",
+			"…",
+			"!",
+			".",
+			"«»",
+			"-‐",
+			"?",
+			"‘’“”",
+			";",
+			"/",
+			"⁄",
+			"␠",
+			"·",
+			"&",
+			"@",
+			"*",
+			"\\",
+			"•",
+			"^",
+			"¤¢$€£¥₩₪",
+			"†‡",
+			"°",
+			"¡",
+			"¿",
+			"¬",
+			"#",
+			"№",
+			"%‰‱",
+			"¶",
+			"′",
+			"§",
+			"~",
+			"¨",
+			"_",
+			"|¦",
+			"⁂",
+			"☞",
+			"∴",
+			"‽",
+			"※"}
+	)
+	var chars []string
+	isNumber := func(val rune) bool {
+		if int(val) >= 48 && int(val) <= 57 {
+			return true
+		}
+		return false
+	}
+	isIllegalChar := func(val string) bool {
+		for _, value := range punchItems {
+			if string(value) == val {
+				return true
+			}
+		}
+		return false
+	}
+
+	for _, value := range str {
+		if !isNumber(rune(value)) && !isIllegalChar(string(value)) {
+			chars = append(chars, fmt.Sprintf("%d", value))
+		}
+	}
+	if len(chars) == 0 {
+		return ""
+	}
+	for u := 0; u < len(chars); u++ {
+		for y := 0; y < len(chars); y++ {
+			first, _ := strconv.Atoi(chars[u])
+			next, _ := strconv.Atoi(chars[y])
+			if first < next {
+				temp := chars[u]
+				chars[u] = chars[y]
+				chars[y] = temp
+			}
+		}
+	}
+	convertAsciiInt := func(val int) string {
+		return fmt.Sprintf("%c", val)
+	}
+
+	exit := ""
+	for _, value := range chars {
+		val, _ := strconv.Atoi(string(value))
+		exit += convertAsciiInt(val)
+	}
+	return exit
 }
 
 func VowelCount(str string) string {
