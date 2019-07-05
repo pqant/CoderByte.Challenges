@@ -13,9 +13,12 @@ func main() {
 		"never odd or even",
 		"never odd44 or even",
 		"eye",
+		"hello",
+		"coderbyte",
+		"All cows eat grass and moo",
 	}
 	for _, value := range items {
-		fmt.Printf("%v-%v\n", value, Palindrome(value))
+		fmt.Printf("%v-%v\n", value, VowelCount(value))
 	}
 
 }
@@ -81,6 +84,21 @@ var numbers = []string{
 	"9",
 }
 
+func VowelCount(str string) string {
+	if len(str) == 0 {
+		return "0"
+	}
+	listOfVowels := []string{"a", "o", "u", "i", "e"}
+	countOfVowels := 0
+	for _, value := range str {
+		for _, char := range listOfVowels {
+			if string(char) == string(value) || strings.ToUpper(string(char)) == string(value) {
+				countOfVowels++
+			}
+		}
+	}
+	return fmt.Sprintf("%d", countOfVowels)
+}
 
 func Palindrome(str string) string {
 	if len(str) == 0 {
