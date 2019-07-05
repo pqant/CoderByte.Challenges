@@ -7,6 +7,19 @@ import (
 
 var vowels = []rune{'a', 'e', 'i', 'o', 'u'}
 
+func main() {
+
+	items := []string{
+		"never odd or even",
+		"never odd44 or even",
+		"eye",
+	}
+	for _, value := range items {
+		fmt.Printf("%v-%v\n", value, Palindrome(value))
+	}
+
+}
+
 var punchItems = []string{
 	" ",
 	"’'",
@@ -55,18 +68,57 @@ var punchItems = []string{
 	"‽",
 	"※"}
 
-func main() {
+var numbers = []string{
+	"0",
+	"1",
+	"2",
+	"3",
+	"4",
+	"5",
+	"6",
+	"7",
+	"8",
+	"9",
+}
 
-	items := []string{
-		"xooxxo",
-		"x",
-		"o",
-		"xoxooooooooooox",
+
+func Palindrome(str string) string {
+	if len(str) == 0 {
+		return "false"
 	}
-	for _, value := range items {
-		fmt.Printf("%v-%v\n", value, ExOh(value))
+	cleaner := func(item string) string {
+		if len(item) == 0 {
+			return item
+		}
+		val := item
+		for _, value := range punchItems {
+			val = strings.Replace(val, string(value), "", -1)
+		}
+		for _, value := range numbers {
+			val = strings.Replace(val, string(value), "", -1)
+		}
+		return val
+	}
+	reverse := func(item string) string {
+		if len(item) == 0 {
+			return item
+		}
+		MAX := len(item) / 2
+		var items []string
+		for _, value := range item {
+			items = append(items, string(value))
+		}
+		for u := 0; u < MAX; u++ {
+			temp := items[u]
+			items[u] = items[len(items)-u-1]
+			items[len(items)-u-1] = temp
+		}
+		return strings.Join(items, "")
 	}
 
+	flatText := cleaner(str)
+	reverseText := cleaner(reverse(str))
+	return fmt.Sprintf("%v", flatText == reverseText)
 }
 
 func ExOh(str string) string {
