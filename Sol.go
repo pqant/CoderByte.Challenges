@@ -13,12 +13,14 @@ func main() {
 	//fmt.Printf("%v\n", ArrayAdditionI([]int{3, 5, -1, 8, 12}))
 
 	items := []string{
-		"Today, is the greatest day ever!",
-		"Hello apple pie",
-		"No words",
+		"567",
+		"2129",
+		"399047",
+		"56730",
+		"99946",
 	}
 	for _, value := range items {
-		fmt.Printf("%v - %v\n", value, LetterCountI(value))
+		fmt.Printf("%v - %v\n", value, DashInsert(value))
 	}
 
 }
@@ -82,6 +84,56 @@ var numbers = []string{
 	"7",
 	"8",
 	"9",
+}
+
+func DashInsert(str string) string {
+	if len(str) == 0 {
+		return ""
+	}
+	exit := ""
+	checkNumber := func(char string) (int, bool) {
+		val, err := strconv.Atoi(char)
+		if err != nil {
+			return 0, false
+		}
+		if val >= 0 && val <= 9 {
+			return val, true
+		}
+		return 0, false
+	}
+
+	oddDetected := false
+	firstValue := ""
+	for index, value := range str {
+		if val, isNumber := checkNumber(string(value)); isNumber {
+			if !oddDetected && val%2 != 0 {
+				firstValue = fmt.Sprintf("%d",val)
+				oddDetected = true
+				if index == len(str)-1 {
+					exit += firstValue
+				}
+				continue
+			}
+			if oddDetected && val%2 != 0 {
+				exit += firstValue + "-" + fmt.Sprintf("%d",val)
+				firstValue = ""
+				continue
+			}
+			if val%2 == 0 {
+				if oddDetected {
+					exit += firstValue + fmt.Sprintf("%d",val)
+				} else {
+					exit += fmt.Sprintf("%d",val)
+				}
+				oddDetected = false
+				firstValue = ""
+			}
+		} else {
+			oddDetected = false
+		}
+	}
+
+	return exit
 }
 
 /*
