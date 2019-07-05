@@ -58,35 +58,42 @@ var punchItems = []string{
 func main() {
 
 	items := []string{
-		"+d+=3=+s+",
-		"f++d+",
-		"+z+z+z+",    //true
-		"+a++",       //true
-		"+z+z+==+a+", //true
+		"Hello World",
+		"one 22 three",
+		"Never eat shredded wheat or cake",    //true
 	}
 	for _, value := range items {
-		fmt.Printf("%v-%v\n", value, SimpleSymbols(value))
+		fmt.Printf("%v-%v\n", value, WordCount(value))
 	}
 
+}
+
+
+func WordCount(str string) string {
+	if len(str)==0 {
+		return "0"
+	}
+	var items = strings.Split(str," ")
+	return fmt.Sprintf("%d",len(items))
 }
 
 // +d+=3=+s+    --> TRUE
 // f++d+        --> FALSE
 var splitter = 3
 
+//noinspection ALL
 func SimpleSymbols(str string) string {
 	if len(str) < 2 {
 		return "false"
 	}
 	for _, value := range str {
 		if value >= 97 && value <= 122 {
-			if !strings.Contains(str,fmt.Sprintf("+%v+",string(value))) {
+			if !strings.Contains(str, fmt.Sprintf("+%v+", string(value))) {
 				return "false"
 			}
 		}
 	}
 	return "true"
-
 
 	var items []string
 	temp := ""
