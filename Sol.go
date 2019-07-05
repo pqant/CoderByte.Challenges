@@ -11,11 +11,12 @@ var vowels = []rune{'a', 'e', 'i', 'o', 'u'}
 func main() {
 
 	items := []string{
-		"coderbyte",
-		"hooplah",
+		//"after badly",
+		//"Laura sobs",
+		"bzzza",
 	}
 	for _, value := range items {
-		fmt.Printf("%v-%v\n", value, AlphabetSoup(value))
+		fmt.Printf("%v-%v\n", value, ABCheck(value))
 	}
 
 }
@@ -79,6 +80,38 @@ var numbers = []string{
 	"7",
 	"8",
 	"9",
+}
+
+func ABCheck(str string) string {
+	if len(str) < 5 {
+		return "false"
+	}
+	aFound := false
+	bFound := false
+	index := 0
+	for _, value := range str {
+		if string(value) == "a" && !bFound {
+			aFound = true
+			index = 0
+			continue
+		}
+		if string(value) == "b" && !aFound {
+			bFound = true
+			index = 0
+			continue
+		}
+		if index == 3 && string(value) == "b" && aFound {
+			bFound = true
+			break
+		}
+		if index == 3 && string(value) == "a" && bFound {
+			aFound = true
+			break
+		}
+		index++
+	}
+	return fmt.Sprintf("%v", aFound && bFound)
+
 }
 
 //sort strings
