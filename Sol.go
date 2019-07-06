@@ -12,21 +12,18 @@ func main() {
 	//fmt.Printf("%v\n", ArrayAdditionI([]int{5, 7, 16, 1, 2}))
 	//fmt.Printf("%v\n", ArrayAdditionI([]int{3, 5, -1, 8, 12}))
 
-	fmt.Printf("%v\n", PowersofTwo(9))
-	fmt.Printf("%v\n", PowersofTwo(120))
-	fmt.Printf("%v\n", PowersofTwo(64))
-	fmt.Printf("%v\n", PowersofTwo(65536))
-	return
+	//fmt.Printf("%v\n", PowersofTwo(9))
+	//fmt.Printf("%v\n", PowersofTwo(120))
+	//fmt.Printf("%v\n", PowersofTwo(64))
+	//fmt.Printf("%v\n", PowersofTwo(65536))
+	//return
 
 	items := []string{
-		"567",
-		"2129",
-		"399047",
-		"56730",
-		"99946",
+		"Hello-LOL",
+		"Sup DUDE!!?",
 	}
 	for _, value := range items {
-		fmt.Printf("%v - %v\n", value, DashInsert(value))
+		fmt.Printf("%v - %v\n", value, SwapCase(value))
 	}
 
 }
@@ -140,6 +137,28 @@ func DashInsert(str string) string {
 	}
 
 	return exit
+}
+
+func SwapCase(str string) string {
+	if len(str) == 0 {
+		return ""
+	}
+
+	convertRuneToAscii := func(val rune) string {
+		return fmt.Sprintf("%c", val)
+	}
+
+	elements := []rune(str)
+	var exit []string
+	for u := 0; u < len(elements); u++ {
+		if elements[u] >= 97 && elements[u] <= 122 {
+			elements[u] -= 32
+		} else if elements[u] < 97 && elements[u] >= 65 {
+			elements[u] += 32
+		}
+		exit = append(exit, convertRuneToAscii(elements[u]))
+	}
+	return strings.Join(exit, "")
 }
 
 func PowersofTwo(num int) string {
