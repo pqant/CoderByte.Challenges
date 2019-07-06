@@ -12,6 +12,8 @@ func main() {
 	//fmt.Printf("%v\n", ArrayAdditionI([]int{5, 7, 16, 1, 2}))
 	//fmt.Printf("%v\n", ArrayAdditionI([]int{3, 5, -1, 8, 12}))
 
+	fmt.Printf("%v \n", AdditivePersistence(4))
+
 	//fmt.Printf("%v\n", PowersofTwo(9))
 	//fmt.Printf("%v\n", PowersofTwo(120))
 	//fmt.Printf("%v\n", PowersofTwo(64))
@@ -137,6 +139,36 @@ func DashInsert(str string) string {
 	}
 
 	return exit
+}
+
+
+
+
+
+//if num is 2718 then your program should return 2 because 2 + 7 + 1 + 8 = 18 and 1 + 8 = 9 and you stop at 9.
+
+func AdditivePersistence(num int) int {
+	if len(fmt.Sprintf("%d", num)) == 0 || len(fmt.Sprintf("%d", num)) == 1 {
+		return 0
+	}
+	index := 0
+start:
+	total := 0
+	val := strconv.Itoa(num)
+	items := []rune(val)
+	numberConvert := func(number int) int {
+		return number - 48
+	}
+	for _, value := range items {
+		total += numberConvert(int(value))
+	}
+	index++
+	if len(fmt.Sprintf("%d", total)) != 1 {
+		num = total
+		goto start
+
+	}
+	return index
 }
 
 func SwapCase(str string) string {
