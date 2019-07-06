@@ -9,10 +9,19 @@ import (
 var vowels = []rune{'a', 'e', 'i', 'o', 'u'}
 
 func main() {
-	//fmt.Printf("%v\n", ArrayAdditionI([]int{5, 7, 16, 1, 2}))
+	fmt.Printf("%v\n", SecondGreatLow([]int{7, 7, 12, 98, 106}))
+	fmt.Printf("%v\n", SecondGreatLow([]int{1, 42, 42, 180}))
+	fmt.Printf("%v\n", SecondGreatLow([]int{80, 80}))
+
 	//fmt.Printf("%v\n", ArrayAdditionI([]int{3, 5, -1, 8, 12}))
 
-	fmt.Printf("%v \n", AdditivePersistence(4))
+	// [7, 7, 12, 98, 106] the output should be 12 98
+	// [1, 42, 42, 180] the output should be 42 42
+	// [4, 90] the output should be 90 4
+
+	return
+
+	//fmt.Printf("%v \n", AdditivePersistence(4))
 
 	//fmt.Printf("%v\n", PowersofTwo(9))
 	//fmt.Printf("%v\n", PowersofTwo(120))
@@ -141,9 +150,54 @@ func DashInsert(str string) string {
 	return exit
 }
 
-
-
-
+// [7, 7, 12, 98, 106] the output should be 12 98
+// [1, 42, 42, 180] the output should be 42 42
+// [4, 90] the output should be 90 4
+func SecondGreatLow(arr []int) string {
+	if len(arr) < 2 {
+		return "0 0"
+	} else if len(arr) == 2 {
+		if arr[0] == arr[1] {
+			return fmt.Sprintf("%d %d", arr[0], arr[1])
+		}
+	}
+	//distinctEliminator
+	distinct := func(bold []int) []int {
+		var element []int
+		isFound := func(items []int, value int) bool {
+			for _, item := range items {
+				if value == item {
+					return true
+				}
+			}
+			return false
+		}
+		for u := 0; u < len(bold); u++ {
+			if !isFound(element, bold[u]) {
+				element = append(element, bold[u])
+			}
+		}
+		return element
+	}
+	tempArr := distinct(arr)
+	//sorting
+	for u := 0; u < len(tempArr); u++ {
+		for y := 0; y < len(tempArr); y++ {
+			if tempArr[u] < tempArr[y] {
+				temp := tempArr[u]
+				tempArr[u] = tempArr[y]
+				tempArr[y] = temp
+			}
+		}
+	}
+	if len(tempArr) > 2 {
+		return fmt.Sprintf("%v %v", tempArr[1], tempArr[len(tempArr)-2])
+	} else if len(tempArr) == 2 {
+		return fmt.Sprintf("%v %v", tempArr[1], tempArr[0])
+	} else {
+		return "0 0"
+	}
+}
 
 //if num is 2718 then your program should return 2 because 2 + 7 + 1 + 8 = 18 and 1 + 8 = 9 and you stop at 9.
 
