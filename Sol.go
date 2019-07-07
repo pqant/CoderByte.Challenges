@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -12,12 +13,18 @@ var vowels = []rune{'a', 'e', 'i', 'o', 'u'}
 func main() {
 	//fmt.Printf("%v\n", SecondGreatLow([]int{7, 7, 12, 98, 106}))
 	//fmt.Printf("%v\n", SecondGreatLow([]int{1, 42, 42, 180}))
+
+	fmt.Printf("%v\n", ThirdGreatest([]string{"hello", "world", "after", "all"}))
+	fmt.Printf("%v\n", ThirdGreatest([]string{"coder", "byte", "code"}))
+	fmt.Printf("%v\n", ThirdGreatest([]string{"abc", "defg", "z", "hijk"}))
+
+	return
 	fmt.Printf("%v\n", RectangleArea([]string{"(0 0)", "(3 0)", "(0 2)", "(3 2)"}))
 	fmt.Printf("%v\n", RectangleArea([]string{"(1 1)", "(1 3)", "(3 1)", "(3 3)"}))
 
 	/*
-	// ["(0 0)", "(3 0)", "(0 2)", "(3 2)"]  -> 6 ( width : 3 , height : 2)
-	// ["(1 1)", "(1 3)", "(3 1)", "(3 3)"]  -> 4 ( widtg : ? , height : ?)
+		// ["(0 0)", "(3 0)", "(0 2)", "(3 2)"]  -> 6 ( width : 3 , height : 2)
+		// ["(1 1)", "(1 3)", "(3 1)", "(3 3)"]  -> 4 ( widtg : ? , height : ?)
 
 
 	*/
@@ -211,6 +218,41 @@ func RectangleArea(strArr []string) string {
 	} else {
 		return "0"
 	}
+}
+
+func ThirdGreatest(strArr []string) string {
+	if len(strArr) < 3 {
+		return ""
+	}
+	var items []string
+	for _, value := range strArr {
+		items = append(items, string(value))
+	}
+	/*
+		sortByLength := func(arr []string) []string {
+			for u := 0; u < len(arr); u++ {
+				for y := 0; y < len(arr); y++ {
+					if len(arr[u]) == len(arr[y]) {
+						continue
+					} else if len(arr[u]) > len(arr[y]) {
+						temp := arr[u]
+						arr[u] = arr[y]
+						arr[y] = temp
+					}
+				}
+			}
+			return arr
+		}
+	*/
+
+	sort.SliceStable(items, func(i, j int) bool {
+		return len(items[i]) > len(items[j])
+	})
+
+	//items = sortByLength(items)
+
+	return fmt.Sprintf("%v\n%v", items, items[2])
+
 }
 
 // [7, 7, 12, 98, 106] the output should be 12 98
@@ -670,6 +712,10 @@ func ExOh(str string) string {
 	return exit
 }
 
+func DivTemp(a, b float64) float64 {
+	return a / b
+}
+
 func WordCount(str string) string {
 	if len(str) == 0 {
 		return "0"
@@ -694,7 +740,6 @@ func SimpleSymbols(str string) string {
 			}
 		}
 	}
-	return "true"
 
 	var items []string
 	temp := ""
