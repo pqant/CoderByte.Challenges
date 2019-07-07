@@ -28,8 +28,6 @@ func main() {
 	// [1, 42, 42, 180] the output should be 42 42
 	// [4, 90] the output should be 90 4
 
-	return
-
 	//fmt.Printf("%v \n", AdditivePersistence(4))
 
 	//fmt.Printf("%v\n", PowersofTwo(9))
