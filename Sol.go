@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"strconv"
 	"strings"
 )
@@ -9,9 +10,17 @@ import (
 var vowels = []rune{'a', 'e', 'i', 'o', 'u'}
 
 func main() {
-	fmt.Printf("%v\n", SecondGreatLow([]int{7, 7, 12, 98, 106}))
-	fmt.Printf("%v\n", SecondGreatLow([]int{1, 42, 42, 180}))
-	fmt.Printf("%v\n", SecondGreatLow([]int{80, 80}))
+	//fmt.Printf("%v\n", SecondGreatLow([]int{7, 7, 12, 98, 106}))
+	//fmt.Printf("%v\n", SecondGreatLow([]int{1, 42, 42, 180}))
+	fmt.Printf("%v\n", RectangleArea([]string{"(0 0)", "(3 0)", "(0 2)", "(3 2)"}))
+	fmt.Printf("%v\n", RectangleArea([]string{"(1 1)", "(1 3)", "(3 1)", "(3 3)"}))
+
+	/*
+	// ["(0 0)", "(3 0)", "(0 2)", "(3 2)"]  -> 6 ( width : 3 , height : 2)
+	// ["(1 1)", "(1 3)", "(3 1)", "(3 3)"]  -> 4 ( widtg : ? , height : ?)
+
+
+	*/
 
 	//fmt.Printf("%v\n", ArrayAdditionI([]int{3, 5, -1, 8, 12}))
 
@@ -148,6 +157,62 @@ func DashInsert(str string) string {
 	}
 
 	return exit
+}
+
+type Point struct {
+	X int
+	Y int
+}
+
+func NewPoint(x, y int) *Point {
+	return &Point{x, y}
+}
+
+//    x y      x y      x y      x y
+// ["(0 0)", "(3 0)", "(0 2)", "(3 2)"]  -> 6 ( width : 3 , height : 2)
+// ["(1 1)", "(1 3)", "(3 1)", "(3 3)"]  -> 4 ( widtg : ? , height : ?)
+func RectangleArea(strArr []string) string {
+	if len(strArr) != 4 {
+		return "0"
+	}
+	var points []*Point
+	for _, value := range strArr {
+		text := strings.Replace(value, "(", "", -1)
+		text = strings.Replace(text, ")", "", -1)
+		values := strings.Split(text, " ")
+		if len(values) != 2 {
+			continue
+		}
+		x, errX := strconv.Atoi(values[0])
+		if errX != nil {
+			continue
+		}
+		y, errY := strconv.Atoi(values[1])
+		if errY != nil {
+			continue
+		}
+		points = append(points, NewPoint(x, y))
+	}
+	if len(points) != 4 {
+		return "0"
+	}
+	//sort Points
+	for u := 0; u < len(points); u++ {
+		for y := 0; y < len(points); y++ {
+			if points[u].X > points[y].X {
+				temp := points[u]
+				points[u] = points[y]
+				points[y] = temp
+			}
+		}
+	}
+	if len(points) != 0 {
+		w := points[len(points)-1].X - points[0].X
+		h := points[1].Y - points[0].Y
+		return fmt.Sprintf("%v", math.Abs(float64(w*h)))
+	} else {
+		return "0"
+	}
 }
 
 // [7, 7, 12, 98, 106] the output should be 12 98
