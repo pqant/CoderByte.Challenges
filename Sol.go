@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"math"
 	"sort"
@@ -11,8 +12,27 @@ import (
 var vowels = []rune{'a', 'e', 'i', 'o', 'u'}
 
 func main() {
-	//fmt.Printf("%v\n", SecondGreatLow([]int{7, 7, 12, 98, 106}))
-	//fmt.Printf("%v\n", SecondGreatLow([]int{1, 42, 42, 180}))
+
+	//values := SortedTimeLine()
+	//for _, value := range values {
+	//	fmt.Printf("%v-%v\n", value.Index, value.Value)
+	//}
+
+	fmt.Printf("%v\n", CountingMinutesI("2:03pm-1:39pm"))
+	fmt.Printf("%v\n", CountingMinutesI("1:23am-1:08am"))
+	fmt.Printf("%v\n", CountingMinutesI("2:08pm-2:00am"))
+	fmt.Printf("%v\n", CountingMinutesI("11:00am-2:10pm"))
+	fmt.Printf("%v\n", CountingMinutesI("12:31pm-12:34pm"))
+	fmt.Printf("%v\n", CountingMinutesI("5:00pm-5:11pm"))
+
+	return
+
+	fmt.Printf("%v\n", CountingMinutesI("1:00pm-11:00am"))
+	fmt.Printf("%v\n", CountingMinutesI("1:23am-1:08am"))
+	fmt.Printf("%v\n", CountingMinutesI("12:30pm-20:01pm"))
+	fmt.Printf("%v\n", CountingMinutesI("12:30pm-12:00am"))
+
+	return
 
 	fmt.Printf("%v\n", ThirdGreatest([]string{"hello", "world", "after", "all"}))
 	fmt.Printf("%v\n", ThirdGreatest([]string{"coder", "byte", "code"}))
@@ -248,11 +268,184 @@ func ThirdGreatest(strArr []string) string {
 	sort.SliceStable(items, func(i, j int) bool {
 		return len(items[i]) > len(items[j])
 	})
-
 	//items = sortByLength(items)
-
 	return fmt.Sprintf("%v\n%v", items, items[2])
 
+}
+
+func CountingMinutesI(str string) string {
+	if !strings.Contains(str, "am") && !strings.Contains(str, "pm") {
+		return ""
+	}
+	result := ""
+	values := strings.Split(str, "-")
+	if len(values) != 2 {
+		return ""
+	}
+	start := values[0]
+
+	timeFixer := func(base string, val []string) string {
+		for _, in := range val {
+			if strings.Contains(base, in) {
+				tempBase := strings.Replace(base, in, "", -1)
+				tempSplit := strings.Split(tempBase, ":")
+				if len(tempSplit) != 2 {
+					return ""
+				}
+				return fmt.Sprintf("%v:%v%v", PadLeft(tempSplit[0], 2, "0"), PadLeft(tempSplit[1], 2, "0"), in)
+			}
+		}
+		return ""
+	}
+	start = timeFixer(start, []string{"am", "pm"})
+	end := values[1]
+	end = timeFixer(end, []string{"am", "pm"})
+
+	tS, _ := GetMinuteByTimeInfo(start)
+	tE, _ := GetMinuteByTimeInfo(end)
+	ReCalc := func() {
+		end2 := "23:59pm"
+		tE2, _ := GetMinuteByTimeInfo(end2)
+		p1 := tE2 - tS + 1
+		s1 := "12:00am"
+		tS1, _ := GetMinuteByTimeInfo(s1)
+		p2 := tE - tS1
+		result = fmt.Sprintf("%d", p1+p2)
+	}
+	if strings.Contains(start, "pm") {
+		if strings.Contains(end, "pm") {
+			//pm - pm
+			if tE-tS < 0 {
+				ReCalc()
+			} else {
+				result = fmt.Sprintf("%d", tE-tS)
+			}
+		} else {
+			//pm ->23:59pm - 00:00 am ->  am
+			ReCalc()
+		}
+	} else {
+		if strings.Contains(end, "am") {
+			//am - am
+			if tE-tS < 0 {
+				ReCalc()
+			} else {
+				result = fmt.Sprintf("%d", tE-tS)
+			}
+		} else {
+			//am ->11:59am - 12:00 pm ->  pm
+			end2 := "11:59am"
+			tE2, _ := GetMinuteByTimeInfo(end2)
+			p1 := tE2 - tS + 1
+			s1 := "12:00pm"
+			tS1, _ := GetMinuteByTimeInfo(s1)
+			p2 := tE - tS1
+			result = fmt.Sprintf("%d", p1+p2)
+		}
+	}
+	return result
+}
+
+type KeyValue struct {
+	Index string
+	Value int
+}
+
+func NewKeyValue(index string, value int) *KeyValue {
+	return &KeyValue{
+		Index: index,
+		Value: value,
+	}
+}
+
+func SortedTimeLine() []*KeyValue {
+	fullTime := 60 * 12 * 2
+	var items []*KeyValue
+	whichPart := "am"
+	for u := 0; u < fullTime; u++ {
+		index := ""
+		if u >= 60 {
+			h := u / 60
+			m := u - (h * 60)
+			if u >= 720 {
+				whichPart = "pm"
+			}
+			index = fmt.Sprintf("%v:%v%v",
+				PadLeft(strconv.Itoa(h), 2, "0"),
+				PadLeft(strconv.Itoa(m), 2, "0"), whichPart)
+		} else {
+			if u == 0 {
+				index = fmt.Sprintf("12:00%v", whichPart)
+			} else {
+				index = fmt.Sprintf("00:%v%v", PadLeft(strconv.Itoa(u), 2, "0"), whichPart)
+			}
+		}
+		item := NewKeyValue(index, u)
+		items = append(items, item)
+	}
+	sort.Slice(items, func(i, j int) bool {
+		return items[i].Value < items[j].Value
+	})
+	return items
+}
+
+//noinspection ALL
+func GetMinuteByTimeInfo(time string) (int, error) {
+	if !strings.Contains(time, "am") && !strings.Contains(time, "pm") {
+		return 0, errors.New("time value error.Please control it.!")
+	}
+	timeBreaker := 1200
+	timeFixer := func(base string, val []string) (string, error) {
+		for _, in := range val {
+			if strings.Contains(base, in) {
+				tempBase := strings.Replace(base, in, "", -1)
+				tempBase = strings.Replace(tempBase, ":", "", -1)
+
+				v, sErr := strconv.Atoi(tempBase)
+				if sErr != nil {
+					return "", errors.New(fmt.Sprintf("%v  - time value error.Please control it.!", sErr.Error()))
+				}
+				if in == "am" {
+					if v > timeBreaker {
+						v -= timeBreaker
+					}
+				} else {
+					if v < timeBreaker {
+						v += timeBreaker
+					}
+				}
+				vStr := PadLeft(fmt.Sprintf("%v", v), 4, "0")
+				return fmt.Sprintf("%c%c:%c%c%v", vStr[0], vStr[1], vStr[2], vStr[3], in), nil
+			}
+		}
+		return "", errors.New("there is no compatible time suffix in the context that being passed!")
+	}
+
+	time, _ = timeFixer(time, []string{"am", "pm"})
+
+	timeIndex := 0
+	values := SortedTimeLine()
+	for _, value := range values {
+		if value.Index == time {
+			timeIndex = value.Value
+			break
+		}
+	}
+	if timeIndex == 0 {
+		return timeIndex, errors.New("didn't find time index data!")
+	}
+	return timeIndex, nil
+}
+
+func PadLeft(val string, length int, char string) string {
+	if len(val) >= length {
+		return val
+	}
+	add := ""
+	for u := 0; u < length-len(val); u++ {
+		add += char
+	}
+	return add + val
 }
 
 // [7, 7, 12, 98, 106] the output should be 12 98
