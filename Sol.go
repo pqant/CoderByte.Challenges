@@ -18,10 +18,11 @@ func main() {
 	//	fmt.Printf("%v-%v\n", value.Index, value.Value)
 	//}
 	//One12 12
-	fmt.Printf("%v\n", NumberAddition("One12 12"))
-	fmt.Printf("%v\n", NumberAddition("1 1 1 7 yes"))
-	fmt.Printf("%v\n", NumberAddition("no numbers sorry**"))
+	fmt.Printf("%v\n", ArithGeo([]int{5, 10, 15}))
+	fmt.Printf("%v\n", ArithGeo([]int{2, 4, 16, 24}))
+	fmt.Printf("%v\n", ArithGeo([]int{2, 6, 18, 54}))
 
+	return
 
 	fmt.Printf("%v\n", NumberAddition("88Hello 3World!"))
 	fmt.Printf("%v\n", NumberAddition("55Hello"))
@@ -82,6 +83,51 @@ func main() {
 		fmt.Printf("%v - %v\n", value, SwapCase(value))
 	}
 
+}
+
+func ArithGeo(arr []int) string {
+	if len(arr) < 3 {
+		return "-1"
+	}
+	first := arr[0]
+	for u := 0; u < len(arr); u++ {
+		if arr[u] == 0 {
+			return "-1"
+		}
+		if u > 0 {
+			if arr[u] == first {
+				return "-1"
+			}
+		}
+	}
+	exit := "-1"
+	isArithmetic := true
+	factor := arr[1] - arr[0]
+	for u := 2; u < len(arr); u++ {
+		if arr[u]-arr[u-1] == factor {
+			continue
+		} else {
+			isArithmetic = false
+			break
+		}
+	}
+	if isArithmetic {
+		return "Arithmetic"
+	}
+	isGeometric := true
+	factor = arr[1] / arr[0]
+	for u := 2; u < len(arr); u++ {
+		if arr[u]/arr[u-1] == factor {
+			continue
+		} else {
+			isGeometric = false
+			break
+		}
+	}
+	if isGeometric {
+		return "Geometric"
+	}
+	return exit
 }
 
 func NumberAddition(str string) string {
