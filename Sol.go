@@ -29,11 +29,70 @@ func DivisionStringified(num1 int, num2 int) string {
 		index++
 	}
 	result = ""
-	for j:=len(t)-1;j>=0 ;j--  {
+	for j := len(t) - 1; j >= 0; j-- {
 		result += string(t[j])
 	}
 
 	return result
+}
+
+//Mod (tepe değer)	3  (max frequency )
+//Mean , ortlama değer
+//Medyan, median (ortanca)	3
+
+//The array will not be empty, will only contain positive integers, and will not contain more than one mode.
+
+func MeanMode(arr []int) int {
+	if len(arr) == 0 {
+		return 0
+	}
+	for u := 0; u < len(arr); u++ {
+		if arr[u] < 0 {
+			return 0
+		}
+	}
+	//mean
+	mean := 0
+	for u := 0; u < len(arr); u++ {
+		mean += arr[u]
+	}
+	mean /= len(arr)
+	//sorting for median!
+	for u := 0; u < len(arr); u++ {
+		for y := 0; y < len(arr); y++ {
+			if arr[u] < arr[y] {
+				arr[u], arr[y] = arr[y], arr[u]
+			}
+		}
+	}
+	//sorted
+	median := 0.0
+	if len(arr)%2 == 1 {
+		median = float64(arr[len(arr)/2])
+	} else {
+		median = float64(arr[(len(arr)/2)-1]+arr[(len(arr) / 2)]) / 2
+	}
+	frequency := make(map[int]int, len(arr))
+	for u := 0; u < len(arr); u++ {
+		val, isExist := frequency[arr[u]]
+		if isExist {
+			frequency[arr[u]] = val + 1
+		} else {
+			frequency[arr[u]] = 1
+		}
+	}
+	max := 0
+	mode := 0
+	for key, value := range frequency {
+		if value > max {
+			max = value
+			mode = key
+		}
+	}
+	if float64(mode) == median {
+		return 1
+	}
+	return 0
 }
 
 func main() {
@@ -44,13 +103,23 @@ func main() {
 	//}
 	//One12 12
 
+	fmt.Printf("%v\n", MeanMode([]int{10, 10, 10, 2}))
+	fmt.Printf("%v\n", MeanMode([]int{7, 7, 12}))
+	fmt.Printf("%v\n", MeanMode([]int{5, 3, 3, 3, 1}))
+	fmt.Printf("%v\n", MeanMode([]int{1, 2, 3}))
+	fmt.Printf("%v\n", MeanMode([]int{4, 4, 4, 6, 2}))
+	return
+
+	fmt.Printf("%v\n", MeanMode([]int{2, 5, 11, 8, 4}))
+	fmt.Printf("%v\n", MeanMode([]int{2, 5, 11, 8, 4, 30}))
+	return
+
 	fmt.Printf("%v\n", DivisionStringified(2, 3))
 	fmt.Printf("%v\n", DivisionStringified(6874, 67))
 	fmt.Printf("%v\n", DivisionStringified(123456789, 10000))
 
 	return
 
-	fmt.Printf("%v\n", ArithGeo([]int{5, 10, 15}))
 	fmt.Printf("%v\n", ArithGeo([]int{2, 4, 16, 24}))
 	fmt.Printf("%v\n", ArithGeo([]int{2, 6, 18, 54}))
 
