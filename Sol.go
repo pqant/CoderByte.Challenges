@@ -11,6 +11,31 @@ import (
 
 var vowels = []rune{'a', 'e', 'i', 'o', 'u'}
 
+func DivisionStringified(num1 int, num2 int) string {
+	if num2 == 0 {
+		return "0" // divbyZero??!!
+	}
+	result := fmt.Sprintf("%.0f", math.Round(float64(num1)/float64(num2)))
+	if len(result) <= 3 {
+		return result
+	}
+	t := ""
+	index := 0
+	for u := len(result) - 1; u >= 0; u-- {
+		if index != 0 && index%3 == 0 {
+			t += ","
+		}
+		t += string(result[u])
+		index++
+	}
+	result = ""
+	for j:=len(t)-1;j>=0 ;j--  {
+		result += string(t[j])
+	}
+
+	return result
+}
+
 func main() {
 
 	//values := SortedTimeLine()
@@ -18,6 +43,13 @@ func main() {
 	//	fmt.Printf("%v-%v\n", value.Index, value.Value)
 	//}
 	//One12 12
+
+	fmt.Printf("%v\n", DivisionStringified(2, 3))
+	fmt.Printf("%v\n", DivisionStringified(6874, 67))
+	fmt.Printf("%v\n", DivisionStringified(123456789, 10000))
+
+	return
+
 	fmt.Printf("%v\n", ArithGeo([]int{5, 10, 15}))
 	fmt.Printf("%v\n", ArithGeo([]int{2, 4, 16, 24}))
 	fmt.Printf("%v\n", ArithGeo([]int{2, 6, 18, 54}))
