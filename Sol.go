@@ -17,7 +17,18 @@ func main() {
 	//for _, value := range values {
 	//	fmt.Printf("%v-%v\n", value.Index, value.Value)
 	//}
+	//One12 12
+	fmt.Printf("%v\n", NumberAddition("One12 12"))
+	fmt.Printf("%v\n", NumberAddition("1 1 1 7 yes"))
+	fmt.Printf("%v\n", NumberAddition("no numbers sorry**"))
 
+
+	fmt.Printf("%v\n", NumberAddition("88Hello 3World!"))
+	fmt.Printf("%v\n", NumberAddition("55Hello"))
+	fmt.Printf("%v\n", NumberAddition("75Number9"))
+	fmt.Printf("%v\n", NumberAddition("10 2One Number*1*"))
+
+	return
 	fmt.Printf("%v\n", CountingMinutesI("2:03pm-1:39pm"))
 	fmt.Printf("%v\n", CountingMinutesI("1:23am-1:08am"))
 	fmt.Printf("%v\n", CountingMinutesI("2:08pm-2:00am"))
@@ -71,6 +82,50 @@ func main() {
 		fmt.Printf("%v - %v\n", value, SwapCase(value))
 	}
 
+}
+
+func NumberAddition(str string) string {
+	if len(str) < 2 {
+		return "0"
+	}
+	isNumber := func(val rune) bool {
+		if int(val) >= 48 && int(val) <= 57 {
+			return true
+		}
+		return false
+	}
+
+	var numbers []int
+	lastValue := ""
+	isBefDetected := false
+	for _, value := range str {
+		if isNumber(rune(value)) {
+			if isBefDetected {
+				lastValue += string(value)
+				continue
+			} else {
+				lastValue = string(value)
+				isBefDetected = true
+			}
+		} else {
+			if lastValue != "" {
+				partialValue, _ := strconv.Atoi(lastValue)
+				numbers = append(numbers, partialValue)
+			}
+			lastValue = ""
+			isBefDetected = false
+		}
+	}
+	if lastValue != "" {
+		partialValue, _ := strconv.Atoi(lastValue)
+		numbers = append(numbers, partialValue)
+		lastValue = ""
+	}
+	total := 0
+	for _, value := range numbers {
+		total += value
+	}
+	return fmt.Sprintf("%d", total)
 }
 
 var punchItems = []string{
