@@ -40,8 +40,6 @@ func DivisionStringified(num1 int, num2 int) string {
 //Mean , ortlama değer
 //Medyan, median (ortanca)	3
 
-//The array will not be empty, will only contain positive integers, and will not contain more than one mode.
-
 func MeanMode(arr []int) int {
 	if len(arr) == 0 {
 		return 0
@@ -95,6 +93,67 @@ func MeanMode(arr []int) int {
 	return 0
 }
 
+func MultiplicativePersistence(num int) int {
+	val := fmt.Sprintf("%v", num)
+	if len(val) < 2 {
+		return 0
+	}
+	index := 0
+do:
+	var numbers []int
+	for _, value := range val {
+		numberVal, _ := strconv.Atoi(string(value))
+		numbers = append(numbers, numberVal)
+	}
+	resultTemp := 1
+	for _, value := range numbers {
+		resultTemp *= value
+	}
+	index++
+	if len(fmt.Sprintf("%v", resultTemp)) != 1 {
+		val = fmt.Sprintf("%v", resultTemp)
+		goto do
+	}
+
+	return index
+}
+
+func ChangingSequence(arr []int) int {
+	if len(arr) < 3 {
+		return -1
+	}
+	inc := false
+	if arr[1] > arr[0] {
+		inc = true
+	}
+	index := -1
+exit:
+	for u := 0; u < 1; u++ {
+		for y := u + 1; y < len(arr); y++ {
+			if inc {
+				if arr[y] > arr[y-1] {
+					// increasing..!!!
+					index = y
+				} else {
+					break exit
+				}
+			} else {
+				if arr[y] < arr[y-1] {
+					// decreasing..!!!
+					index = y
+				} else {
+					break exit
+				}
+			}
+		}
+	}
+	if len(arr)-1 == index {
+		return -1
+	}
+	return index
+}
+
+//noinspection ALL
 func main() {
 
 	//values := SortedTimeLine()
@@ -102,6 +161,21 @@ func main() {
 	//	fmt.Printf("%v-%v\n", value.Index, value.Value)
 	//}
 	//One12 12
+
+	fmt.Printf("%v\n", MultiplicativePersistence(39))
+	fmt.Printf("%v\n", MultiplicativePersistence(4))
+	fmt.Printf("%v\n", MultiplicativePersistence(25))
+
+	return
+	fmt.Printf("%v\n", ChangingSequence([]int{-3, -2, -1, 0, 2}))
+
+	return
+
+	fmt.Printf("%v\n", ChangingSequence([]int{1, 2, 4, 6, 4, 3, 1}))
+	fmt.Printf("%v\n", ChangingSequence([]int{-4, -2, 9, 10}))
+	fmt.Printf("%v\n", ChangingSequence([]int{5, 4, 3, 2, 10, 11}))
+
+	return
 
 	fmt.Printf("%v\n", MeanMode([]int{10, 10, 10, 2}))
 	fmt.Printf("%v\n", MeanMode([]int{7, 7, 12}))
