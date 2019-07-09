@@ -121,6 +121,104 @@ func rec(items []string) (values []string) {
 	}
 }
 
+func ThreeNumbers(str string) bool {
+	if len(str) == 0 {
+		return false
+	}
+	isNumber := func(value string) bool {
+		if value == "0" || value == "1" || value == "2" || value == "3" || value == "4" ||
+			value == "5" || value == "6" || value == "7" || value == "8" || value == "9" {
+			return true
+		}
+		return false
+	}
+	totalNumberCount := 0
+	for u := 0; u < len(str); u++ {
+		if isNumber(string(str[u])) {
+			totalNumberCount++
+		}
+	}
+	if totalNumberCount < 3 {
+		return false
+	}
+
+	items := strings.Split(str, " ")
+
+	if len(items) == 0 {
+		return false
+	}
+	for _, value := range items {
+		xVal := string(value)
+		n0, n1, n2, n3, n4, n5, n6, n7, n8, n9 := 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+		for u := 0; u < len(xVal); u++ {
+			if isNumber(string(xVal[u])) {
+				if string(xVal[u]) == "0" {
+					n0 += 1
+					if n0 > 1 {
+						return false
+					}
+				} else if string(xVal[u]) == "1" {
+					n1 += 1
+					if n1 > 1 {
+						return false
+					}
+				} else if string(xVal[u]) == "2" {
+					n2 += 1
+					if n2 > 1 {
+						return false
+					}
+				} else if string(xVal[u]) == "3" {
+					n3 += 1
+					if n3 > 1 {
+						return false
+					}
+				} else if string(xVal[u]) == "4" {
+					n4 += 1
+					if n4 > 1 {
+						return false
+					}
+				} else if string(xVal[u]) == "5" {
+					n5 += 1
+					if n5 > 1 {
+						return false
+					}
+				} else if string(xVal[u]) == "6" {
+					n6 += 1
+					if n6 > 1 {
+						return false
+					}
+				} else if string(xVal[u]) == "7" {
+					n7 += 1
+					if n7 > 1 {
+						return false
+					}
+				} else if string(xVal[u]) == "8" {
+					n8 += 1
+					if n8 > 1 {
+						return false
+					}
+				} else if string(xVal[u]) == "9" {
+					n9 += 1
+					if n9 > 1 {
+						return false
+					}
+				}
+			}
+			if u > 0 && u < len(xVal)-1 {
+				//fmt.Printf("%v ->>>  %v - %v - %v\n",xVal,string(xVal[u-1]),string(xVal[u]),string(xVal[u+1]))
+			}
+
+			if u > 0 && u < len(xVal)-1 &&
+				isNumber(string(xVal[u-1])) &&
+				isNumber(string(xVal[u])) &&
+				isNumber(string(xVal[u+1])) {
+				return false
+			}
+		}
+	}
+	return true
+}
+
 /*
 "cats AND*Dogs-are Awesome -> "CatsAndDogsAreAwesome"
 "Daniel LikeS-coding"      -> "DanielLikesCoding"
@@ -399,6 +497,13 @@ exit:
 
 //noinspection ALL
 func main() {
+
+	//1a23
+	fmt.Printf("%v\n", ThreeNumbers("1a23"))
+	fmt.Printf("%v\n", ThreeNumbers("2a3b5 w1o2rl3d g1gg92"))
+	fmt.Printf("%v\n", ThreeNumbers("21aa3a ggg4g4g6ggg"))
+
+	return
 
 	fmt.Printf("%v\n", DifferentCases("cats AND*Dogs-are Awesome"))
 	fmt.Printf("%v\n", DifferentCases("Daniel LikeS-coding"))
