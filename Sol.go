@@ -93,6 +93,54 @@ func MeanMode(arr []int) int {
 	return 0
 }
 
+//["5","4","6","E","1","7","E","E","3","2"] ->  4,1,5
+//["1","2","E","E","3"]                     ->  1,2
+func OffLineMinimum(strArr []string) string {
+	if len(strArr) == 0 {
+		return ""
+	}
+	for _, value := range strArr {
+		if string(value) == "E" {
+			break
+			// at least there is one E in the array!
+		}
+	}
+	var items []string
+	var tempArr []string
+	for _, value := range strArr {
+		if string(value) == "E" {
+			if len(tempArr) != 0 {
+				for u := 0; u < len(tempArr); u++ {
+					for y := 0; y < len(tempArr); y++ {
+						if tempArr[u] < tempArr[y] {
+							tempArr[u], tempArr[y] = tempArr[y], tempArr[u]
+						}
+					}
+				}
+				var tempValue = tempArr[0]
+			exit:
+				for _, value := range tempArr {
+					isFound := false
+					for _, valueItem := range items {
+						if string(value) == string(valueItem) {
+							isFound = true
+							break
+						}
+					}
+					if !isFound {
+						tempValue = value
+						break exit
+					}
+				}
+				items = append(items, tempValue)
+			}
+		} else {
+			tempArr = append(tempArr, string(value))
+		}
+	}
+	return strings.Join(items, ",")
+}
+
 func MultiplicativePersistence(num int) int {
 	val := fmt.Sprintf("%v", num)
 	if len(val) < 2 {
@@ -161,6 +209,12 @@ func main() {
 	//	fmt.Printf("%v-%v\n", value.Index, value.Value)
 	//}
 	//One12 12
+
+	fmt.Printf("%v\n", OffLineMinimum([]string{"5", "4", "6", "E", "1", "7", "E", "E", "3", "2"}))
+	fmt.Printf("%v\n", OffLineMinimum([]string{"1", "2", "E", "E", "3"}))
+	fmt.Printf("%v\n", OffLineMinimum([]string{"4", "E", "1", "E", "2", "E", "3", "E"}))
+
+	return
 
 	fmt.Printf("%v\n", MultiplicativePersistence(39))
 	fmt.Printf("%v\n", MultiplicativePersistence(4))
