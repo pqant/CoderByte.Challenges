@@ -93,6 +93,136 @@ func MeanMode(arr []int) int {
 	return 0
 }
 
+func rec(items []string) (values []string) {
+	keepSearch := false
+	for _, value := range items {
+		isAdded := false
+	keepLooking:
+		for _, char := range punchItems {
+			tSplitter := strings.Split(value, string(char))
+			if len(tSplitter) != 1 {
+				isAdded = true
+				for _, valueSplit := range tSplitter {
+					values = append(values, string(valueSplit))
+				}
+				keepSearch = true
+				break keepLooking
+			}
+		}
+		if !isAdded {
+			values = append(values, string(value))
+			isAdded = true
+		}
+	}
+	if keepSearch {
+		return rec(values)
+	} else {
+		return values
+	}
+}
+
+/*
+"cats AND*Dogs-are Awesome -> "CatsAndDogsAreAwesome"
+"Daniel LikeS-coding"      -> "DanielLikesCoding"
+
+*/
+//noinspection ALL
+func DifferentCases(str string) string {
+	var punchItems = []string{
+		" ",
+		"-",
+		"%",
+		"’'",
+		"()[]{}<>",
+		":",
+		",",
+		"+",
+		"‒–—―",
+		"…",
+		"!",
+		".",
+		"«»",
+		"-‐",
+		"?",
+		"‘’“”",
+		";",
+		"/",
+		"⁄",
+		"␠",
+		"·",
+		"&",
+		"@",
+		"*",
+		"\\",
+		"•",
+		"^",
+		"¤¢$€£¥₩₪",
+		"†‡",
+		"°",
+		"¡",
+		"¿",
+		"¬",
+		"#",
+		"№",
+		"%‰‱",
+		"¶",
+		"′",
+		"§",
+		"~",
+		"¨",
+		"_",
+		"|¦",
+		"⁂",
+		"☞",
+		"∴",
+		"‽",
+		"※"}
+
+	if len(str) == 0 {
+		return ""
+	}
+	isIllegalChar := func(val string) bool {
+		for _, value := range punchItems {
+			if string(value) == val {
+				return true
+			}
+		}
+		return false
+	}
+
+	splitted := strings.Split(str, " ")
+	splitted = rec(splitted)
+	var words []string
+	for _, value := range splitted {
+		if !isIllegalChar(string(value)) {
+			var temp []rune
+			t := string(value)
+			for u := 0; u < len(t); u++ {
+				temp = append(temp, rune(t[u]))
+			}
+			for u := 0; u < len(temp); u++ {
+				if u == 0 {
+					if temp[u] >= 97 && temp[u] <= 122 {
+						temp[u] = rune(temp[u] - 32)
+					}
+				} else {
+					if temp[u] >= 65 && temp[u] < 97 {
+						temp[u] = rune(temp[u] + 32)
+					}
+				}
+			}
+			newWord := ""
+			for _, value := range temp {
+				newWord += fmt.Sprintf("%c", rune(value))
+			}
+
+			words = append(words, newWord)
+		}
+	}
+	return strings.Join(words, "")
+
+}
+
 func HammingDistance(strArr []string) int {
 	if len(strArr) != 2 {
 		return 0
@@ -270,13 +400,11 @@ exit:
 //noinspection ALL
 func main() {
 
-	//values := SortedTimeLine()
-	//for _, value := range values {
-	//	fmt.Printf("%v-%v\n", value.Index, value.Value)
-	//}
-	//One12 12
+	fmt.Printf("%v\n", DifferentCases("cats AND*Dogs-are Awesome"))
+	fmt.Printf("%v\n", DifferentCases("Daniel LikeS-coding"))
+	fmt.Printf("%v\n", DifferentCases("a b c d-e-f%g"))
 
-	//HammingDistance
+	return
 
 	fmt.Printf("%v\n", HammingDistance([]string{"10011", "10100"}))
 	fmt.Printf("%v\n", HammingDistance([]string{"helloworld", "worldhello"}))
@@ -489,6 +617,8 @@ func NumberAddition(str string) string {
 
 var punchItems = []string{
 	" ",
+	"-",
+	"%",
 	"’'",
 	"()[]{}<>",
 	":",
