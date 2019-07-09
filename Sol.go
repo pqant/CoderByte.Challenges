@@ -93,6 +93,56 @@ func MeanMode(arr []int) int {
 	return 0
 }
 
+//[]int {1,2,3,4}
+func Superincreasing(arr []int) bool {
+	if len(arr) == 0 {
+		return false
+	}
+	for u := 0; u < len(arr); u++ {
+		internalSum := 0
+		if u != 0 {
+			for y := 0; y < u; y++ {
+				internalSum += arr[y]
+			}
+		}
+		if internalSum >= arr[u] {
+			return false
+		}
+	}
+	return true
+}
+
+func OverlappingRanges(arr []int) bool {
+	if len(arr) != 5 {
+		return false
+	}
+	a := arr[0]
+	b := arr[1]
+	c := arr[2]
+	d := arr[3]
+	x := arr[4]
+	var numbers1 []int
+	var numbers2 []int
+	for u := a; u <= b; u++ {
+		numbers1 = append(numbers1, u)
+	}
+	for u := c; u <= d; u++ {
+		numbers2 = append(numbers2, u)
+	}
+	counter := 0
+	for _, value1 := range numbers1 {
+		for _, value2 := range numbers2 {
+			if value1 == value2 {
+				counter++
+				if counter >= x {
+					return true
+				}
+			}
+		}
+	}
+	return false
+}
+
 //["5","4","6","E","1","7","E","E","3","2"] ->  4,1,5
 //["1","2","E","E","3"]                     ->  1,2
 func OffLineMinimum(strArr []string) string {
@@ -209,6 +259,12 @@ func main() {
 	//	fmt.Printf("%v-%v\n", value.Index, value.Value)
 	//}
 	//One12 12
+
+	fmt.Printf("%v\n", OverlappingRanges([]int{5, 11, 1, 5, 1}))
+	fmt.Printf("%v\n", OverlappingRanges([]int{1, 8, 2, 4, 4}))
+	fmt.Printf("%v\n", OverlappingRanges([]int{4, 10, 2, 6, 3}))
+
+	return
 
 	fmt.Printf("%v\n", OffLineMinimum([]string{"5", "4", "6", "E", "1", "7", "E", "E", "3", "2"}))
 	fmt.Printf("%v\n", OffLineMinimum([]string{"1", "2", "E", "E", "3"}))
