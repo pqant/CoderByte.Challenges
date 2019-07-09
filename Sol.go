@@ -93,6 +93,22 @@ func MeanMode(arr []int) int {
 	return 0
 }
 
+func HammingDistance(strArr []string) int {
+	if len(strArr) != 2 {
+		return 0
+	}
+	if len(strArr[0]) != len(strArr[1]) {
+		return 0
+	}
+	result := 0
+	for u := 0; u < len(strArr[0]); u++ {
+		if strArr[0][u] != strArr[1][u] {
+			result++
+		}
+	}
+	return result
+}
+
 //[]int {1,2,3,4}
 func Superincreasing(arr []int) bool {
 	if len(arr) == 0 {
@@ -259,9 +275,16 @@ func main() {
 	//	fmt.Printf("%v-%v\n", value.Index, value.Value)
 	//}
 	//One12 12
-	fmt.Printf("%v\n", Superincreasing([]int{1,2,3,4}))
-	fmt.Printf("%v\n", Superincreasing([]int{1,2,5,10}))
-	fmt.Printf("%v\n", Superincreasing([]int{1,3,6,13,54}))
+
+	//HammingDistance
+
+	fmt.Printf("%v\n", HammingDistance([]string{"10011", "10100"}))
+	fmt.Printf("%v\n", HammingDistance([]string{"helloworld", "worldhello"}))
+	return
+
+	fmt.Printf("%v\n", Superincreasing([]int{1, 2, 3, 4}))
+	fmt.Printf("%v\n", Superincreasing([]int{1, 2, 5, 10}))
+	fmt.Printf("%v\n", Superincreasing([]int{1, 3, 6, 13, 54}))
 
 	return
 
