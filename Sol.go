@@ -104,9 +104,9 @@ func Superincreasing(arr []int) bool {
 			for y := 0; y < u; y++ {
 				internalSum += arr[y]
 			}
-		}
-		if internalSum >= arr[u] {
-			return false
+			if internalSum >= arr[u] {
+				return false
+			}
 		}
 	}
 	return true
@@ -259,6 +259,11 @@ func main() {
 	//	fmt.Printf("%v-%v\n", value.Index, value.Value)
 	//}
 	//One12 12
+	fmt.Printf("%v\n", Superincreasing([]int{1,2,3,4}))
+	fmt.Printf("%v\n", Superincreasing([]int{1,2,5,10}))
+	fmt.Printf("%v\n", Superincreasing([]int{1,3,6,13,54}))
+
+	return
 
 	fmt.Printf("%v\n", OverlappingRanges([]int{5, 11, 1, 5, 1}))
 	fmt.Printf("%v\n", OverlappingRanges([]int{1, 8, 2, 4, 4}))
