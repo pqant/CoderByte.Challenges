@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"math"
+	"reflect"
 	"sort"
 	"strconv"
 	"strings"
@@ -217,6 +218,25 @@ func ThreeNumbers(str string) bool {
 		}
 	}
 	return true
+}
+
+func TwoSum(arr []int) string {
+	if len(arr) < 3 {
+		return "-1"
+	}
+	sum := arr[0]
+	var pairs []string
+	for u := 1; u < len(arr); u++ {
+		for y := u + 1; y < len(arr); y++ {
+			if sum == arr[u]+arr[y] {
+				pairs = append(pairs, fmt.Sprintf("%v,%v", arr[u], arr[y]))
+			}
+		}
+	}
+	if len(pairs) == 0 {
+		return "-1"
+	}
+	return strings.Join(pairs, " ")
 }
 
 /*
@@ -495,8 +515,41 @@ exit:
 	return index
 }
 
+func EqualSlice(a, b []int) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for key, value := range a {
+		if value != b[key] {
+			return false
+		}
+	}
+	return true
+}
+
 //noinspection ALL
 func main() {
+
+	a := [...]int{1, 2, 3}
+	b := [...]int{1, 2, 3}
+
+	fmt.Printf("%v\n", a == b)
+
+	a1 := []int{1, 2, 3}
+	b1 := []int{1, 2, 3}
+
+
+	fmt.Printf("%v - %v \n", EqualSlice(a1, b1),reflect.DeepEqual(a1,b1))
+
+	return
+
+	fmt.Printf("%v\n", TwoSum([]int{6, 2}))
+	fmt.Printf("%v\n", TwoSum([]int{100, 90, 90, 90, 90, 11}))
+
+	fmt.Printf("%v\n", TwoSum([]int{17, 4, 5, 6, 10, 11, 4, -3, -5, 3, 15, 2, 7}))
+	fmt.Printf("%v\n", TwoSum([]int{7, 6, 4, 1, 7, -2, 3, 12}))
+
+	return
 
 	//1a23
 	fmt.Printf("%v\n", ThreeNumbers("1a23"))
