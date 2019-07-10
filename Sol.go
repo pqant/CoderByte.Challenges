@@ -527,8 +527,132 @@ func EqualSlice(a, b []int) bool {
 	return true
 }
 
+func IntSliceToStrSlice(items []int) (str []string) {
+	for _, value := range items {
+		str = append(str, strconv.Itoa(value))
+	}
+	return
+}
+
+func FoodDistribution(arr []int) int {
+	if len(arr) == 0 {
+		return 0
+	}
+	//fmt.Printf("INPUT  : [%v]\n", strings.Join(IntSliceToStrSlice(arr), ","))
+	mean := 0
+	var newArr []int
+	for index, value := range arr {
+		if index == 0 {
+			continue
+		}
+		mean += int(value)
+		newArr = append(newArr, int(value))
+	}
+	mean /= len(arr) - 1
+
+	stock := arr[0]
+	if stock == 0 {
+		return stock
+	}
+
+	sort.Slice(newArr, func(i, j int) bool {
+		return newArr[i] > newArr[j]
+	})
+
+	sum := func(arr []int) (sum int) {
+		for _, value := range arr {
+			sum += int(value)
+		}
+		return
+	}
+
+	if sum(newArr) <= stock {
+		return 0
+	}
+
+	diffCalc := func(myArr []int) (diff float64) {
+		for u := 0; u < len(newArr); u++ {
+			for y := u + 1; y < len(newArr); {
+				diff += math.Abs(float64(newArr[y] - newArr[u]))
+				break
+			}
+		}
+		return
+	}
+	var result []float64
+	print := false
+	mean += 1
+reCalc:
+	for u := 0; u < len(newArr); u++ {
+		if stock == 0 {
+			break
+		}
+		if newArr[u] > mean {
+			if stock >= newArr[u]-mean {
+				stock -= newArr[u] - mean
+				newArr[u] = mean
+			} else {
+				newArr[u] -= stock
+				stock = 0
+			}
+		}
+	}
+
+	printOut := func(sign string,meanVal int,calcRes float64,active bool) {
+		if !active {
+			return
+		}
+		var temp []int
+		temp = append(temp, stock)
+		for u := 0; u < len(newArr); u++ {
+			temp = append(temp, newArr[u])
+		}
+		fmt.Printf("%v - M [%v] - OUTPUT : %v [diff : %v]\n",sign, meanVal, temp,calcRes)
+	}
+
+	calc := diffCalc(newArr)
+	if calc != 0 {
+		result = append(result, calc)
+		mean--
+		if mean >= 0 {
+			printOut("*",mean,calc,print)
+			goto reCalc
+		}
+	} else {
+		printOut("|",mean,0,print)
+		result = nil
+	}
+
+	if len(result) != 0 {
+		sort.Slice(result, func(i, j int) bool {
+			return result[i] < result[j]
+		})
+		calc = result[0]
+	}
+
+	return int(calc)
+
+}
+
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", FoodDistribution([]int{7, 5, 4, 3, 4, 5, 2, 3, 1, 4, 5}))
+
+
+
+	return
+
+	fmt.Printf("%v\n", FoodDistribution([]int{4, 5, 4, 5, 2, 3, 1, 2}))
+	fmt.Printf("%v\n", FoodDistribution([]int{4, 2, 3, 2, 1}))
+	fmt.Printf("%v\n", FoodDistribution([]int{1, 5, 4, 1}))
+	fmt.Printf("%v\n", FoodDistribution([]int{3, 2, 1, 0, 4, 1, 0}))
+	fmt.Printf("%v\n", FoodDistribution([]int{20, 5, 4, 1}))
+	fmt.Printf("%v\n", FoodDistribution([]int{5, 2, 3, 4, 5}))
+	fmt.Printf("%v\n", FoodDistribution([]int{5, 3, 1, 2, 1}))
+	fmt.Printf("%v\n", FoodDistribution([]int{4, 5, 2, 3, 1, 0}))
+
+	return
 
 	a := [...]int{1, 2, 3}
 	b := [...]int{1, 2, 3}
@@ -538,8 +662,7 @@ func main() {
 	a1 := []int{1, 2, 3}
 	b1 := []int{1, 2, 3}
 
-
-	fmt.Printf("%v - %v \n", EqualSlice(a1, b1),reflect.DeepEqual(a1,b1))
+	fmt.Printf("%v - %v \n", EqualSlice(a1, b1), reflect.DeepEqual(a1, b1))
 
 	return
 
