@@ -636,8 +636,31 @@ reCalc:
 var (
 	print = true
 )
+
+func OtherProducts(arr []int) string {
+	if len(arr) < 1 && len(arr) > 10 {
+		return ""
+	}
+	var results []string
+	for u := 0; u < len(arr); u++ {
+		partialMul := 1
+		for y := 0; y < len(arr); y++ {
+			if u != y {
+				partialMul = partialMul * arr[y]
+			}
+		}
+		results = append(results, fmt.Sprintf("%d", partialMul))
+	}
+	return strings.Join(results, "-")
+}
+
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", OtherProducts([]int{1, 4, 3}))
+	fmt.Printf("%v\n", OtherProducts([]int{3, 1, 2, 6}))
+
+	return
 
 	fmt.Printf("%v\n", BitwiseOne([]string{"00011", "01010"}))
 
