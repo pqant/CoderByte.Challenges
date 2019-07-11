@@ -580,7 +580,6 @@ func FoodDistribution(arr []int) int {
 		return
 	}
 	var result []float64
-	print := false
 	mean += 1
 reCalc:
 	for u := 0; u < len(newArr); u++ {
@@ -598,7 +597,7 @@ reCalc:
 		}
 	}
 
-	printOut := func(sign string,meanVal int,calcRes float64,active bool) {
+	printOut := func(sign string, meanVal int, calcRes float64, active bool) {
 		if !active {
 			return
 		}
@@ -607,7 +606,7 @@ reCalc:
 		for u := 0; u < len(newArr); u++ {
 			temp = append(temp, newArr[u])
 		}
-		fmt.Printf("%v - M [%v] - OUTPUT : %v [diff : %v]\n",sign, meanVal, temp,calcRes)
+		fmt.Printf("%v - M [%v] - OUTPUT : %v [diff : %v]\n", sign, meanVal, temp, calcRes)
 	}
 
 	calc := diffCalc(newArr)
@@ -615,11 +614,11 @@ reCalc:
 		result = append(result, calc)
 		mean--
 		if mean >= 0 {
-			printOut("*",mean,calc,print)
+			printOut("*", mean, calc, print)
 			goto reCalc
 		}
 	} else {
-		printOut("|",mean,0,print)
+		printOut("|", mean, 0, print)
 		result = nil
 	}
 
@@ -634,12 +633,33 @@ reCalc:
 
 }
 
+var (
+	print = true
+)
 //noinspection ALL
 func main() {
 
+	fmt.Printf("%v\n", BitwiseOne([]string{"00011", "01010"}))
+
+	return
+
+	tempx := []rune("Eralp")
+
+	newOne := ""
+
+	for _, value := range tempx {
+		if (rune(value) >= 'A' && rune(value) <= 'Z') {
+			newOne += string(rune(value) + 32)
+		} else if (rune(value) >= 'a' && rune(value) <= 'z') {
+			newOne += string(rune(value) - 32)
+		}
+	}
+
+	fmt.Printf("%v\n", newOne)
+
+	return
+
 	fmt.Printf("%v\n", FoodDistribution([]int{7, 5, 4, 3, 4, 5, 2, 3, 1, 4, 5}))
-
-
 
 	return
 
@@ -805,6 +825,38 @@ func main() {
 		fmt.Printf("%v - %v\n", value, SwapCase(value))
 	}
 
+}
+
+func BitwiseOne(strArr []string) string {
+	if len(strArr) != 2 {
+		return ""
+	}
+	if len(strArr[0]) != len(strArr[1]) {
+		return ""
+	}
+	xor := func(str1, str2 string) (ret string) {
+		ret = "0"
+		if str1 == str2 {
+			ret = "1"
+		}
+		return
+	}
+	_ = xor
+	bor := func(str1, str2 string) (ret string) {
+		ret = "1"
+		if str1 == "0" && str2 == "0" {
+			ret = "0"
+		}
+		return
+	}
+
+	result := ""
+	runeItem1 := []rune(strArr[0])
+	runeItem2 := []rune(strArr[1])
+	for u := 0; u < len(runeItem1); u++ {
+		result += bor(fmt.Sprintf("%c", runeItem1[u]), fmt.Sprintf("%c", runeItem2[u]))
+	}
+	return result
 }
 
 func ArithGeo(arr []int) string {
