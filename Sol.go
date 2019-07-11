@@ -646,7 +646,7 @@ func OtherProducts(arr []int) string {
 		partialMul := 1
 		for y := 0; y < len(arr); y++ {
 			if u != y {
-				partialMul = partialMul * arr[y]
+				partialMul *= arr[y]
 			}
 		}
 		results = append(results, fmt.Sprintf("%d", partialMul))
