@@ -654,8 +654,124 @@ func OtherProducts(arr []int) string {
 	return strings.Join(results, "-")
 }
 
+/*
+func WaveSorting(arr []int) string {
+	if len(arr) < 2 {
+		return "false"
+	}
+	result := "true"
+
+	sort.Slice(arr, func(i, j int) bool {
+		return arr[i] < arr[j]
+	})
+
+	removeItem := func(slice []int, i int) []int {
+		if len(slice) == 0 {
+			return slice
+		}
+		slice[i] = slice[len(slice)-1]
+		// We do not need to put s[i] at the end, as it will be discarded anyway
+		return slice[:len(slice)-1]
+	}
+
+	permGenerator := func(list []int) (result [][]int) {
+		if len(list) == 0 {
+			return
+		}
+		for u := 0; u < len(list); u++ {
+			var temp []int
+			for y := 0; y < len(list); y++ {
+				temp = append(temp, list[u])
+				if u != y {
+					temp = append(temp, list[y])
+				}
+			}
+			result = append(result, temp)
+		}
+		return
+	}
+
+	checkStatus := func(arrNew []int) (result bool) {
+		result = true
+		for u := 1; u < len(arrNew)-1; u++ {
+			if arrNew[u-1] > arrNew[u] && arrNew[u] < arrNew[u+1] {
+				fmt.Printf("OK->%v-%v-%v\n", arrNew[u-1], arrNew[u], arrNew[u+1])
+				continue
+			} else {
+				fmt.Printf("WRONG->%v-%v-%v\n", arrNew[u-1], arrNew[u], arrNew[u+1])
+				result = false
+				break
+			}
+		}
+		return
+	}
+	_ = checkStatus(arr)
+
+	var list []int
+	for {
+		if len(arr) >= 3 {
+			if arr[1] != arr[0] && arr[2] != arr[1] && arr[2] != arr[0] {
+				list = append(list, arr[1], arr[0], arr[2])
+				arr = removeItem(arr, 0)
+				arr = removeItem(arr, 0)
+				arr = removeItem(arr, 0)
+			} else {
+				result = "false"
+				break
+			}
+		} else {
+			if len(arr) == 0 {
+				break
+			} else {
+				//compare the LAST arr item with the last list[n] item over even / odd mode
+			}
+		}
+	}
+
+	return result
+}
+
+*/
+
+func Gen(list []int) (results [][]int) {
+	if len(list) == 0 {
+		return
+	}
+	var fact func(int) int
+	fact = func(a int) int {
+		if a == 0 {
+			return 1
+		}
+		return a * fact(a-1)
+	}
+	total := fact(len(list))
+	for u := 0; u < total; u++ {
+		results = append(results, []int{})
+	}
+	m := 0
+	fix := fact(len(list)) / len(list)
+	for t := 0; t < total; t++ {
+		for j := m; j < len(list); j++ {
+			results[t] = append(results[t], list[j])
+		}
+		if t%fix == 0 {
+			m++
+		}
+	}
+
+	return
+}
+
 //noinspection ALL
 func main() {
+	xz := Gen([]int{1, 2, 3})
+	fmt.Printf("%v\n", xz)
+	return
+
+	//fmt.Printf("%v\n", WaveSorting([]int{0, 4, 22, 4, 14, 4, 2}))
+	return
+
+	//fmt.Printf("%v\n", WaveSorting([]int{0, 1, 2, 4, 1, 1, 1}))
 
 	fmt.Printf("%v\n", OtherProducts([]int{1, 4, 3}))
 	fmt.Printf("%v\n", OtherProducts([]int{3, 1, 2, 6}))
