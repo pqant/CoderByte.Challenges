@@ -744,28 +744,129 @@ func Gen(list []int) (results [][]int) {
 		}
 		return a * fact(a-1)
 	}
+	var remove func([]int, int) []int
+	var find func(int, []int) (int, error)
+
+	remove = func(slice []int, i int) []int {
+		if len(slice) == 0 {
+			return slice
+		}
+		slice[i] = slice[len(slice)-1]
+		return slice[:len(slice)-1]
+	}
+
+	find = func(index int, unused []int) (r int, e error) {
+		if index < len(unused) {
+			r = unused[index]
+			e = nil
+		} else {
+			e = errors.New("no item")
+		}
+		return
+	}
+
 	total := fact(len(list))
 	for u := 0; u < total; u++ {
 		results = append(results, []int{})
 	}
-	m := 0
 	fix := fact(len(list)) / len(list)
-	for t := 0; t < total; t++ {
-		for j := m; j < len(list); j++ {
-			results[t] = append(results[t], list[j])
+	m := 0
+	_ = remove
+	for u := 0; u < len(list); u++ {
+		var v []int
+
+		for x := 0; x < len(list); x++ {
+			if u != x {
+				v = append(v, list[x])
+			}
 		}
-		if t%fix == 0 {
+
+		for n := 0; n < fix; n++ {
+			results[m] = append(results[m], list[u])
+			c := len(v)
+			for c != 0 {
+				item, err := find(n, v)
+				if err == nil {
+					results[m] = append(results[m], item)
+					v = remove(v, n)
+				}
+				c--
+			}
 			m++
+
+			for x := 0; x < len(list); x++ {
+				if u != x {
+					v = append(v, list[x])
+				}
+			}
+
 		}
+
+		//m++
 	}
 
 	return
 }
 
+func permutations(arr []int) [][]int {
+	var helper func([]int, int)
+	var res [][]int
+
+	helper = func(arr []int, n int) {
+		if n == 1 {
+			tmp := make([]int, len(arr))
+			copy(tmp, arr)
+			res = append(res, tmp)
+		} else {
+			for i := 0; i < n; i++ {
+				helper(arr, n-1)
+				if n%2 == 1 {
+					tmp := arr[i]
+					arr[i] = arr[n-1]
+					arr[n-1] = tmp
+				} else {
+					tmp := arr[0]
+					arr[0] = arr[n-1]
+					arr[n-1] = tmp
+				}
+			}
+		}
+	}
+	helper(arr, len(arr))
+	return res
+}
+
+
+
+
 //noinspection ALL
 func main() {
-	xz := Gen([]int{1, 2, 3})
-	fmt.Printf("%v\n", xz)
+	arr := []int{1, 2, 3, 4}
+	var results []int
+	for _, perm := range permutations(arr) {
+		val := ""
+		for _, value := range perm {
+			val += fmt.Sprintf("%v", value)
+		}
+		valx, _ := strconv.Atoi(val)
+		results = append(results, valx)
+	}
+	/*
+	sort.SliceStable(results, func(i int, j int) bool {
+		return results[i] < results[j]
+	})
+	 */
+	for _, perm := range results {
+		fmt.Println(perm)
+	}
+
+
+	return
+
+	xz := Gen([]int{1, 2, 3, 4})
+	for _, value := range xz {
+		fmt.Printf("%v\n", value)
+	}
 	return
 
 	//fmt.Printf("%v\n", WaveSorting([]int{0, 4, 22, 4, 14, 4, 2}))
