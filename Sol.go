@@ -836,11 +836,58 @@ func permutations(arr []int) [][]int {
 	return res
 }
 
+func ArrayMatching(strArr []string) string {
+	if len(strArr) != 2 {
+		return ""
+	}
+	var coll []string
+	cleaner := func(text string) (r []string) {
+		rT := strings.Replace(text, "[", "", -1)
+		rT = strings.Replace(rT, "]", "", -1)
+		rT = strings.Replace(rT, " ", "", -1)
+		r = strings.Split(rT, ",")
+		return
+	}
+	strArr1 := cleaner(strArr[0])
+	strArr2 := cleaner(strArr[1])
 
+	nConverter := func(number string) int {
+		val, _ := strconv.Atoi(number)
+		return val
+	}
 
+	if len(strArr1) == len(strArr2) {
+		for u := 0; u < len(strArr1); u++ {
+			coll = append(coll, fmt.Sprintf("%d", nConverter(strArr1[u])+nConverter(strArr2[u])))
+		}
+	} else {
+		if len(strArr1) > len(strArr2) {
+			for u := 0; u < len(strArr2); u++ {
+				coll = append(coll, fmt.Sprintf("%d", nConverter(strArr1[u])+nConverter(strArr2[u])))
+			}
+			for u := len(strArr2); u < len(strArr1); u++ {
+				coll = append(coll, fmt.Sprintf("%d", nConverter(strArr1[u])))
+			}
+		} else {
+			for u := 0; u < len(strArr1); u++ {
+				coll = append(coll, fmt.Sprintf("%d", nConverter(strArr1[u])+nConverter(strArr2[u])))
+			}
+			for u := len(strArr1); u < len(strArr2); u++ {
+				coll = append(coll, fmt.Sprintf("%d", nConverter(strArr2[u])))
+			}
+		}
+	}
+
+	return strings.Join(coll, "-")
+}
 
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", ArrayMatching([]string{"[5, 2, 3]", "[2, 2, 3, 10, 6]"}))
+	fmt.Printf("%v\n", ArrayMatching([]string{"[1, 1, 2]", "[2, 5, 1, 2]"}))
+
+	return
 	arr := []int{1, 2, 3, 4}
 	var results []int
 	for _, perm := range permutations(arr) {
@@ -852,14 +899,13 @@ func main() {
 		results = append(results, valx)
 	}
 	/*
-	sort.SliceStable(results, func(i int, j int) bool {
-		return results[i] < results[j]
-	})
-	 */
+		sort.SliceStable(results, func(i int, j int) bool {
+			return results[i] < results[j]
+		})
+	*/
 	for _, perm := range results {
 		fmt.Println(perm)
 	}
-
 
 	return
 
