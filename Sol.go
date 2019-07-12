@@ -836,6 +836,50 @@ func permutations(arr []int) [][]int {
 	return res
 }
 
+func NextPalindrome(num int) int {
+	if num < 0 {
+		return 0
+	}
+	checkPalindrome := func(text string) bool {
+		reverse := func(val string) string {
+			if len(val) == 0 {
+				return ""
+			}
+			var items []string
+			for _, value := range val {
+				items = append(items, string(value))
+			}
+			MAX := len(items) / 2
+			for u := 0; u < MAX; u++ {
+				temp := items[u]
+				items[u] = items[len(items)-u-1]
+				items[len(items)-u-1] = temp
+			}
+			return strings.Join(items, "")
+		}
+		if reverse(text) == text {
+			return true
+		}
+		return false
+	}
+
+	if len(strconv.Itoa(num)) == 1 {
+		num++
+		if len(strconv.Itoa(num)) == 1 {
+			return num
+		}
+	}
+
+	if checkPalindrome(strconv.Itoa(num)) {
+		num++
+	}
+
+	for !checkPalindrome(strconv.Itoa(num)) {
+		num++
+	}
+	return num
+}
+
 func NonrepeatingCharacter(str string) string {
 	if len(str) < 1 {
 		return ""
@@ -843,7 +887,7 @@ func NonrepeatingCharacter(str string) string {
 	for u := 0; u < len(str); u++ {
 		found := false
 		for y := 0; y < len(str); y++ {
-			if u!=y && str[u] == str[y] {
+			if u != y && str[u] == str[y] {
 				found = true
 				break
 			}
@@ -958,6 +1002,11 @@ func ArrayMatching(strArr []string) string {
 
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", NextPalindrome(99))
+	fmt.Printf("%v\n", NextPalindrome(9))
+
+	return
 
 	fmt.Printf("%v\n", NonrepeatingCharacter("abcdef"))
 	fmt.Printf("%v\n", NonrepeatingCharacter("hello world hi hey"))
