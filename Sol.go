@@ -836,6 +836,62 @@ func permutations(arr []int) [][]int {
 	return res
 }
 
+func BinaryReversal(str string) int {
+	if len(str) == 0 {
+		return 0
+	}
+
+	num, err := strconv.Atoi(str)
+	if err != nil {
+		return 0
+	}
+	n := int64(num)
+	binary := strconv.FormatInt(n, 2)
+
+	if len(binary)%8 != 0 {
+		upperBound := len(binary)
+		for upperBound%8 != 0 {
+			upperBound++
+		}
+		numGenerator := func(number string, count int) (r string) {
+			if count == 0 {
+				return
+			}
+			for u := 0; u < count; u++ {
+				r += number
+			}
+			return
+		}
+		binary = numGenerator("0", upperBound-len(binary)) + binary
+	}
+	var bin []string
+	for _, value := range binary {
+		bin = append(bin, string(value))
+	}
+
+	MAX := len(binary) / 2
+	for u := 0; u < MAX; u++ {
+		temp := bin[u]
+		bin[u] = bin[len(bin)-u-1]
+		bin[len(bin)-u-1] = temp
+	}
+
+	binToDecimal := func(bin string) (r float64) {
+		if len(bin) == 0 {
+			r = 0
+		}
+		for u := 0; u < len(bin); u++ {
+			index := len(bin) - 1 - u
+			val, _ := strconv.Atoi(string(bin[index]))
+			res := math.Pow(2.0, float64(u)) * float64(val)
+			r += res
+		}
+		return
+	}
+
+	return int(binToDecimal(strings.Join(bin, "")))
+}
+
 func ArrayMatching(strArr []string) string {
 	if len(strArr) != 2 {
 		return ""
@@ -883,6 +939,11 @@ func ArrayMatching(strArr []string) string {
 
 //noinspection ALL
 func main() {
+
+	//fmt.Printf("%v\n", BinaryReversal("213"))
+	fmt.Printf("%v\n", BinaryReversal("4567"))
+
+	return
 
 	fmt.Printf("%v\n", ArrayMatching([]string{"[5, 2, 3]", "[2, 2, 3, 10, 6]"}))
 	fmt.Printf("%v\n", ArrayMatching([]string{"[1, 1, 2]", "[2, 5, 1, 2]"}))
