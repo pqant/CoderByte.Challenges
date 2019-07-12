@@ -836,6 +836,32 @@ func permutations(arr []int) [][]int {
 	return res
 }
 
+func ProductDigits(num int) int {
+	var div []int
+	for u := 2; u < num; u++ {
+		if num%u == 0 {
+			div = append(div, u)
+		}
+	}
+	if len(div) == 0 {
+		div = append(div, 1, num)
+		return len(strconv.Itoa(num)) + 1
+	}
+
+	var lenOps []int
+	for u := 0; u < len(div); u++ {
+		for y := 0; y < len(div); y++ {
+			if u != y && div[u]*div[y] == num {
+				lenOps = append(lenOps, len(strconv.Itoa(div[u]))+len(strconv.Itoa(div[y])))
+			}
+		}
+	}
+	sort.Slice(lenOps, func(i, j int) bool {
+		return lenOps[i] < lenOps[j]
+	})
+	return lenOps[0]
+}
+
 func NextPalindrome(num int) int {
 	if num < 0 {
 		return 0
@@ -1003,6 +1029,11 @@ func ArrayMatching(strArr []string) string {
 //noinspection ALL
 func main() {
 
+	fmt.Printf("%v\n", ProductDigits(90))
+	fmt.Printf("%v\n", ProductDigits(23))
+	fmt.Printf("%v\n", ProductDigits(24))
+
+	return
 	fmt.Printf("%v\n", NextPalindrome(99))
 	fmt.Printf("%v\n", NextPalindrome(9))
 
