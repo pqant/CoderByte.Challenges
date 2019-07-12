@@ -836,6 +836,25 @@ func permutations(arr []int) [][]int {
 	return res
 }
 
+func NonrepeatingCharacter(str string) string {
+	if len(str) < 1 {
+		return ""
+	}
+	for u := 0; u < len(str); u++ {
+		found := false
+		for y := 0; y < len(str); y++ {
+			if u!=y && str[u] == str[y] {
+				found = true
+				break
+			}
+		}
+		if !found {
+			return string(str[u])
+		}
+	}
+	return string(str[0])
+}
+
 func BinaryReversal(str string) int {
 	if len(str) == 0 {
 		return 0
@@ -940,6 +959,10 @@ func ArrayMatching(strArr []string) string {
 //noinspection ALL
 func main() {
 
+	fmt.Printf("%v\n", NonrepeatingCharacter("abcdef"))
+	fmt.Printf("%v\n", NonrepeatingCharacter("hello world hi hey"))
+
+	return
 	//fmt.Printf("%v\n", BinaryReversal("213"))
 	fmt.Printf("%v\n", BinaryReversal("4567"))
 
