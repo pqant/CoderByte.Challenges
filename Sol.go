@@ -1096,15 +1096,44 @@ func BinarySearch(items []int, search int) bool {
 	return false
 }
 
-//noinspection ALL
-func main() {
-
-	itemsArr := []int{1, 3, 4, 3, 4, 3, 5, 32, 454, 4, 3, 2, 4, 5, 3, 2234, 533, 43, 45}
+func LoveStory(itemsArr []int, sum int) bool {
+	result := false
 	sort.Slice(itemsArr, func(i, j int) bool {
 		return itemsArr[i] < itemsArr[j]
 	})
+	fmt.Printf("%v\n\n\n", itemsArr)
+	var already []string
+	isAlreadyChecked := func(items []string, val string) bool {
+		for _, value := range items {
+			if value == val {
+				return true
+			}
+		}
+		return false
+	}
+exit:
+	for u := 0; u < len(itemsArr); u++ {
+		for y := u + 1; y < len(itemsArr); y++ {
+			if itemsArr[u]+itemsArr[y] < sum && !isAlreadyChecked(already, fmt.Sprintf("%v,%v", itemsArr[u], itemsArr[y])) {
+				fmt.Printf("%v-%v -> [%v]\n", itemsArr[u], itemsArr[y], sum-(itemsArr[u]+itemsArr[y]))
+				result = BinarySearch(itemsArr, sum-(itemsArr[u]+itemsArr[y]))
+				if result {
+					break exit
+				} else {
+					already = append(already, fmt.Sprintf("%v,%v", itemsArr[u], itemsArr[y]))
+				}
+			}
+		}
+	}
+	return result
+}
 
-	res := BinarySearch(itemsArr, 45444)
+//noinspection ALL
+func main() {
+
+	itemsArr := []int{1, 3, 4, 3, 4, 3, 5, 32, 454, 4, 1, 2, 3, 2, 4, 5, 3, 2234, 533, 43, 45}
+	res := LoveStory(itemsArr, 10)
+
 	fmt.Printf("Result : %v\n", res)
 
 	return
