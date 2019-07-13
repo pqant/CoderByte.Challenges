@@ -122,6 +122,56 @@ func rec(items []string) (values []string) {
 	}
 }
 
+func PowerSetCount(arr []int) int {
+	if len(arr) == 0 {
+		return 1 // []
+	}
+	var str string
+	for _, value := range arr {
+		str += fmt.Sprintf("%d", value)
+	}
+	var elements []string
+	check := func(element string, all []string) (r bool) {
+		r = false
+		for k := 0; k < len(all); k++ {
+			if all[k] == element {
+				r = true
+			}
+		}
+		return
+	}
+
+	//temp := "1234"
+	//fmt.Printf("%v\n",temp[0:1])
+	//fmt.Printf("%v\n",temp[1:2])
+	//fmt.Printf("%v\n",temp[2:3])
+	//fmt.Printf("%v\n",temp[3:4])
+
+	div := func(text string, count int) (r []string) {
+		if len(text) == 0 {
+			return
+		}
+		for u := 0; u < len(text); u++ {
+			for y := u + 1; y < len(text); y++ {
+				r = append(r, text[u:y])
+			}
+		}
+
+		return
+	}
+	_ = div
+
+	for u := 1; u < len(arr)+1; u++ {
+		val := ""
+
+		if !check(val, elements) {
+			elements = append(elements, val)
+		}
+	}
+	return len(elements) + 1 // []
+
+}
+
 func ThreeNumbers(str string) bool {
 	if len(str) == 0 {
 		return false
@@ -1026,8 +1076,55 @@ func ArrayMatching(strArr []string) string {
 	return strings.Join(coll, "-")
 }
 
+func BinarySearch(items []int, search int) bool {
+	if len(items) == 0 {
+		return false
+	}
+	left := 0
+	right := len(items) - 1
+	mid := 0
+	for left <= right {
+		mid = (left + right) / 2
+		if items[mid] == search {
+			return true
+		} else if items[mid] > search {
+			right = mid - 1
+		} else {
+			left = mid + 1
+		}
+	}
+	return false
+}
+
 //noinspection ALL
 func main() {
+
+	itemsArr := []int{1, 3, 4, 3, 4, 3, 5, 32, 454, 4, 3, 2, 4, 5, 3, 2234, 533, 43, 45}
+	sort.Slice(itemsArr, func(i, j int) bool {
+		return itemsArr[i] < itemsArr[j]
+	})
+
+	res := BinarySearch(itemsArr, 45444)
+	fmt.Printf("Result : %v\n", res)
+
+	return
+
+	temp := "1234"
+
+	div := func(text string, count int) (r []string) {
+		if len(text) == 0 {
+			return
+		}
+		for u := 0; u < len(text); u++ {
+			r = append(r, text[u:u+count])
+		}
+
+		return
+	}
+
+	fmt.Printf("%v\n", div(temp, 1))
+
+	return
 
 	fmt.Printf("%v\n", ProductDigits(90))
 	fmt.Printf("%v\n", ProductDigits(23))
