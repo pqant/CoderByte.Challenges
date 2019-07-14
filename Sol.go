@@ -704,158 +704,62 @@ func OtherProducts(arr []int) string {
 	return strings.Join(results, "-")
 }
 
-/*
+//a1 > a2 < a3 > a4 < a5 > a6 ...
+
 func WaveSorting(arr []int) string {
-	if len(arr) < 2 {
+	if len(arr) == 0 {
 		return "false"
 	}
-	result := "true"
-
-	sort.Slice(arr, func(i, j int) bool {
-		return arr[i] < arr[j]
-	})
-
-	removeItem := func(slice []int, i int) []int {
-		if len(slice) == 0 {
-			return slice
-		}
-		slice[i] = slice[len(slice)-1]
-		// We do not need to put s[i] at the end, as it will be discarded anyway
-		return slice[:len(slice)-1]
-	}
-
-	permGenerator := func(list []int) (result [][]int) {
-		if len(list) == 0 {
-			return
-		}
-		for u := 0; u < len(list); u++ {
-			var temp []int
-			for y := 0; y < len(list); y++ {
-				temp = append(temp, list[u])
-				if u != y {
-					temp = append(temp, list[y])
-				}
-			}
+	var result [][]int
+	var utility func([]int, int)
+	utility = func(arr []int, n int) {
+		if n == 1 {
+			temp := make([]int, len(arr))
+			copy(temp, arr)
 			result = append(result, temp)
-		}
-		return
-	}
-
-	checkStatus := func(arrNew []int) (result bool) {
-		result = true
-		for u := 1; u < len(arrNew)-1; u++ {
-			if arrNew[u-1] > arrNew[u] && arrNew[u] < arrNew[u+1] {
-				fmt.Printf("OK->%v-%v-%v\n", arrNew[u-1], arrNew[u], arrNew[u+1])
-				continue
-			} else {
-				fmt.Printf("WRONG->%v-%v-%v\n", arrNew[u-1], arrNew[u], arrNew[u+1])
-				result = false
-				break
-			}
-		}
-		return
-	}
-	_ = checkStatus(arr)
-
-	var list []int
-	for {
-		if len(arr) >= 3 {
-			if arr[1] != arr[0] && arr[2] != arr[1] && arr[2] != arr[0] {
-				list = append(list, arr[1], arr[0], arr[2])
-				arr = removeItem(arr, 0)
-				arr = removeItem(arr, 0)
-				arr = removeItem(arr, 0)
-			} else {
-				result = "false"
-				break
-			}
 		} else {
-			if len(arr) == 0 {
-				break
-			} else {
-				//compare the LAST arr item with the last list[n] item over even / odd mode
-			}
-		}
-	}
-
-	return result
-}
-
-*/
-
-func Gen(list []int) (results [][]int) {
-	if len(list) == 0 {
-		return
-	}
-	var fact func(int) int
-	fact = func(a int) int {
-		if a == 0 {
-			return 1
-		}
-		return a * fact(a-1)
-	}
-	var remove func([]int, int) []int
-	var find func(int, []int) (int, error)
-
-	remove = func(slice []int, i int) []int {
-		if len(slice) == 0 {
-			return slice
-		}
-		slice[i] = slice[len(slice)-1]
-		return slice[:len(slice)-1]
-	}
-
-	find = func(index int, unused []int) (r int, e error) {
-		if index < len(unused) {
-			r = unused[index]
-			e = nil
-		} else {
-			e = errors.New("no item")
-		}
-		return
-	}
-
-	total := fact(len(list))
-	for u := 0; u < total; u++ {
-		results = append(results, []int{})
-	}
-	fix := fact(len(list)) / len(list)
-	m := 0
-	_ = remove
-	for u := 0; u < len(list); u++ {
-		var v []int
-
-		for x := 0; x < len(list); x++ {
-			if u != x {
-				v = append(v, list[x])
-			}
-		}
-
-		for n := 0; n < fix; n++ {
-			results[m] = append(results[m], list[u])
-			c := len(v)
-			for c != 0 {
-				item, err := find(n, v)
-				if err == nil {
-					results[m] = append(results[m], item)
-					v = remove(v, n)
-				}
-				c--
-			}
-			m++
-
-			for x := 0; x < len(list); x++ {
-				if u != x {
-					v = append(v, list[x])
+			for i := 0; i < n; i++ {
+				utility(arr, n-1)
+				if n%2 == 1 {
+					temp := arr[i]
+					arr[i] = arr[n-1]
+					arr[n-1] = temp
+				} else {
+					temp := arr[0]
+					arr[0] = arr[n-1]
+					arr[n-1] = temp
 				}
 			}
-
 		}
-
-		//m++
 	}
+	utility(arr, len(arr))
+	res := "true"
 
-	return
+	for u := 0; u < len(result); u++ {
+		sign := true
+		res = "true"
+
+		for k := 0; k < len(result[u]); k++ {
+			if sign {
+				if k < len(result[u])-1 && result[u][k] <= result[u][k+1] {
+					res = "false"
+					break
+				}
+				sign = false
+			} else {
+				if k < len(result[u])-1 && result[u][k] >= result[u][k+1] {
+					res = "false"
+					break
+				}
+				sign = true
+			}
+		}
+		if res == "true" {
+			//fmt.Printf("%v - index : %v\n", result[u], u)
+			return res
+		}
+	}
+	return res
 }
 
 func permutations(arr []int) [][]int {
@@ -1128,10 +1032,191 @@ exit:
 	return result
 }
 
+func Fact(a int) int {
+	if a == 0 {
+		return 1
+	}
+	return a * Fact(a-1)
+}
+
+func CharPermutation(items []string) [][]string {
+	var result [][]string
+	var utility func([]string, int)
+	utility = func(items []string, n int) {
+		if n == 1 {
+			temp := make([]string, len(items))
+			copy(temp, items)
+			result = append(result, temp)
+		} else {
+			for i := 0; i < n; i++ {
+				utility(items, n-1)
+				if n%2 == 1 {
+					temp := items[i]
+					items[i] = items[n-1]
+					items[n-1] = temp
+				} else {
+					temp := items[0]
+					items[0] = items[n-1]
+					items[n-1] = temp
+				}
+			}
+		}
+	}
+	utility(items, len(items))
+	return result
+}
+
+func CallMe(original []string, items []string, index int, activeIndex int, show bool, limiter int, totalExec int) []string {
+	var item string
+	var send []string
+	if len(items) == 0 {
+		return []string{}
+	}
+	if totalExec > limiter {
+		return []string{}
+	}
+	for _, value := range items {
+		item += string(value)
+	}
+	if show {
+		fmt.Printf("%v \n", item)
+	}
+	if index == 0 {
+		index = len(items) - 1
+		start := len(items) - index
+		send = append(send, original[activeIndex])
+		for u := start; u < len(items); u++ {
+			send = append(send, string(items[u]))
+		}
+		if totalExec != 0 && limiter%totalExec == 0 {
+			activeIndex++
+		}
+	} else {
+		item = item[1:] + item[:1]
+		for _, value := range item {
+			send = append(send, fmt.Sprintf("%c", rune(value)))
+		}
+		index--
+	}
+	totalExec++
+	return CallMe(original, send, index, activeIndex, true, limiter, totalExec)
+}
+
+func CalcPermutation(items []int) [][]int {
+	var result [][]int
+	var util func([]int, int)
+	util = func(items []int, n int) {
+		if n == 1 {
+			temp := make([]int, len(items))
+			copy(temp, items)
+			result = append(result, temp)
+		} else {
+			for i := 0; i < n; i++ {
+				util(items, n-1)
+				if n%2 == 1 {
+					temp := items[i]
+					items[i] = items[n-1]
+					items[n-1] = temp
+				} else {
+					temp := items[0]
+					items[0] = items[n-1]
+					items[n-1] = temp
+				}
+			}
+		}
+	}
+	util(items, len(items))
+	return result
+}
+
+func Perm(items []int) [][]int {
+	var result [][]int
+	var utility func([]int, int)
+	utility = func(items []int, n int) {
+		if n == 1 {
+			temp := make([]int, len(items))
+			copy(temp, items)
+			result = append(result, temp)
+		} else {
+			for i := 0; i < n; i++ {
+				utility(items, n-1)
+				if n%2 == 1 {
+					temp := items[i]
+					items[i] = items[n-1]
+					items[n-1] = temp
+				} else {
+					temp := items[0]
+					items[0] = items[n-1]
+					items[n-1] = temp
+				}
+			}
+		}
+	}
+	utility(items, len(items))
+	return result
+}
+
 //noinspection ALL
 func main() {
+	//fmt.Printf("%v\n", WaveSorting([]int{0, 1, 2, 4, 1, 1, 1}))
 
-	itemsArr := []int{1, 3, 4, 3, 4, 3, 5, 32, 454, 4, 1, 2, 3, 2, 4, 5, 3, 2234, 533, 43, 45}
+	fmt.Printf("%v\n", WaveSorting([]int{0, 1, 2, 4, 1, 1, 1}))
+	fmt.Printf("%v\n", WaveSorting([]int{0, 4, 22, 4, 14, 4, 2}))
+
+	return
+
+	var letters = []string{"A", "B", "C"}
+	var numbers = []int{1, 2, 3}
+	_ = letters
+
+	sorted := Perm(numbers)
+	sort.Slice(sorted, func(i, j int) bool {
+		return fmt.Sprintf("%c%c%c", sorted[i][0], sorted[i][1], sorted[i][2]) < fmt.Sprintf("%c%c%c", sorted[j][0],
+			sorted[j][1], sorted[j][2])
+	})
+
+	for _, value := range sorted {
+		fmt.Printf("%v\n", value)
+	}
+
+	return
+
+	CallMe(letters, letters, len(letters), 0, false, Fact(len(letters)), 0)
+
+	return
+
+	deleteItem := func(source []int, index int) []int {
+		if len(source) == 0 {
+			return source
+		}
+		if index > len(source)-1 || index < 0 {
+			return source
+		}
+
+		var bef []int = source[:index]
+		var aft []int = source[index+1:]
+
+		for _, value := range aft {
+			bef = append(bef, value)
+		}
+
+		return bef
+	}
+
+	itemsArr := []int{1, 3, 2, 3, 2234, 533, 43, 45}
+	fmt.Printf("%v\n", itemsArr)
+
+	itemsArr = deleteItem(itemsArr, 3)
+	fmt.Printf("%v\n", itemsArr)
+
+	itemsArr = deleteItem(itemsArr, 3)
+	fmt.Printf("%v\n", itemsArr)
+
+	itemsArr = deleteItem(itemsArr, 13)
+	fmt.Printf("%v\n", itemsArr)
+
+	return
+
 	res := LoveStory(itemsArr, 10)
 
 	fmt.Printf("Result : %v\n", res)
@@ -1198,17 +1283,6 @@ func main() {
 	}
 
 	return
-
-	xz := Gen([]int{1, 2, 3, 4})
-	for _, value := range xz {
-		fmt.Printf("%v\n", value)
-	}
-	return
-
-	//fmt.Printf("%v\n", WaveSorting([]int{0, 4, 22, 4, 14, 4, 2}))
-	return
-
-	//fmt.Printf("%v\n", WaveSorting([]int{0, 1, 2, 4, 1, 1, 1}))
 
 	fmt.Printf("%v\n", OtherProducts([]int{1, 4, 3}))
 	fmt.Printf("%v\n", OtherProducts([]int{3, 1, 2, 6}))
