@@ -710,13 +710,40 @@ func WaveSorting(arr []int) string {
 	if len(arr) == 0 {
 		return "false"
 	}
-	var result [][]int
+	res := "true"
 	var utility func([]int, int)
+
+	check := func(resItem []int) (r string) {
+		sign := true
+		r = "true"
+		for k := 0; k < len(resItem); k++ {
+			if sign {
+				if k < len(resItem)-1 && resItem[k] <= resItem[k+1] {
+					r = "false"
+					break
+				}
+				sign = false
+			} else {
+				if k < len(resItem)-1 && resItem[k] >= resItem[k+1] {
+					r = "false"
+					break
+				}
+				sign = true
+			}
+		}
+		return
+	}
+	state := false
+
 	utility = func(arr []int, n int) {
 		if n == 1 {
-			temp := make([]int, len(arr))
-			copy(temp, arr)
-			result = append(result, temp)
+			res = check(arr)
+			if res == "true" {
+				state = true
+				return
+			} else {
+				fmt.Printf("Trying..%v \n", arr)
+			}
 		} else {
 			for i := 0; i < n; i++ {
 				utility(arr, n-1)
@@ -733,33 +760,8 @@ func WaveSorting(arr []int) string {
 		}
 	}
 	utility(arr, len(arr))
-	res := "true"
 
-	for u := 0; u < len(result); u++ {
-		sign := true
-		res = "true"
-
-		for k := 0; k < len(result[u]); k++ {
-			if sign {
-				if k < len(result[u])-1 && result[u][k] <= result[u][k+1] {
-					res = "false"
-					break
-				}
-				sign = false
-			} else {
-				if k < len(result[u])-1 && result[u][k] >= result[u][k+1] {
-					res = "false"
-					break
-				}
-				sign = true
-			}
-		}
-		if res == "true" {
-			//fmt.Printf("%v - index : %v\n", result[u], u)
-			return res
-		}
-	}
-	return res
+	return fmt.Sprintf("%v", res)
 }
 
 func permutations(arr []int) [][]int {
@@ -1161,6 +1163,21 @@ func main() {
 	//fmt.Printf("%v\n", WaveSorting([]int{0, 1, 2, 4, 1, 1, 1}))
 
 	fmt.Printf("%v\n", WaveSorting([]int{0, 1, 2, 4, 1, 1, 1}))
+
+	return
+
+	fmt.Printf("%v\n", WaveSorting([]int{1, 1, 1, 1, 5, 2, 5, 1, 1, 3, 5, 6, 8, 3}))
+
+	return
+
+	fmt.Printf("%v\n", WaveSorting([]int{10, 90, 49, 2, 1, 5, 23, 45, 21, 22}))
+
+	return
+
+	fmt.Printf("%v\n", WaveSorting([]int{0, 331, 2, 333, 333, 333, 333333, 3, 8333333, 9999999}))
+
+	return
+
 	fmt.Printf("%v\n", WaveSorting([]int{0, 4, 22, 4, 14, 4, 2}))
 
 	return
