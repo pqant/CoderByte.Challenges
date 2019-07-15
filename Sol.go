@@ -584,6 +584,24 @@ func IntSliceToStrSlice(items []int) (str []string) {
 	return
 }
 
+func OtherProducts(arr []int) string {
+	if len(arr) < 1 && len(arr) > 10 {
+		return ""
+	}
+	var results []string
+	for u := 0; u < len(arr); u++ {
+		partialMul := 1
+		for y := 0; y < len(arr); y++ {
+			if u != y {
+				partialMul *= arr[y]
+			}
+		}
+		results = append(results, fmt.Sprintf("%d", partialMul))
+	}
+	return strings.Join(results, "-")
+}
+
+
 func FoodDistribution(arr []int) int {
 	if len(arr) == 0 {
 		return 0
@@ -687,22 +705,6 @@ var (
 	print = true
 )
 
-func OtherProducts(arr []int) string {
-	if len(arr) < 1 && len(arr) > 10 {
-		return ""
-	}
-	var results []string
-	for u := 0; u < len(arr); u++ {
-		partialMul := 1
-		for y := 0; y < len(arr); y++ {
-			if u != y {
-				partialMul *= arr[y]
-			}
-		}
-		results = append(results, fmt.Sprintf("%d", partialMul))
-	}
-	return strings.Join(results, "-")
-}
 
 //a1 > a2 < a3 > a4 < a5 > a6 ...
 
