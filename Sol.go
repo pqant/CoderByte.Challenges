@@ -982,6 +982,48 @@ func ArrayMatching(strArr []string) string {
 	return strings.Join(coll, "-")
 }
 
+func LongestIncreasingSequence(arr []int) int {
+	if len(arr) == 0 {
+		return 0
+	}
+	kv := make(map[int][]int, len(arr))
+	key := -1
+	for u := 0; u < len(arr); u++ {
+		key = -1
+		search := arr[u]
+		j := 1
+	do:
+		for y := j; y < len(arr); y++ {
+			if u != y && y > u {
+				if arr[y] > search {
+					if key == -1 {
+						key = u // sequence starter!
+						kv[u] = append(kv[u], arr[y])
+					} else {
+						if arr[y] > kv[key][len(kv[key])-1] {
+							kv[key] = append(kv[key], arr[y])
+						}
+					}
+					//search = arr[y]
+				}
+			}
+		}
+		if j < len(arr)-1 {
+			j++
+			goto do
+		}
+	}
+	max := 0
+	for k, value := range kv {
+		fmt.Printf("%v - %v\n", arr[k], value)
+		if len(value) > max {
+			max = len(value)
+		}
+	}
+
+	return max
+}
+
 func BinarySearch(items []int, search int) bool {
 	if len(items) == 0 {
 		return false
@@ -1158,9 +1200,14 @@ func Perm(items []int) [][]int {
 	return result
 }
 
+
 //noinspection ALL
 func main() {
 	//fmt.Printf("%v\n", WaveSorting([]int{0, 1, 2, 4, 1, 1, 1}))
+
+	fmt.Printf("%v\n", LongestIncreasingSequence([]int{2, 10, 3, 9, 11, 5}))
+
+	return
 
 	fmt.Printf("%v\n", WaveSorting([]int{0, 1, 2, 4, 1, 1, 1}))
 
