@@ -457,6 +457,19 @@ func OverlappingRanges(arr []int) bool {
 	return false
 }
 
+func EqualSlice(a, b []int) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for key, value := range a {
+		if value != b[key] {
+			return false
+		}
+	}
+	return true
+}
+
+
 //["5","4","6","E","1","7","E","E","3","2"] ->  4,1,5
 //["1","2","E","E","3"]                     ->  1,2
 func OffLineMinimum(strArr []string) string {
@@ -565,17 +578,6 @@ exit:
 	return index
 }
 
-func EqualSlice(a, b []int) bool {
-	if len(a) != len(b) {
-		return false
-	}
-	for key, value := range a {
-		if value != b[key] {
-			return false
-		}
-	}
-	return true
-}
 
 func IntSliceToStrSlice(items []int) (str []string) {
 	for _, value := range items {
