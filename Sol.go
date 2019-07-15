@@ -706,6 +706,52 @@ func OtherProducts(arr []int) string {
 
 //a1 > a2 < a3 > a4 < a5 > a6 ...
 
+func NextPalindrome(num int) int {
+	if num < 0 {
+		return 0
+	}
+	checkPalindrome := func(text string) bool {
+		reverse := func(val string) string {
+			if len(val) == 0 {
+				return ""
+			}
+			var items []string
+			for _, value := range val {
+				items = append(items, string(value))
+			}
+			MAX := len(items) / 2
+			for u := 0; u < MAX; u++ {
+				temp := items[u]
+				items[u] = items[len(items)-u-1]
+				items[len(items)-u-1] = temp
+			}
+			return strings.Join(items, "")
+		}
+		if reverse(text) == text {
+			return true
+		}
+		return false
+	}
+
+	if len(strconv.Itoa(num)) == 1 {
+		num++
+		if len(strconv.Itoa(num)) == 1 {
+			return num
+		}
+	}
+
+	if checkPalindrome(strconv.Itoa(num)) {
+		num++
+	}
+
+	for !checkPalindrome(strconv.Itoa(num)) {
+		num++
+	}
+	return num
+}
+
+
+
 func WaveSorting(arr []int) string {
 	if len(arr) == 0 {
 		return "false"
@@ -818,49 +864,6 @@ func ProductDigits(num int) int {
 	return lenOps[0]
 }
 
-func NextPalindrome(num int) int {
-	if num < 0 {
-		return 0
-	}
-	checkPalindrome := func(text string) bool {
-		reverse := func(val string) string {
-			if len(val) == 0 {
-				return ""
-			}
-			var items []string
-			for _, value := range val {
-				items = append(items, string(value))
-			}
-			MAX := len(items) / 2
-			for u := 0; u < MAX; u++ {
-				temp := items[u]
-				items[u] = items[len(items)-u-1]
-				items[len(items)-u-1] = temp
-			}
-			return strings.Join(items, "")
-		}
-		if reverse(text) == text {
-			return true
-		}
-		return false
-	}
-
-	if len(strconv.Itoa(num)) == 1 {
-		num++
-		if len(strconv.Itoa(num)) == 1 {
-			return num
-		}
-	}
-
-	if checkPalindrome(strconv.Itoa(num)) {
-		num++
-	}
-
-	for !checkPalindrome(strconv.Itoa(num)) {
-		num++
-	}
-	return num
-}
 
 func NonrepeatingCharacter(str string) string {
 	if len(str) < 1 {
