@@ -836,6 +836,25 @@ func permutations(arr []int) [][]int {
 	return res
 }
 
+func NonrepeatingCharacter(str string) string {
+	if len(str) < 1 {
+		return ""
+	}
+	for u := 0; u < len(str); u++ {
+		found := false
+		for y := 0; y < len(str); y++ {
+			if u != y && str[u] == str[y] {
+				found = true
+				break
+			}
+		}
+		if !found {
+			return string(str[u])
+		}
+	}
+	return string(str[0])
+}
+
 func ProductDigits(num int) int {
 	var div []int
 	for u := 2; u < num; u++ {
@@ -862,24 +881,6 @@ func ProductDigits(num int) int {
 	return lenOps[0]
 }
 
-func NonrepeatingCharacter(str string) string {
-	if len(str) < 1 {
-		return ""
-	}
-	for u := 0; u < len(str); u++ {
-		found := false
-		for y := 0; y < len(str); y++ {
-			if u != y && str[u] == str[y] {
-				found = true
-				break
-			}
-		}
-		if !found {
-			return string(str[u])
-		}
-	}
-	return string(str[0])
-}
 
 func BinaryReversal(str string) int {
 	if len(str) == 0 {
