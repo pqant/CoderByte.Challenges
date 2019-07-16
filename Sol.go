@@ -391,6 +391,19 @@ func DifferentCases(str string) string {
 
 }
 
+func EqualSlice(a, b []int) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for key, value := range a {
+		if value != b[key] {
+			return false
+		}
+	}
+	return true
+}
+
+
 func HammingDistance(strArr []string) int {
 	if len(strArr) != 2 {
 		return 0
@@ -457,17 +470,6 @@ func OverlappingRanges(arr []int) bool {
 	return false
 }
 
-func EqualSlice(a, b []int) bool {
-	if len(a) != len(b) {
-		return false
-	}
-	for key, value := range a {
-		if value != b[key] {
-			return false
-		}
-	}
-	return true
-}
 
 //["5","4","6","E","1","7","E","E","3","2"] ->  4,1,5
 //["1","2","E","E","3"]                     ->  1,2
