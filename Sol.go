@@ -664,6 +664,8 @@ reCalc:
 		}
 	}
 
+
+	calc := diffCalc(newArr)
 	printOut := func(sign string, meanVal int, calcRes float64, active bool) {
 		if !active {
 			return
@@ -676,7 +678,6 @@ reCalc:
 		fmt.Printf("%v - M [%v] - OUTPUT : %v [diff : %v]\n", sign, meanVal, temp, calcRes)
 	}
 
-	calc := diffCalc(newArr)
 	if calc != 0 {
 		result = append(result, calc)
 		mean--
