@@ -469,7 +469,6 @@ func EqualSlice(a, b []int) bool {
 	return true
 }
 
-
 //["5","4","6","E","1","7","E","E","3","2"] ->  4,1,5
 //["1","2","E","E","3"]                     ->  1,2
 func OffLineMinimum(strArr []string) string {
@@ -578,7 +577,6 @@ exit:
 	return index
 }
 
-
 func IntSliceToStrSlice(items []int) (str []string) {
 	for _, value := range items {
 		str = append(str, strconv.Itoa(value))
@@ -602,7 +600,6 @@ func OtherProducts(arr []int) string {
 	}
 	return strings.Join(results, "-")
 }
-
 
 func FoodDistribution(arr []int) int {
 	if len(arr) == 0 {
@@ -707,7 +704,6 @@ var (
 	print = true
 )
 
-
 //a1 > a2 < a3 > a4 < a5 > a6 ...
 
 func NextPalindrome(num int) int {
@@ -753,8 +749,6 @@ func NextPalindrome(num int) int {
 	}
 	return num
 }
-
-
 
 func WaveSorting(arr []int) string {
 	if len(arr) == 0 {
@@ -867,7 +861,6 @@ func ProductDigits(num int) int {
 	})
 	return lenOps[0]
 }
-
 
 func NonrepeatingCharacter(str string) string {
 	if len(str) < 1 {
@@ -989,6 +982,26 @@ func ArrayMatching(strArr []string) string {
 	return strings.Join(coll, "-")
 }
 
+//2, 10, 3, 9, 11, 5
+func LongestIncreasingSequenceV2(arr []int) int {
+	if len(arr) == 0 {
+		return 0
+	}
+	kv := make(map[int][]int, len(arr))
+	for n := 0; n < len(arr); n++ {
+		max := arr[n]
+		kv[arr[n]] = append(kv[arr[n]], max)
+		for u := 0; u < len(arr); u++ {
+			if u != n && arr[u] > max {
+				max = arr[u]
+				kv[n] = append(kv[n], arr[u])
+			}
+		}
+	}
+	return 0
+}
+
+//2, 10, 3, 9, 11, 5
 func LongestIncreasingSequence(arr []int) int {
 	if len(arr) == 0 {
 		return 0
@@ -1005,9 +1018,36 @@ func LongestIncreasingSequence(arr []int) int {
 				if arr[y] > search {
 					if key == -1 {
 						key = u // sequence starter!
-						kv[u] = append(kv[u], arr[y])
+						kv[u] = append(kv[u], arr[u], arr[y])
 					} else {
-						if arr[y] > kv[key][len(kv[key])-1] {
+						exist, ok := kv[key]
+						if ok && len(exist) != 0 {
+							fmt.Printf("->j:%v-arr[u]:%v-arr[y]:%v-search:%v-last:%v --- [%v]\n",
+								j,
+								arr[u],
+								arr[y],
+								search,
+								kv[key][len(kv[key])-1], kv[key])
+							if arr[y] > kv[key][len(kv[key])-1] {
+								kv[key] = append(kv[key], arr[y])
+							} else {
+								if math.Abs(float64(arr[y]-search)) < math.Abs(float64(kv[key][len(kv[key])-1]-search)) {
+									//check the remaining of the array which can be bigger than last item !
+									max := kv[key][len(kv[key])-1]
+									isBiggerFound := false
+									for n := j; n < len(arr); n++ {
+										fmt.Printf("->>>> max : %v- arr[n] : %v\n", max, arr[n])
+										if arr[n] > max {
+											isBiggerFound = true
+											break
+										}
+									}
+									if isBiggerFound {
+										kv[key][len(kv[key])-1] = arr[y]
+									}
+								}
+							}
+						} else {
 							kv[key] = append(kv[key], arr[y])
 						}
 					}
@@ -1207,10 +1247,17 @@ func Perm(items []int) [][]int {
 	return result
 }
 
-
 //noinspection ALL
 func main() {
 	//fmt.Printf("%v\n", WaveSorting([]int{0, 1, 2, 4, 1, 1, 1}))
+
+	//fmt.Printf("%v\n", LongestIncreasingSequence([]int{1, 2, 3, 7, 4, 5}))
+
+	//return
+
+	fmt.Printf("%v\n", LongestIncreasingSequenceV2([]int{2, 10, 3, 9, 11, 5}))
+
+	return
 
 	fmt.Printf("%v\n", LongestIncreasingSequence([]int{2, 10, 3, 9, 11, 5}))
 
