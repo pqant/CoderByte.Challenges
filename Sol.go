@@ -982,6 +982,77 @@ func ArrayMatching(strArr []string) string {
 	return strings.Join(coll, "-")
 }
 
+func EvenPairs(str string) string {
+	if len(str) == 0 {
+		return "false"
+	}
+
+	numberConverter := func(str string) (r bool, v int) {
+		r = false
+		v = 0
+		if len(str) == 0 {
+			return
+		}
+		v, e := strconv.Atoi(str)
+		if e != nil {
+			return
+		}
+		r = true
+		return
+	}
+
+	var all []int
+	check := ""
+	for _, value := range str {
+		opSuccess, number := numberConverter(fmt.Sprintf("%c", rune(value)))
+		if opSuccess {
+			check = fmt.Sprintf("%v%v", check, number)
+		} else {
+			if len(check) != 0 {
+				num, err := strconv.Atoi(check)
+				if err == nil {
+					all = append(all, num)
+				}
+				check = ""
+			}
+		}
+	}
+	if len(check) != 0 {
+		num, err := strconv.Atoi(check)
+		if err == nil {
+			all = append(all, num)
+		}
+		check = ""
+	}
+
+	for u := 0; u < len(all); u++ {
+		strVal := fmt.Sprintf("%d", all[u])
+		index := 1
+		for n := 0; n < len(strVal); n++ {
+			first := ""
+			for _, value := range strVal {
+				first += string(value)
+				if len(first) == index {
+					break
+				}
+			}
+			second := strVal[len(first):]
+			if len(second) != 0 {
+				p1, e1 := strconv.Atoi(first)
+				p2, e2 := strconv.Atoi(second)
+				if e1 == nil && e2 == nil {
+					if p1%2 == 0 && p2%2 == 0 {
+						return "true"
+					}
+				}
+			}
+			index++
+		}
+
+	}
+	return "false"
+}
+
 //1, 2, 3, 7, 4, 5
 
 func LongestIncreasingSequence(arr []int) int {
@@ -1263,6 +1334,19 @@ func main() {
 	//fmt.Printf("%v\n", WaveSorting([]int{0, 1, 2, 4, 1, 1, 1}))
 
 	//return
+
+	fmt.Printf("%v\n", EvenPairs("3gy41d216"))
+
+	fmt.Printf("%v\n", EvenPairs("5678dddd"))
+
+	fmt.Printf("%v\n", EvenPairs("f09r28i8e67"))
+
+	fmt.Printf("%v\n",EvenPairs("106a"))
+
+	fmt.Printf("%v\n",EvenPairs("128fk9846mf78"))
+
+
+	return
 
 	fmt.Printf("%v\n", LongestIncreasingSequence([]int{10, 22, 9, 33, 21, 50, 41, 60, 22, 68, 90}))
 
