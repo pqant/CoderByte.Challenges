@@ -982,6 +982,26 @@ func ArrayMatching(strArr []string) string {
 	return strings.Join(coll, "-")
 }
 
+func LargestPair(num int) int {
+	strVal := fmt.Sprintf("%d", num)
+	if len(strVal)  == 2 {
+		return num
+	}
+	max := 0
+	for n := 0; n < len(strVal); n++ {
+		for y := n + 1; y < len(strVal)-1; y++ {
+			number, _ := strconv.Atoi(strVal[y:y+2])
+			if number > max {
+				max = number
+			}
+		}
+	}
+	return max
+}
+
+
+
+
 func EvenPairs(str string) string {
 	if len(str) == 0 {
 		return "false"
@@ -1048,7 +1068,6 @@ func EvenPairs(str string) string {
 			}
 			index++
 		}
-
 	}
 	return "false"
 }
@@ -1335,16 +1354,22 @@ func main() {
 
 	//return
 
+	fmt.Printf("%v\n", LargestPair(453857))
+	fmt.Printf("%v\n", LargestPair(363223311))
+	fmt.Printf("%v\n", LargestPair(91))
+
+
+
+	return
 	fmt.Printf("%v\n", EvenPairs("3gy41d216"))
 
 	fmt.Printf("%v\n", EvenPairs("5678dddd"))
 
 	fmt.Printf("%v\n", EvenPairs("f09r28i8e67"))
 
-	fmt.Printf("%v\n",EvenPairs("106a"))
+	fmt.Printf("%v\n", EvenPairs("106a"))
 
-	fmt.Printf("%v\n",EvenPairs("128fk9846mf78"))
-
+	fmt.Printf("%v\n", EvenPairs("128fk9846mf78"))
 
 	return
 
