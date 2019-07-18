@@ -984,13 +984,13 @@ func ArrayMatching(strArr []string) string {
 
 func LargestPair(num int) int {
 	strVal := fmt.Sprintf("%d", num)
-	if len(strVal)  == 2 {
+	if len(strVal) == 2 {
 		return num
 	}
 	max := 0
 	for n := 0; n < len(strVal); n++ {
 		for y := n + 1; y < len(strVal)-1; y++ {
-			number, _ := strconv.Atoi(strVal[y:y+2])
+			number, _ := strconv.Atoi(strVal[y : y+2])
 			if number > max {
 				max = number
 			}
@@ -999,8 +999,36 @@ func LargestPair(num int) int {
 	return max
 }
 
+func BitwiseTwo(strArr []string) string {
+	if len(strArr) != 2 {
+		return ""
+	}
+	if len(strArr[0]) != len(strArr[1]) || (len(strArr[0]) == 0 && len(strArr[2]) == 0) {
+		return ""
+	}
 
+	andOp := func(val1, val2 string) (result string) {
+		result = "0"
+		if val1 == "1" && val2 == "1" {
+			result = "1"
+		}
+		return
+	}
 
+	strToSlice := func(val string) (result []string) {
+		for _, value := range val {
+			result = append(result, string(value))
+		}
+		return
+	}
+
+	var res []string
+	str1, str2 := strToSlice(strArr[0]), strToSlice(strArr[1])
+	for u := 0; u < len(str1); u++ {
+		res = append(res, andOp(str1[u], str2[u]))
+	}
+	return strings.Join(res, "")
+}
 
 func EvenPairs(str string) string {
 	if len(str) == 0 {
@@ -1348,17 +1376,64 @@ func Perm(items []int) [][]int {
 	return result
 }
 
+func PowerSet(inputSet []int) [][]int {
+	powerSet := make([][]int, 0)
+	var selectedSoFar []int
+	generatePowerItems(inputSet, 0, selectedSoFar, &powerSet)
+	return powerSet
+}
+
+func generatePowerItems(inputSet []int, decisionPoint int, selectedSoFar []int, powerSet *[][]int) {
+	if decisionPoint == len(inputSet) {
+		*powerSet = append(*powerSet, selectedSoFar)
+		//fmt.Printf("%v\n",*powerSet)
+		return
+	}
+	selectedSoFar = append(selectedSoFar, inputSet[decisionPoint])
+	generatePowerItems(inputSet, decisionPoint+1, selectedSoFar, powerSet)
+	fmt.Printf("--- %v\n", selectedSoFar)
+	selectedSoFar = selectedSoFar[:len(selectedSoFar)-1]
+	//fmt.Printf("### %v\n", selectedSoFar)
+	generatePowerItems(inputSet, decisionPoint+1, selectedSoFar, powerSet)
+}
+
 //noinspection ALL
 func main() {
-	//fmt.Printf("%v\n", WaveSorting([]int{0, 1, 2, 4, 1, 1, 1}))
 
-	//return
+	tempy := []int{1, 2, 3}
+
+	values := PowerSet(tempy)
+	_ = values
+	return
+
+	xx := 1
+	fmt.Printf("[] - %v \n", xx)
+	xx++
+	for u := 0; u < len(tempy); u++ {
+		fmt.Printf("%v - %v \n", tempy[u], xx)
+		xx++
+	}
+	for u := 0; u < len(tempy); u++ {
+		for y := u + 1; y < len(tempy); y++ {
+			if u != y {
+				fmt.Printf("%v - %v - %v \n", tempy[u], tempy[y], xx)
+				xx++
+			}
+		}
+	}
+	fmt.Printf("[1,2,3,4] - %v \n", xx)
+
+	return
+
+	fmt.Printf("%v\n", BitwiseTwo([]string{"100", "000"}))
+
+	fmt.Printf("%v\n", BitwiseTwo([]string{"10100", "11100"}))
+
+	return
 
 	fmt.Printf("%v\n", LargestPair(453857))
 	fmt.Printf("%v\n", LargestPair(363223311))
 	fmt.Printf("%v\n", LargestPair(91))
-
-
 
 	return
 	fmt.Printf("%v\n", EvenPairs("3gy41d216"))
