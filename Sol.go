@@ -982,23 +982,6 @@ func ArrayMatching(strArr []string) string {
 	return strings.Join(coll, "-")
 }
 
-func LargestPair(num int) int {
-	strVal := fmt.Sprintf("%d", num)
-	if len(strVal) == 2 {
-		return num
-	}
-	max := 0
-	for n := 0; n < len(strVal); n++ {
-		for y := n + 1; y < len(strVal)-1; y++ {
-			number, _ := strconv.Atoi(strVal[y : y+2])
-			if number > max {
-				max = number
-			}
-		}
-	}
-	return max
-}
-
 func BitwiseTwo(strArr []string) string {
 	if len(strArr) != 2 {
 		return ""
@@ -1029,6 +1012,25 @@ func BitwiseTwo(strArr []string) string {
 	}
 	return strings.Join(res, "")
 }
+
+
+func LargestPair(num int) int {
+	strVal := fmt.Sprintf("%d", num)
+	if len(strVal) == 2 {
+		return num
+	}
+	max := 0
+	for n := 0; n < len(strVal); n++ {
+		for y := n + 1; y < len(strVal)-1; y++ {
+			number, _ := strconv.Atoi(strVal[y : y+2])
+			if number > max {
+				max = number
+			}
+		}
+	}
+	return max
+}
+
 
 
 func LongestIncreasingSequence(arr []int) int {
