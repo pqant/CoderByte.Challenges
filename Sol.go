@@ -1200,26 +1200,6 @@ func LongestIncreasingSequence_old(arr []int) int {
 	return max
 }
 
-func BinarySearch(items []int, search int) bool {
-	if len(items) == 0 {
-		return false
-	}
-	left := 0
-	right := len(items) - 1
-	mid := 0
-	for left <= right {
-		mid = (left + right) / 2
-		if items[mid] == search {
-			return true
-		} else if items[mid] > search {
-			right = mid - 1
-		} else {
-			left = mid + 1
-		}
-	}
-	return false
-}
-
 func LoveStory(itemsArr []int, sum int) bool {
 	result := false
 	sort.Slice(itemsArr, func(i, j int) bool {
@@ -1251,6 +1231,28 @@ exit:
 	}
 	return result
 }
+
+
+func BinarySearch(items []int, search int) bool {
+	if len(items) == 0 {
+		return false
+	}
+	left := 0
+	right := len(items) - 1
+	mid := 0
+	for left <= right {
+		mid = (left + right) / 2
+		if items[mid] == search {
+			return true
+		} else if items[mid] > search {
+			right = mid - 1
+		} else {
+			left = mid + 1
+		}
+	}
+	return false
+}
+
 
 func Fact(a int) int {
 	if a == 0 {
