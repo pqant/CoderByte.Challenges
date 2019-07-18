@@ -1030,6 +1030,38 @@ func BitwiseTwo(strArr []string) string {
 	return strings.Join(res, "")
 }
 
+
+func LongestIncreasingSequence(arr []int) int {
+	if len(arr) == 0 {
+		return 0
+	}
+	var base []int
+	for range arr {
+		base = append(base, 1)
+	}
+	for i := 1; i < len(arr); i++ {
+		for j := 0; j < len(arr); j++ {
+			if j >= i {
+				break
+			}
+			if arr[j] < arr[i] {
+				if base[i] <= base[j] {
+					base[i] = base[j] + 1
+				}
+				//fmt.Printf("%v \n", base)
+			}
+		}
+	}
+	max := base[0]
+	for u := 1; u < len(base); u++ {
+		if base[u] > max {
+			max = base[u]
+		}
+	}
+	//fmt.Printf("ARR - %v  - %v \n\n", arr, base)
+	return max
+}
+
 func EvenPairs(str string) string {
 	if len(str) == 0 {
 		return "false"
@@ -1102,36 +1134,6 @@ func EvenPairs(str string) string {
 
 //1, 2, 3, 7, 4, 5
 
-func LongestIncreasingSequence(arr []int) int {
-	if len(arr) == 0 {
-		return 0
-	}
-	var base []int
-	for range arr {
-		base = append(base, 1)
-	}
-	for i := 1; i < len(arr); i++ {
-		for j := 0; j < len(arr); j++ {
-			if j >= i {
-				break
-			}
-			if arr[j] < arr[i] {
-				if base[i] <= base[j] {
-					base[i] = base[j] + 1
-				}
-				//fmt.Printf("%v \n", base)
-			}
-		}
-	}
-	max := base[0]
-	for u := 1; u < len(base); u++ {
-		if base[u] > max {
-			max = base[u]
-		}
-	}
-	//fmt.Printf("ARR - %v  - %v \n\n", arr, base)
-	return max
-}
 
 //2, 10, 3, 9, 11, 5
 func LongestIncreasingSequence_old(arr []int) int {
