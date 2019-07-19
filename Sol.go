@@ -932,6 +932,49 @@ func ArrayMatching(strArr []string) string {
 	return strings.Join(coll, "-")
 }
 
+func ThreeSum(arr []int) string {
+	if len(arr) < 4 {
+		return "false"
+	}
+	first := arr[:1][0]
+	results := make([][]int, 0)
+	soFarList := make([]int, 0)
+	var powerSetGenerator func([]int, int, []int, *[][]int)
+
+	powerSetGenerator = func(subset []int, breakPoint int, soFarList []int, result *[][]int) {
+		if breakPoint == len(subset) {
+			if len(soFarList) == 3 { // powerset just for 3 items!
+				sum := 0
+				for _, value := range soFarList {
+					sum += int(value)
+				}
+				if sum == first {
+					clone := make([]int, 3)
+					copy(clone, soFarList)
+					*result = append(*result, clone)
+				}
+			}
+			return
+		}
+		soFarList = append(soFarList, subset[breakPoint])
+		powerSetGenerator(subset, breakPoint+1, soFarList, result)
+		soFarList = soFarList[:len(soFarList)-1]
+		powerSetGenerator(subset, breakPoint+1, soFarList, result)
+	}
+	powerSetGenerator(arr[1:], 0, soFarList, &results)
+
+	for _, value := range results {
+		sum := 0
+		for _, val := range value {
+			sum += val
+		}
+		if sum == first {
+			return "true"
+		}
+	}
+	return "false"
+}
+
 func QuestionsMarks(str string) string {
 	if len(str) == 0 {
 		return "false"
@@ -1492,14 +1535,22 @@ func generatePowerItems(inputSet []int, decisionPoint int, selectedSoFar []int, 
 //noinspection ALL
 func main() {
 
-	//fmt.Printf("%v\n", BasicRomanNumerals("IV"))
+	//fmt.Printf("%v\n",ThreeSum([]int{8, 2, 1, 4, 10, 5, -1, -1}))
 
+	fmt.Printf("%v\n", ThreeSum([]int{10, 2, 3, 1, 5, 3, 1, 4, -4, -3, -2}))
+
+	fmt.Printf("%v\n", ThreeSum([]int{12, 3, 1, -5, -4, 7}))
+
+
+	return
+
+	//fmt.Printf("%v\n", BasicRomanNumerals("IV"))
 	//fmt.Printf("%v\n", QuestionsMarks("aa6?9"))
 	//fmt.Printf("%v\n",QuestionsMarks("aaaaaaarrrrr??????"))
 	//fmt.Printf("%v\n",QuestionsMarks("9???1???9???1???9")) // true
-	fmt.Printf("%v\n",QuestionsMarks("9???1???9??1???9")) // false
-	fmt.Printf("%v\n",QuestionsMarks("5??aaaaaaaaaaaaaaaaaaa?5?5")) // false
-	fmt.Printf("%v\n",QuestionsMarks("mbbv???????????4??????ddsdsdcc9?")) // false
+	fmt.Printf("%v\n", QuestionsMarks("9???1???9??1???9"))                 // false
+	fmt.Printf("%v\n", QuestionsMarks("5??aaaaaaaaaaaaaaaaaaa?5?5"))       // false
+	fmt.Printf("%v\n", QuestionsMarks("mbbv???????????4??????ddsdsdcc9?")) // false
 	return
 
 	fmt.Printf("%v\n", QuestionsMarks("acc?7??sss?3rr1??????5"))
