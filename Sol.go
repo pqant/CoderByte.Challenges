@@ -932,6 +932,26 @@ func ArrayMatching(strArr []string) string {
 	return strings.Join(coll, "-")
 }
 
+func DistinctCharacters(str string) string {
+	if len(str) < 10 {
+		return "false"
+	}
+
+	kv := make(map[string]int, len(str))
+	for _, value := range str {
+		newVal := string(value)
+		if val, isExist := kv[newVal]; isExist {
+			kv[newVal] = val + 1
+		} else {
+			kv[newVal] = 1
+		}
+	}
+	if len(kv) >= 10 {
+		return "true"
+	}
+	return "false"
+}
+
 func ThreeSum(arr []int) string {
 	if len(arr) < 4 {
 		return "false"
@@ -1535,12 +1555,15 @@ func generatePowerItems(inputSet []int, decisionPoint int, selectedSoFar []int, 
 //noinspection ALL
 func main() {
 
-	//fmt.Printf("%v\n",ThreeSum([]int{8, 2, 1, 4, 10, 5, -1, -1}))
+	fmt.Printf("%v\n",DistinctCharacters("abc123kkmmmm?"))
+	fmt.Printf("%v\n", DistinctCharacters("12334bbmma:=6"))
+	fmt.Printf("%v\n", DistinctCharacters("eeeemmmmmmmmm1000"))
+
+	return
 
 	fmt.Printf("%v\n", ThreeSum([]int{10, 2, 3, 1, 5, 3, 1, 4, -4, -3, -2}))
 
 	fmt.Printf("%v\n", ThreeSum([]int{12, 3, 1, -5, -4, 7}))
-
 
 	return
 
