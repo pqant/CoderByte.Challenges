@@ -932,11 +932,46 @@ func ArrayMatching(strArr []string) string {
 	return strings.Join(coll, "-")
 }
 
+func RemoveBrackets(str string) int {
+	if len(str) == 0 {
+		return 0
+	}
+	leftPCount := 0
+	rightPCount := 0
+	diffPlus := 0
+	j := 0
+	for j = 0; j < len(str); j++ {
+		if string(str[j:j+1]) == ")" {
+			diffPlus++
+		}
+		if j == 0 && diffPlus == 0 {
+			break
+		}
+	}
+	if diffPlus != 0 {
+		str = str[diffPlus:]
+	}
+	for u := 0; u < len(str); u++ {
+		val := string(str[u])
+		if val == "(" {
+			leftPCount++
+		}
+		if val == ")" {
+			rightPCount++
+		}
+	}
+	diff := float64(leftPCount - rightPCount + diffPlus)
+	if diff != 0 {
+		return int(math.Abs(diff))
+	} else {
+		return 0
+	}
+}
+
 func DistinctCharacters(str string) string {
 	if len(str) < 10 {
 		return "false"
 	}
-
 	kv := make(map[string]int, len(str))
 	for _, value := range str {
 		newVal := string(value)
@@ -1555,7 +1590,16 @@ func generatePowerItems(inputSet []int, decisionPoint int, selectedSoFar []int, 
 //noinspection ALL
 func main() {
 
-	fmt.Printf("%v\n",DistinctCharacters("abc123kkmmmm?"))
+	//)(()
+	fmt.Printf("%v\n", RemoveBrackets(")(()"))
+	fmt.Printf("%v\n", RemoveBrackets("))))(()"))
+	fmt.Printf("%v\n", RemoveBrackets("(()))"))
+	fmt.Printf("%v\n", RemoveBrackets("(())()((("))
+	fmt.Printf("%v\n", RemoveBrackets("(()("))
+
+	return
+
+	fmt.Printf("%v\n", DistinctCharacters("abc123kkmmmm?"))
 	fmt.Printf("%v\n", DistinctCharacters("12334bbmma:=6"))
 	fmt.Printf("%v\n", DistinctCharacters("eeeemmmmmmmmm1000"))
 
