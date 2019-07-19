@@ -932,6 +932,70 @@ func ArrayMatching(strArr []string) string {
 	return strings.Join(coll, "-")
 }
 
+func QuestionsMarks(str string) string {
+	if len(str) == 0 {
+		return "false"
+	}
+	isNumberFunc := func(val rune) bool {
+		switch val {
+		case '0':
+			return true
+		case '1':
+			return true
+		case '2':
+			return true
+		case '3':
+			return true
+		case '4':
+			return true
+		case '5':
+			return true
+		case '6':
+			return true
+		case '7':
+			return true
+		case '8':
+			return true
+		case '9':
+			return true
+		default:
+			return false
+		}
+	}
+	questionCount := 0
+	bef, aft := "-1", "-1"
+	for _, value := range str {
+		val := string(value)
+		if val == "?" {
+			questionCount++
+		} else {
+			if isNumberFunc(rune(value)) {
+				if bef == "-1" {
+					questionCount = 0
+					bef = string(value)
+				} else {
+					aft = string(value)
+				}
+				if bef != "-1" && aft != "-1" && questionCount == 3 {
+					befVal, _ := strconv.Atoi(bef)
+					aftVal, _ := strconv.Atoi(aft)
+					if befVal+aftVal == 10 {
+						questionCount = 0
+						bef = "-1"
+						aft = "-1"
+						return "true"
+					} else {
+						return "false"
+					}
+				}
+			} else {
+				questionCount = 0
+			}
+		}
+	}
+	return "false"
+}
+
 func BasicRomanNumerals(str string) string {
 	if len(str) == 0 {
 		return "0"
@@ -1430,9 +1494,22 @@ func main() {
 
 	//fmt.Printf("%v\n", BasicRomanNumerals("IV"))
 
-	fmt.Printf("%v\n", BasicRomanNumerals("VIII"))
-	fmt.Printf("%v\n", BasicRomanNumerals("IIV"))
-	fmt.Printf("%v\n", BasicRomanNumerals("VI"))
+	//fmt.Printf("%v\n", QuestionsMarks("aa6?9"))
+	//fmt.Printf("%v\n",QuestionsMarks("aaaaaaarrrrr??????"))
+	//fmt.Printf("%v\n",QuestionsMarks("9???1???9???1???9")) // true
+	fmt.Printf("%v\n",QuestionsMarks("9???1???9??1???9")) // false
+	fmt.Printf("%v\n",QuestionsMarks("5??aaaaaaaaaaaaaaaaaaa?5?5")) // false
+	fmt.Printf("%v\n",QuestionsMarks("mbbv???????????4??????ddsdsdcc9?")) // false
+	return
+
+	fmt.Printf("%v\n", QuestionsMarks("acc?7??sss?3rr1??????5"))
+	fmt.Printf("%v\n", QuestionsMarks("arrb6???4xxbl5???eee5"))
+
+	return
+
+	fmt.Printf("%v\n", BasicRomanNumerals("XCV"))
+	fmt.Printf("%v\n", BasicRomanNumerals("XI"))
+	fmt.Printf("%v\n", BasicRomanNumerals("LXVII"))
 	fmt.Printf("%v\n", BasicRomanNumerals("IV"))
 	fmt.Printf("%v\n", BasicRomanNumerals("XIX"))
 	fmt.Printf("%v\n", BasicRomanNumerals("XLVI"))
