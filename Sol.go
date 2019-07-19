@@ -122,56 +122,6 @@ func rec(items []string) (values []string) {
 	}
 }
 
-func PowerSetCount(arr []int) int {
-	if len(arr) == 0 {
-		return 1 // []
-	}
-	var str string
-	for _, value := range arr {
-		str += fmt.Sprintf("%d", value)
-	}
-	var elements []string
-	check := func(element string, all []string) (r bool) {
-		r = false
-		for k := 0; k < len(all); k++ {
-			if all[k] == element {
-				r = true
-			}
-		}
-		return
-	}
-
-	//temp := "1234"
-	//fmt.Printf("%v\n",temp[0:1])
-	//fmt.Printf("%v\n",temp[1:2])
-	//fmt.Printf("%v\n",temp[2:3])
-	//fmt.Printf("%v\n",temp[3:4])
-
-	div := func(text string, count int) (r []string) {
-		if len(text) == 0 {
-			return
-		}
-		for u := 0; u < len(text); u++ {
-			for y := u + 1; y < len(text); y++ {
-				r = append(r, text[u:y])
-			}
-		}
-
-		return
-	}
-	_ = div
-
-	for u := 1; u < len(arr)+1; u++ {
-		val := ""
-
-		if !check(val, elements) {
-			elements = append(elements, val)
-		}
-	}
-	return len(elements) + 1 // []
-
-}
-
 func ThreeNumbers(str string) bool {
 	if len(str) == 0 {
 		return false
@@ -982,6 +932,84 @@ func ArrayMatching(strArr []string) string {
 	return strings.Join(coll, "-")
 }
 
+func BasicRomanNumerals(str string) string {
+	if len(str) == 0 {
+		return "0"
+	}
+	romanChars := []string{"M", "D", "C", "L", "X", "V", "I"}
+
+	RtoD := func(rom string) int {
+		if len(rom) == 0 {
+			return 0
+		}
+		switch rom {
+		case "I":
+			return 1
+		case "V":
+			return 5
+		case "X":
+			return 10
+		case "L":
+			return 50
+		case "C":
+			return 100
+		case "D":
+			return 500
+		case "M":
+			return 1000
+		default:
+			return 0
+		}
+	}
+
+	var numberList []string
+
+do:
+	for u := 0; u < len(romanChars) && len(str) != 0; u++ {
+		index := strings.Index(str, string(romanChars[u]))
+		if index != -1 {
+			numberList = append(numberList, str[:index+1])
+			str = str[index+1:]
+			if len(str) != 0 {
+				goto do
+			}
+		}
+	}
+
+	total := 0
+	for u := 0; u < len(numberList); u++ {
+		soFar := 0
+		for y := 0; y < len(numberList[u])-1; y++ {
+			soFar += RtoD(string(numberList[u][y]))
+		}
+		total += RtoD(string(numberList[u][len(numberList[u])-1]))
+		total -= soFar
+	}
+	return fmt.Sprintf("%v", total)
+}
+
+func PowerSetCount(arr []int) int {
+	if len(arr) == 0 {
+		return 0
+	}
+	var powerSetGenerator func([]int, int, []int, *[][]int)
+	powerSetGenerator = func(subset []int, breakPoint int, internalList []int, allList *[][]int) {
+		if len(subset) == breakPoint {
+			*allList = append(*allList, internalList)
+			return
+		}
+		internalList = append(internalList, subset[breakPoint])
+		powerSetGenerator(subset, breakPoint+1, internalList, allList)
+		internalList = internalList[:len(internalList)-1]
+		powerSetGenerator(subset, breakPoint+1, internalList, allList)
+	}
+	allList := make([][]int, 0)
+	var internalList []int
+	powerSetGenerator(arr, 0, internalList, &allList)
+
+	return len(allList)
+}
+
 func BitwiseTwo(strArr []string) string {
 	if len(strArr) != 2 {
 		return ""
@@ -1013,7 +1041,6 @@ func BitwiseTwo(strArr []string) string {
 	return strings.Join(res, "")
 }
 
-
 func LargestPair(num int) int {
 	strVal := fmt.Sprintf("%d", num)
 	if len(strVal) == 2 {
@@ -1030,8 +1057,6 @@ func LargestPair(num int) int {
 	}
 	return max
 }
-
-
 
 func LongestIncreasingSequence(arr []int) int {
 	if len(arr) == 0 {
@@ -1136,7 +1161,6 @@ func EvenPairs(str string) string {
 
 //1, 2, 3, 7, 4, 5
 
-
 //2, 10, 3, 9, 11, 5
 func LongestIncreasingSequence_old(arr []int) int {
 	if len(arr) == 0 {
@@ -1236,7 +1260,6 @@ exit:
 	return result
 }
 
-
 func BinarySearch(items []int, search int) bool {
 	if len(items) == 0 {
 		return false
@@ -1256,7 +1279,6 @@ func BinarySearch(items []int, search int) bool {
 	}
 	return false
 }
-
 
 func Fact(a int) int {
 	if a == 0 {
@@ -1405,6 +1427,22 @@ func generatePowerItems(inputSet []int, decisionPoint int, selectedSoFar []int, 
 
 //noinspection ALL
 func main() {
+
+	//fmt.Printf("%v\n", BasicRomanNumerals("IV"))
+
+	fmt.Printf("%v\n", BasicRomanNumerals("VIII"))
+	fmt.Printf("%v\n", BasicRomanNumerals("IIV"))
+	fmt.Printf("%v\n", BasicRomanNumerals("VI"))
+	fmt.Printf("%v\n", BasicRomanNumerals("IV"))
+	fmt.Printf("%v\n", BasicRomanNumerals("XIX"))
+	fmt.Printf("%v\n", BasicRomanNumerals("XLVI"))
+	fmt.Printf("%v\n", BasicRomanNumerals("XXIV"))
+
+	return
+
+	fmt.Printf("%v\n", PowerSetCount([]int{1, 2, 3, 4, 5, 6}))
+
+	return
 
 	tempy := []int{1, 2, 3}
 
