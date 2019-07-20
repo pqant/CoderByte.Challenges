@@ -968,6 +968,23 @@ func RemoveBrackets(str string) int {
 	}
 }
 
+func LargestFour(arr []int) int {
+	if len(arr) == 0 {
+		return 0
+	}
+	sort.Slice(arr, func(i, j int) bool {
+		return arr[i] > arr[j]
+	})
+	sum := 0
+	for u := 0; u < len(arr); u++ {
+		sum += arr[u]
+		if u == 3 {
+			break
+		}
+	}
+	return sum
+}
+
 func DistinctCharacters(str string) string {
 	if len(str) < 10 {
 		return "false"
@@ -1589,6 +1606,11 @@ func generatePowerItems(inputSet []int, decisionPoint int, selectedSoFar []int, 
 
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", LargestFour([]int{1, 1, 1, -5}))
+	fmt.Printf("%v\n", LargestFour([]int{0, 0, 2, 3, 7, 1}))
+
+	return
 
 	//)(()
 	fmt.Printf("%v\n", RemoveBrackets(")(()"))
