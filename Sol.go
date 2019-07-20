@@ -985,6 +985,67 @@ func LargestFour(arr []int) int {
 	return sum
 }
 
+func StringPeriods(str string) string {
+	if len(str) == 1 || len(str) == 0 {
+		return "-1"
+	}
+	var chars []string
+	for _, value := range str {
+		chars = append(chars, string(value))
+	}
+	count := func(val string, search string) (total int) {
+		total = 0
+		if len(val) == 0 || len(search) == 0 {
+			return
+		}
+		res := 0
+		for u := 0; u < len(val); u++ {
+			res = strings.Index(val[u:], search)
+			if res != -1 {
+				total++
+				u += res
+			}
+		}
+		return
+	}
+	_ = count
+
+	kv := make([]string, 0)
+	for u := 0; u < len(chars); u++ {
+		for y := u + 1; y < len(chars); y++ {
+			keyword := strings.Join(chars[u:y], "")
+			kv = append(kv, keyword)
+		}
+	}
+	kvNext := make(map[string]int, 0)
+	for _, value := range kv {
+		newVal := string(value)
+		m := 1
+		for ; len(newVal) <= len(str); {
+			if newVal == str {
+				kvNext[string(value)] = m
+			}
+			newVal += string(value)
+			m++
+		}
+	}
+
+	var keys []string
+
+	for key := range kvNext {
+		keys = append(keys, key)
+	}
+	sort.Slice(keys, func(i, j int) bool {
+		return len(keys[i]) > len(keys[j])
+	})
+
+	if len(keys) != 0 {
+		return fmt.Sprintf("%v", keys[0])
+	} else {
+		return "-1"
+	}
+}
+
 func DistinctCharacters(str string) string {
 	if len(str) < 10 {
 		return "false"
@@ -1606,6 +1667,13 @@ func generatePowerItems(inputSet []int, decisionPoint int, selectedSoFar []int, 
 
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", StringPeriods("gg"))
+	fmt.Printf("%v\n", StringPeriods("abcxabc"))
+	fmt.Printf("%v\n", StringPeriods("affedaaffed"))
+	fmt.Printf("%v\n", StringPeriods("abcababcababcab"))
+
+	return
 
 	fmt.Printf("%v\n", LargestFour([]int{1, 1, 1, -5}))
 	fmt.Printf("%v\n", LargestFour([]int{0, 0, 2, 3, 7, 1}))
