@@ -1917,11 +1917,49 @@ func ClosestEnemy(arr []int) int {
 	return int(math.Abs(float64(min)))
 }
 
+func NumberStream(str string) string {
+	if len(str) == 0 {
+		return "false"
+	}
+	var nums []int
+	for _, value := range str {
+		val := int(value) - 48
+		if val == 0 || val == 1 {
+			return "false"
+		}
+		nums = append(nums, val)
+	}
+
+	multiplex := func(text string, count int) string {
+		if count == 0 {
+			return text
+		}
+		if len(text) == 0 {
+			return ""
+		}
+		result := ""
+		for u := 0; u < count; u++ {
+			result += text
+		}
+		return result
+	}
+
+	for u := 0; u < len(nums); u++ {
+		result := multiplex(fmt.Sprintf("%d", nums[u]), nums[u])
+		if strings.Contains(str, result) {
+			return "true"
+		}
+	}
+	return "false"
+}
+
 //noinspection ALL
 func main() {
 
-	fmt.Printf("%v\n", ClosestEnemy([]int{0,1,0}))
+	fmt.Printf("%v\n", NumberStream("6539923335"))
+	return
 
+	fmt.Printf("%v\n", ClosestEnemy([]int{0, 1, 0}))
 
 	fmt.Printf("%v\n", ClosestEnemy([]int{2, 2, 2, 2, 0, 0, 1, 0}))
 
