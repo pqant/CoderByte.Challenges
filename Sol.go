@@ -1789,9 +1789,90 @@ func SimpleEvens(num int) bool {
 	return true
 }
 
+//"cats AND*Dogs-are Awesome" --> "catsAndDogsAreAwesome"
+func CamelCase(str string) string {
+	if len(str) == 0 {
+		return ""
+	}
+	var (
+		illItems = []string{
+			" ",
+			"’'",
+			"-",
+			"%",
+			"()[]{}<>",
+			":",
+			",",
+			"+",
+			"‒",
+			"…",
+			"!",
+			".",
+			"«»",
+			"-‐",
+			"?",
+			"‘’“”",
+			";",
+			"/",
+			"⁄",
+			"␠",
+			"·",
+			"&",
+			"@",
+			"*",
+			"\\",
+			"•",
+			"^",
+			"¤¢$€£¥₩₪",
+			"†‡",
+			"°",
+			"¡",
+			"¿",
+			"¬",
+			"#",
+			"№",
+			"%‰‱",
+			"¶",
+			"′",
+			"§",
+			"~",
+			"¨",
+			"_",
+			"|¦",
+			"⁂",
+			"☞",
+			"∴",
+			"‽",
+			"※"}
+	)
+	illegalReplacer := func(text string) string {
+		for _, char := range illItems {
+			text = strings.Replace(text, string(char), " ", -1)
+		}
+		return text
+	}
+	str = illegalReplacer(str)
+	var items = strings.Split(str, " ")
+	result := ""
+	index := 0
+	for _, value := range items {
+		if index == 0 {
+			result += strings.ToLower(value[:])
+		} else {
+			result += strings.ToUpper(value[:1]) + strings.ToLower(value[1:])
+		}
+		index++
+	}
+	return result
+}
+
 //noinspection ALL
 func main() {
 
+	fmt.Printf("%v\n", CamelCase("cats AND*Dogs-are Awesome"))
+	fmt.Printf("%v\n", CamelCase("a b c d-e-f%g"))
+
+	return
 	fmt.Printf("%v\n", SimpleEvens(2222220222))
 
 	fmt.Printf("%v\n", SimpleEvens(20864646452))
