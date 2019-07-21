@@ -1776,10 +1776,27 @@ func OneDecremented(num int) int {
 	return index
 }
 
+func SimpleEvens(num int) bool {
+	var nums []int
+	for _, value := range fmt.Sprintf("%d", num) {
+		nums = append(nums, int(value)-48)
+	}
+	for u := 0; u < len(nums); u++ {
+		if nums[u]%2 != 0 {
+			return false
+		}
+	}
+	return true
+}
+
 //noinspection ALL
 func main() {
 
-	fmt.Printf("%v\n", OneDecremented(56))
+	fmt.Printf("%v\n", SimpleEvens(2222220222))
+
+	fmt.Printf("%v\n", SimpleEvens(20864646452))
+
+	return
 
 	fmt.Printf("%v\n", OneDecremented(9876541110))
 
