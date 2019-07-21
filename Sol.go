@@ -1046,6 +1046,76 @@ func StringPeriods(str string) string {
 	}
 }
 
+func VowelSquare(strArr []string) string {
+	if len(strArr) < 2 {
+		return "not found"
+	}
+	for _, value := range strArr {
+		if len(value) < 2 {
+			return "not found"
+		}
+	}
+	vowelCheck := func(char string) bool {
+		if strings.ToLower(char) == "a" || strings.ToLower(char) == "e" ||
+			strings.ToLower(char) == "u" || strings.ToLower(char) == "i" ||
+			strings.ToLower(char) == "o" || strings.ToLower(char) == "ü" ||
+			strings.ToLower(char) == "ö" {
+			return true
+		}
+		return false
+	}
+
+	matrixController := func(items []string, sizeOfx int, sizeOfy int) bool {
+		colSize := len(items[0])
+		rowSize := len(items)
+		if colSize < sizeOfx || rowSize < sizeOfy {
+			return false
+		}
+
+		for u := 0; u < colSize-sizeOfx; u++ {
+			for y := 0; y < rowSize-sizeOfy; y++ {
+				fmt.Printf("[%v]\n", items[u][y])
+			}
+		}
+		return true
+	}
+
+	_ = matrixController
+
+	var newArr []string
+	for k := 0; k < len(strArr); k++ {
+		newLine := ""
+		for n := 0; n < len(strArr[k]); n++ {
+			if vowelCheck(string(strArr[k][n])) {
+				newLine += "1"
+			} else {
+				newLine += "0"
+			}
+		}
+		newArr = append(newArr, newLine)
+	}
+
+	if len(newArr) == 0 {
+		return "not found"
+	}
+	lenArr := len(newArr[0])
+
+	for u := 0; u < lenArr; u++ {
+		first := string(newArr[u])
+		for y := 0; y < lenArr; y++ {
+			if first == "1" {
+				if u < lenArr-1 {
+					//secondRowVal := string(newArr[u+1])
+
+				}
+			}
+
+		}
+	}
+
+	return "0-0"
+}
+
 func DistinctCharacters(str string) string {
 	if len(str) < 10 {
 		return "false"
@@ -1665,8 +1735,38 @@ func generatePowerItems(inputSet []int, decisionPoint int, selectedSoFar []int, 
 	generatePowerItems(inputSet, decisionPoint+1, selectedSoFar, powerSet)
 }
 
+func AlphabetSearching(str string) string {
+	engAlphabet := []string{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r",
+		"s", "t", "u", "v", "w", "x", "y", "z"}
+	var all []string
+	for _, value := range str {
+		all = append(all, string(value))
+	}
+	kv := make(map[string]int, len(engAlphabet))
+	for _, value := range engAlphabet {
+		kv[string(value)] = 0
+	}
+	for _, value := range all {
+		if count, isExist := kv[string(value)]; isExist {
+			kv[string(value)] = count + 1
+		} else {
+			kv[string(value)] = 1
+		}
+	}
+	for _, value := range kv {
+		if value == 0 {
+			return "false"
+		}
+	}
+	return "true"
+}
+
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", AlphabetSearching("zacxyjbbkfgtbhdaielqrm45pnsowtuv"))
+
+	return
 
 	fmt.Printf("%v\n", StringPeriods("gg"))
 	fmt.Printf("%v\n", StringPeriods("abcxabc"))
