@@ -2111,6 +2111,25 @@ func HDistance(strArr []string) int {
 	return diff
 }
 
+func StringMerge(str string) string {
+	if len(str) == 0 {
+		return ""
+	}
+	if !strings.Contains(str,"*") {
+		return ""
+	}
+	items := strings.Split(str,"*")
+	if len(items)!=2 {
+		return ""
+	}
+	text:=""
+	for u:=0; u<len(items[0]);u++ {
+		text += string(items[0][u]) + string(items[1][u])
+	}
+	return text
+}
+
+
 func ASCIIConversion(str string) string {
 	if len(str) == 0 {
 		return ""
@@ -2132,6 +2151,8 @@ func ASCIIConversion(str string) string {
 //noinspection ALL
 func main() {
 
+	fmt.Printf("%v\n", StringMerge("abc1*kyoo"))
+	return
 	fmt.Printf("%v\n", ASCIIConversion("hello world"))
 	return
 
