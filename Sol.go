@@ -1973,12 +1973,85 @@ func GCF(arr []int) int {
 	return result
 }
 
+//Input:"cats AND*Dogs-are Awesome" --> cats_and_dogs_are_awesome
+func SnakeCase(str string) string {
+	if len(str) == 0 {
+		return ""
+	}
+	var (
+		illItems = []string{
+			" ",
+			"’'",
+			"-",
+			"%",
+			"()[]{}<>",
+			":",
+			",",
+			"+",
+			"‒",
+			"…",
+			"!",
+			".",
+			"«»",
+			"-‐",
+			"?",
+			"‘’“”",
+			";",
+			"/",
+			"⁄",
+			"␠",
+			"·",
+			"&",
+			"@",
+			"*",
+			"\\",
+			"•",
+			"^",
+			"¤¢$€£¥₩₪",
+			"†‡",
+			"°",
+			"¡",
+			"¿",
+			"¬",
+			"#",
+			"№",
+			"%‰‱",
+			"¶",
+			"′",
+			"§",
+			"~",
+			"¨",
+			"_",
+			"|¦",
+			"⁂",
+			"☞",
+			"∴",
+			"‽",
+			"※"}
+	)
+	illegalReplacer := func(text string) string {
+		for _, char := range illItems {
+			text = strings.Replace(text, string(char), " ", -1)
+		}
+		return text
+	}
+	str = illegalReplacer(str)
+	var items = strings.Split(str, " ")
+	var result []string
+	for _, value := range items {
+		result = append(result, strings.ToLower(value[:]))
+	}
+	return strings.Join(result, "_")
+}
+
 //noinspection ALL
 func main() {
 
+	fmt.Printf("%v\n", SnakeCase("cats AND*Dogs-are Awesome"))
+	fmt.Printf("%v\n", SnakeCase("a b c d-e-f%g"))
+	return
 
 	fmt.Printf("%v\n", GCF([]int{106, 212}))
-
 	fmt.Printf("%v\n", GCF([]int{45, 12}))
 	fmt.Printf("%v\n", GCF([]int{1, 6}))
 	fmt.Printf("%v\n", GCF([]int{12, 28}))
