@@ -2044,9 +2044,60 @@ func SnakeCase(str string) string {
 	return strings.Join(result, "_")
 }
 
+//[]string {"X:-1", "Y:1", "X:-4", "B:3", "X:5"} -> "B:3,Y:1"
+func GroupTotals(strArr []string) string {
+	if len(strArr) == 0 {
+		return ""
+	}
+	kv := make(map[string]int, 0)
+	for _, value := range strArr {
+		vals := strings.Split(string(value), ":")
+		if len(vals) != 2 {
+			return ""
+		}
+		newVal, err := strconv.Atoi(vals[1])
+		if err != nil {
+			return ""
+		}
+		if data, isExist := kv[vals[0]]; isExist {
+			kv[vals[0]] = data + newVal
+		} else {
+			kv[vals[0]] = newVal
+		}
+	}
+	result := ""
+	var keys []string
+	for key := range kv {
+		keys = append(keys, key)
+	}
+	sort.Slice(keys, func(i, j int) bool {
+		return fmt.Sprintf("%d", []rune(keys[i])[0]) < fmt.Sprintf("%d", []rune(keys[j])[0])
+	})
+
+	for _, value := range keys {
+		if kv[value] != 0 {
+			result += fmt.Sprintf("%v:%v,", value, kv[value])
+		}
+	}
+	if len(result) == 0 {
+		return ""
+	}
+	if result[len(result)-1:] == "," {
+		result = result[0 : len(result)-1]
+	}
+	return result
+}
+
 //noinspection ALL
 func main() {
 
+	fmt.Printf("%v\n", GroupTotals([]string{"P:1", "N:1", "Z:1", "P:0", "N:-2", "Z:-1"}))
+
+	return
+
+	fmt.Printf("%v\n", GroupTotals([]string{"X:-1", "Y:1", "X:-4", "B:3", "X:5"}))
+
+	return
 	fmt.Printf("%v\n", SnakeCase("cats AND*Dogs-are Awesome"))
 	fmt.Printf("%v\n", SnakeCase("a b c d-e-f%g"))
 	return
