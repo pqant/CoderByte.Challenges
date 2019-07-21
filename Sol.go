@@ -1866,8 +1866,35 @@ func CamelCase(str string) string {
 	return result
 }
 
+func SumMultiplier(arr []int) string {
+	if len(arr) == 0 {
+		return "false"
+	}
+	sum := 0
+	for _, value := range arr {
+		sum += int(value)
+	}
+	sum *= 2
+	for u := 0; u < len(arr); u++ {
+		for y := u + 1; y < len(arr); y++ {
+			if arr[u]*arr[y] > sum {
+				return "true"
+			}
+		}
+	}
+	return "false"
+}
+
 //noinspection ALL
 func main() {
+
+
+	fmt.Printf("%v\n", SumMultiplier([]int{4,5,5,12}))
+
+	fmt.Printf("%v\n", SumMultiplier([]int{2, 2, 2, 2, 4, 1}))
+	fmt.Printf("%v\n", SumMultiplier([]int{1, 1, 2, 10, 3, 1, 12}))
+
+	return
 
 	fmt.Printf("%v\n", CamelCase("cats AND*Dogs-are Awesome"))
 	fmt.Printf("%v\n", CamelCase("a b c d-e-f%g"))
