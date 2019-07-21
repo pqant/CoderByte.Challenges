@@ -2111,8 +2111,29 @@ func HDistance(strArr []string) int {
 	return diff
 }
 
+func ASCIIConversion(str string) string {
+	if len(str) == 0 {
+		return ""
+	}
+
+	var all []string
+	all = strings.Split(str," ")
+
+	text := ""
+	for _, value := range all {
+		for _, value := range string(value) {
+			text += fmt.Sprintf("%d", rune(value))
+		}
+		text+=" "
+	}
+	return strings.TrimRight(text," ")
+}
+
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", ASCIIConversion("hello world"))
+	return
 
 	fmt.Printf("%v\n", HDistance([]string{"10011", "10100"}))
 	fmt.Printf("%v\n", HDistance([]string{"abcdef", "defabc"}))
