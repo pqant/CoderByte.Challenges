@@ -1885,11 +1885,52 @@ func SumMultiplier(arr []int) string {
 	return "false"
 }
 
+func ClosestEnemy(arr []int) int {
+	if len(arr) == 0 {
+		return 0
+	}
+	var enemies []int
+	hero := 0
+	oneCount := 0
+	for key, value := range arr {
+		val := int(value)
+		if val == 1 {
+			oneCount++
+			hero = key
+		}
+		if val == 2 {
+			enemies = append(enemies, key)
+		}
+	}
+	if oneCount != 1 {
+		return 0
+	}
+	if len(enemies) == 0 {
+		return 0
+	}
+	min := int(math.Abs(float64(hero) - float64(enemies[0])))
+	for u := 1; u < len(enemies); u++ {
+		if int(math.Abs(float64(enemies[u])-float64(hero))) < min {
+			min = int(math.Abs(float64(enemies[u]) - float64(hero)))
+		}
+	}
+	return int(math.Abs(float64(min)))
+}
+
 //noinspection ALL
 func main() {
 
+	fmt.Printf("%v\n", ClosestEnemy([]int{0,1,0}))
 
-	fmt.Printf("%v\n", SumMultiplier([]int{4,5,5,12}))
+
+	fmt.Printf("%v\n", ClosestEnemy([]int{2, 2, 2, 2, 0, 0, 1, 0}))
+
+	fmt.Printf("%v\n", ClosestEnemy([]int{0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 2}))
+	fmt.Printf("%v\n", ClosestEnemy([]int{2, 0, 0, 0, 2, 2, 1, 0}))
+
+	return
+
+	fmt.Printf("%v\n", SumMultiplier([]int{4, 5, 5, 12}))
 
 	fmt.Printf("%v\n", SumMultiplier([]int{2, 2, 2, 2, 4, 1}))
 	fmt.Printf("%v\n", SumMultiplier([]int{1, 1, 2, 10, 3, 1, 12}))
