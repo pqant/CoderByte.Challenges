@@ -2115,20 +2115,19 @@ func StringMerge(str string) string {
 	if len(str) == 0 {
 		return ""
 	}
-	if !strings.Contains(str,"*") {
+	if !strings.Contains(str, "*") {
 		return ""
 	}
-	items := strings.Split(str,"*")
-	if len(items)!=2 {
+	items := strings.Split(str, "*")
+	if len(items) != 2 {
 		return ""
 	}
-	text:=""
-	for u:=0; u<len(items[0]);u++ {
+	text := ""
+	for u := 0; u < len(items[0]); u++ {
 		text += string(items[0][u]) + string(items[1][u])
 	}
 	return text
 }
-
 
 func ASCIIConversion(str string) string {
 	if len(str) == 0 {
@@ -2136,20 +2135,50 @@ func ASCIIConversion(str string) string {
 	}
 
 	var all []string
-	all = strings.Split(str," ")
+	all = strings.Split(str, " ")
 
 	text := ""
 	for _, value := range all {
 		for _, value := range string(value) {
 			text += fmt.Sprintf("%d", rune(value))
 		}
-		text+=" "
+		text += " "
 	}
-	return strings.TrimRight(text," ")
+	return strings.TrimRight(text, " ")
+}
+
+func ElementMerger(arr []int) int {
+	if len(arr) == 0 {
+		return 0
+	}
+	var newList []int
+
+do:
+	for u := 1; u < len(arr); u++ {
+		diff := int(math.Abs(float64(arr[u]) - (float64(arr[u-1]))))
+		newList = append(newList, diff)
+		if u == len(arr)-1 {
+			if len(newList) != 1 {
+				arr = make([]int, len(newList))
+				copy(arr, newList)
+				newList = nil
+				goto do
+			}
+		}
+	}
+	if len(arr) == 2 {
+		return int(math.Abs(float64(arr[0]) - (float64(arr[1]))))
+	}
+	return 0
 }
 
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", ElementMerger([]int{5, 7, 16, 1, 2}))
+	fmt.Printf("%v\n", ElementMerger([]int{1, 1, 1, 2}))
+
+	return
 
 	fmt.Printf("%v\n", StringMerge("abc1*kyoo"))
 	return
