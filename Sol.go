@@ -2172,14 +2172,95 @@ do:
 	return 0
 }
 
-/*
-func MatrixMultiply(a,b [][]float32) [][]float32,error  {
+func MatrixMultiply(m1, m2 [][]float32) ([][]float32, error) {
+	if len(m1[0]) != len(m2) {
+		return [][]float32{}, errors.New("matrix can't be multiply!Dimensions are different!")
+	}
+	res := make([][]float32, len(m1))
+	for i := 0; i < len(m1); i++ {
+		res[i] = make([]float32, len(m2[0]))
+		for u := 0; u < len(m2[0]); u++ {
+			for y := 0; y < len(m2); y++ {
+				res[i][u] += m1[i][y] * m2[y][u]
+			}
+		}
+	}
+	return res, nil
 }
+
+/*
+
+1. It needs to contain three sets each with three digits (1 through 9) separated by a period.
+2. The first set of digits must add up to an even number.
+3. The second set of digits must add up to an odd number.
+4. The last digit in each set must be larger than the two previous digits in the same set.
+
+If all the above constraints are met within the string, the your program should return the string true, otherwise your program should return the string false. For example: if str is "224.315.218" then your program should return "true".
 
 */
 
+func SerialNumber(str string) string {
+	if len(str) == 0 {
+		return "false"
+	}
+	if len(str) > 11 {
+		return "false"
+	}
+	split := strings.Split(str, ".")
+	if len(split) != 3 {
+		return "false"
+	}
+	index := 0
+	checkValIsLess := func(valIn string) bool {
+		if len(valIn) == 0 {
+			return false
+		}
+		last, errLast := strconv.Atoi(valIn[:len(valIn)-1])
+		if errLast != nil {
+			return false
+		}
+		for u := 0; u < len(valIn)-1; u++ {
+			inVal, errIn := strconv.Atoi(string(valIn[u]))
+			if errIn != nil {
+				return false
+			}
+			if inVal >= last {
+				return false
+			}
+		}
+		return true
+	}
+	for _, value := range split {
+		valIn := 0
+		for _, value := range string(value) {
+			val := int(value) - 48
+			if val < 0 || val > 9 {
+				return "false"
+			}
+			valIn += val
+		}
+		if index == 0 {
+			if valIn%2 != 0 {
+				return "false"
+			}
+		} else if index == 1 {
+			if valIn%2 == 0 {
+				return "false"
+			}
+		}
+		if !checkValIsLess(string(value)) {
+			return "false"
+		}
+		index++
+	}
+	return "true"
+}
+
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", SerialNumber("11.124.667"))
+	return
 
 	var m1 [][]float32 = [][]float32{
 		[]float32{1.0, 2.0, 3.0},
@@ -2191,29 +2272,13 @@ func main() {
 		[]float32{0.7, 0.3},
 	}
 
-	matrixMultiply := func(m1, m2 [][]float32) ([][]float32, error) {
-		if len(m1[0]) != len(m2) {
-			return [][]float32{}, errors.New("matrix can't be multiply!Dimensions are different!")
-		}
-		res := make([][]float32, len(m1))
-		for i := 0; i < len(m1); i++ {
-			res[i] = make([]float32, len(m2[0]))
-			for u := 0; u < len(m2[0]); u++ {
-				for y := 0; y < len(m2); y++ {
-					res[i][u] += m1[i][y] * m2[y][u]
-				}
-			}
-		}
-		return res, nil
-	}
+	mRes, err := MatrixMultiply(m1, m2)
 
-	mRes,err := matrixMultiply(m1,m2)
-
-	if err!=nil {
-		fmt.Printf("Error : %v \n",err.Error())
+	if err != nil {
+		fmt.Printf("Error : %v \n", err.Error())
 		return
 	}
-	fmt.Printf("Result : %v \n",mRes)
+	fmt.Printf("Result : %v \n", mRes)
 
 	return
 
