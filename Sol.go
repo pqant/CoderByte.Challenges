@@ -2088,8 +2088,36 @@ func GroupTotals(strArr []string) string {
 	return result
 }
 
+func HDistance(strArr []string) int {
+	if len(strArr) == 0 {
+		return 0
+	}
+	if len(strArr[0]) != len(strArr[1]) {
+		return 0
+	}
+	var a, b []string
+	for _, value := range strArr[0] {
+		a = append(a, string(value))
+	}
+	for _, value := range strArr[1] {
+		b = append(b, string(value))
+	}
+	diff := 0
+	for u := 0; u < len(a); u++ {
+		if a[u] != b[u] {
+			diff++
+		}
+	}
+	return diff
+}
+
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", HDistance([]string{"10011", "10100"}))
+	fmt.Printf("%v\n", HDistance([]string{"abcdef", "defabc"}))
+
+	return
 
 	fmt.Printf("%v\n", GroupTotals([]string{"P:1", "N:1", "Z:1", "P:0", "N:-2", "Z:-1"}))
 
