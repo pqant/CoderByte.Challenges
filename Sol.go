@@ -2172,8 +2172,50 @@ do:
 	return 0
 }
 
+/*
+func MatrixMultiply(a,b [][]float32) [][]float32,error  {
+}
+
+*/
+
 //noinspection ALL
 func main() {
+
+	var m1 [][]float32 = [][]float32{
+		[]float32{1.0, 2.0, 3.0},
+		[]float32{4.0, 5.0, 6.0},
+	}
+	var m2 [][]float32 = [][]float32{
+		[]float32{0.5, 0.5},
+		[]float32{0.2, 0.8},
+		[]float32{0.7, 0.3},
+	}
+
+	matrixMultiply := func(m1, m2 [][]float32) ([][]float32, error) {
+		if len(m1[0]) != len(m2) {
+			return [][]float32{}, errors.New("matrix can't be multiply!Dimensions are different!")
+		}
+		res := make([][]float32, len(m1))
+		for i := 0; i < len(m1); i++ {
+			res[i] = make([]float32, len(m2[0]))
+			for u := 0; u < len(m2[0]); u++ {
+				for y := 0; y < len(m2); y++ {
+					res[i][u] += m1[i][y] * m2[y][u]
+				}
+			}
+		}
+		return res, nil
+	}
+
+	mRes,err := matrixMultiply(m1,m2)
+
+	if err!=nil {
+		fmt.Printf("Error : %v \n",err.Error())
+		return
+	}
+	fmt.Printf("Result : %v \n",mRes)
+
+	return
 
 	fmt.Printf("%v\n", ElementMerger([]int{5, 7, 16, 1, 2}))
 	fmt.Printf("%v\n", ElementMerger([]int{1, 1, 1, 2}))
