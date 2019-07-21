@@ -1761,8 +1761,29 @@ func AlphabetSearching(str string) string {
 	return "true"
 }
 
+//9876541110 --> 6
+func OneDecremented(num int) int {
+	var nums []int
+	for _, value := range fmt.Sprintf("%d", num) {
+		nums = append(nums, int(value)-48)
+	}
+	index := 0
+	for u := 1; u < len(nums); u++ {
+		if nums[u]-nums[u-1] == -1 {
+			index++
+		}
+	}
+	return index
+}
+
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", OneDecremented(56))
+
+	fmt.Printf("%v\n", OneDecremented(9876541110))
+
+	return
 
 	fmt.Printf("%v\n", AlphabetSearching("zacxyjbbkfgtbhdaielqrm45pnsowtuv"))
 
