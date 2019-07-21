@@ -1953,8 +1953,37 @@ func NumberStream(str string) string {
 	return "false"
 }
 
+func GCF(arr []int) int {
+	if len(arr) != 2 {
+		return 0
+	}
+	if arr[0] < 0 || arr[1] < 0 {
+		return 0
+	}
+	result := 1
+	min := arr[0]
+	if arr[1] < arr[0] {
+		min = arr[1]
+	}
+	for u := 1; u <= min; u++ {
+		if arr[0]%u == 0 && arr[1]%u == 0 {
+			result = u
+		}
+	}
+	return result
+}
+
 //noinspection ALL
 func main() {
+
+
+	fmt.Printf("%v\n", GCF([]int{106, 212}))
+
+	fmt.Printf("%v\n", GCF([]int{45, 12}))
+	fmt.Printf("%v\n", GCF([]int{1, 6}))
+	fmt.Printf("%v\n", GCF([]int{12, 28}))
+
+	return
 
 	fmt.Printf("%v\n", NumberStream("6539923335"))
 	return
