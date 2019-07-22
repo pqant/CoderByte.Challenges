@@ -2278,7 +2278,7 @@ func StringChanges(str string) string {
 //noinspection ALL
 func main() {
 
-	fmt.Printf("%v\n", StringChanges("oMoMkkNrrN"))
+	fmt.Printf("%v\n", StringChanges("MNMNjMa"))
 	fmt.Printf("%v\n", StringChanges("MrtyNNgMM"))
 	return
 
