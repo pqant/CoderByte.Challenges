@@ -2412,8 +2412,148 @@ func CommandLine(str string) string {
 	return text
 }
 
+func PalindromeSwapperExtended(str string) string {
+	if len(str) == 0 {
+		return "-1"
+	}
+	var allItems []string
+	for _, value := range str {
+		allItems = append(allItems, string(value))
+	}
+	kv := make(map[string]int, 0)
+	for _, value := range str {
+		if val, isExist := kv[string(value)]; isExist {
+			kv[string(value)] = val + 1
+		} else {
+			kv[string(value)] = 1
+		}
+	}
+	threshold := 0
+	if len(str)%2 != 0 {
+		threshold++
+	}
+	detectedCount := 0
+	for _, value := range kv {
+		if value != 2 {
+			detectedCount++
+			if detectedCount > threshold {
+				return "-1"
+			}
+		}
+	}
+
+	var permutation func([]string, int)
+	result := make([][]string, 0)
+	reverse := func(val string) string {
+		if len(val) == 0 {
+			return ""
+		}
+		var text []string
+		for _, value := range val {
+			text = append(text, string(value))
+		}
+		MAX := len(text) / 2
+		for u := 0; u < MAX; u++ {
+			temp := text[u]
+			text[u] = text[len(text)-u-1]
+			text[len(text)-u-1] = temp
+		}
+		return strings.Join(text, "")
+	}
+	palindromeRes := "-1"
+	permutation = func(items []string, n int) {
+		if n == 1 {
+			arr := make([]string, len(items))
+			copy(arr, items)
+			result = append(result, arr)
+			data := strings.Join(arr, "")
+			if palindromeRes == "-1" && data == reverse(data) {
+				palindromeRes = data
+				return
+			}
+		} else {
+			for i := 0; i < n; i++ {
+				permutation(items, n-1)
+				if n%2 == 1 {
+					temp := items[i]
+					items[i] = items[n-1]
+					items[n-1] = temp
+				} else {
+					temp := items[0]
+					items[0] = items[n-1]
+					items[n-1] = temp
+				}
+			}
+		}
+	}
+	permutation(allItems, len(allItems))
+
+	return palindromeRes
+}
+
+func PalindromeSwapper(str string) string {
+	if len(str) == 0 {
+		return "-1"
+	}
+	var result = "-1"
+	reverse := func(val string) string {
+		if len(val) == 0 {
+			return ""
+		}
+		var text []string
+		for _, value := range val {
+			text = append(text, string(value))
+		}
+		MAX := len(text) / 2
+		for u := 0; u < MAX; u++ {
+			temp := text[u]
+			text[u] = text[len(text)-u-1]
+			text[len(text)-u-1] = temp
+		}
+		return strings.Join(text, "")
+	}
+	var allItems []string
+	for _, value := range str {
+		allItems = append(allItems, string(value))
+	}
+	temp := make([]string, len(allItems))
+	copy(temp, allItems)
+	in := false
+out:
+	for u := 0; u < len(allItems); u++ {
+		for y := u + 1; y < len(allItems); y++ {
+			tempChar := temp[u]
+			temp[u] = temp[y]
+			temp[y] = tempChar
+			data := strings.Join(temp, "")
+			if data == reverse(data) {
+				result = data
+				in = true
+				break out
+			} else {
+				temp = make([]string, len(allItems))
+				copy(temp, allItems)
+			}
+			u++
+		}
+	}
+	if !in {
+		if str == reverse(str) {
+			return result
+		}
+	}
+	return result
+}
+
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", PalindromeSwapper("anna"))
+	fmt.Printf("%v\n", PalindromeSwapper("ahhhhhhhhh"))
+	fmt.Printf("%v\n", PalindromeSwapper("notpossible"))
+	fmt.Printf("%v\n", PalindromeSwapper("rcaecar"))
+
+	return
 
 	fmt.Printf("%v\n", CommandLine("empty="))
 
