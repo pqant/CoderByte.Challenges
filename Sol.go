@@ -2291,8 +2291,90 @@ func FizzBuzz(num int) string {
 	return strings.Join(result, " ")
 }
 
+//"0.38" -> half empty empty empty empty
+//"4.5"  -> full full full full half
+func StarRating(str string) string {
+	half, empty, full, min, max, halfFactor, fullFactor := "half", "empty", "full", 0.0, 5.0, 0.5, 1.0
+	generate := func(which string, count int) string {
+		var res []string
+		for u := 0; u < count; u++ {
+			res = append(res, which)
+		}
+		return strings.Join(res, " ")
+	}
+	if len(str) == 0 {
+		return generate(empty, int(max))
+	}
+
+	num64, err := strconv.ParseFloat(str, 64)
+	if err != nil {
+		return generate(empty, int(max))
+	}
+
+	round := func(x, unit float64) float64 {
+		return math.Round(x/unit) * unit
+	}
+	num64 = round(num64, halfFactor)
+
+	if num64 < min && num64 > max {
+		return generate(empty, int(max))
+	}
+	if num64 == min {
+		return generate(empty, int(max))
+	}
+	sum := 0.0
+	hCount, fCount, eCount := 0, 0, 0
+	for sum <= num64 {
+		if sum+fullFactor <= num64 {
+			sum += fullFactor
+			fCount++
+			if sum == num64 {
+				break
+			}
+			continue
+		} else if sum <= num64 {
+			sum += num64 - sum
+			hCount++
+			if sum == num64 {
+				break
+			}
+			continue
+		} else {
+			break
+		}
+	}
+	eCount = int(max - float64(fCount))
+	if hCount != 0 {
+		eCount -= 1
+	}
+	result := ""
+	if fCount > 0 {
+		result += generate(full, fCount)
+	}
+	if hCount > 0 {
+		if len(result) != 0 {
+			result += " "
+		}
+		result += generate(half, hCount)
+	}
+	if eCount > 0 {
+		if len(result) != 0 {
+			result += " "
+		}
+		result += generate(empty, eCount)
+	}
+	return result
+}
+
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", StarRating("0.0"))
+	fmt.Printf("%v\n", StarRating("1.00"))
+	fmt.Printf("%v\n", StarRating("2.39"))
+	fmt.Printf("%v\n", StarRating("1.99"))
+
+	return
 
 	fmt.Printf("%v\n", FizzBuzz(8))
 	return
