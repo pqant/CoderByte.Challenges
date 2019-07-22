@@ -2366,8 +2366,58 @@ func StarRating(str string) string {
 	return result
 }
 
+func CommandLine(str string) string {
+	if len(str) == 0 {
+		return ""
+	}
+	var templates []string
+	templates = strings.Split(str, "=")
+	kv := make(map[int]map[string]string, 0)
+	indexMe := 0
+	reservedKey := ""
+	for _, value := range templates {
+		if indexMe == 0 {
+			reservedKey = string(value)
+		} else {
+			findLastEmpty := strings.LastIndex(string(value), " ")
+			kv[indexMe] = make(map[string]string, 1)
+			val := kv[indexMe]
+			if findLastEmpty != -1 && indexMe != len(templates)-1 {
+				val[reservedKey] = string(value)[:findLastEmpty]
+				reservedKey = string(value)[findLastEmpty+1:]
+			} else {
+				val[reservedKey] = string(value)[:]
+			}
+		}
+		indexMe++
+	}
+	text := ""
+	var keys []int
+	for key := range templates {
+		keys = append(keys, key)
+	}
+	sort.Slice(keys, func(i, j int) bool {
+		return keys[i] < keys[j]
+	})
+	for _, keyIndex := range keys {
+		if data, isExist := kv[keyIndex]; isExist {
+			for key, value := range data {
+				text += fmt.Sprintf("%v=%v ", len(key), len(value))
+			}
+		}
+	}
+	if text[len(text)-1:] == " " {
+		text = text[:len(text)-1]
+	}
+	return text
+}
+
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", CommandLine("empty="))
+
+	return
 
 	fmt.Printf("%v\n", StarRating("0.0"))
 	fmt.Printf("%v\n", StarRating("1.00"))
