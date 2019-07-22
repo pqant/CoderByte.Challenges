@@ -2545,8 +2545,60 @@ out:
 	return result
 }
 
+func TriangleRow(num int) int {
+	sum := 0
+	if num < 0 {
+		return sum
+	}
+	num++
+	rowGenerator := func(row int) []int {
+		var result []int
+		for u := 0; u < row; u++ {
+			if u == 0 {
+				result = []int{1}
+			} else if u == 1 {
+				result = []int{1, 1}
+			} else if u == 2 {
+				result = []int{1, 2, 1}
+			} else {
+				var temp []int
+			do:
+				temp = append(temp, result[0])
+				last := result[len(result)-1]
+				for y := 0; y < len(result); y++ {
+					for k := y + 1; k < len(result); k++ {
+						temp = append(temp, result[y]+result[k])
+						y++
+					}
+				}
+				temp = append(temp, last)
+				if len(temp) < num {
+					result = make([]int, len(temp))
+					copy(result, temp)
+					temp = make([]int, 0)
+					goto do
+				} else {
+					return temp
+				}
+			}
+		}
+		return result
+	}
+	for _, value := range rowGenerator(num) {
+		sum += value
+	}
+
+	return sum
+}
+
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", TriangleRow(1))
+	fmt.Printf("%v\n", TriangleRow(2))
+	fmt.Printf("%v\n", TriangleRow(6))
+
+	return
 
 	fmt.Printf("%v\n", PalindromeSwapper("anna"))
 	fmt.Printf("%v\n", PalindromeSwapper("ahhhhhhhhh"))
