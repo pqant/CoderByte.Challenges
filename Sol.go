@@ -2275,8 +2275,27 @@ func StringChanges(str string) string {
 	return strings.Join(text, "")
 }
 
+func FizzBuzz(num int) string {
+	var result []string
+	for u := 1; u <= num; u++ {
+		if u%3 == 0 && u%5 != 0 {
+			result = append(result, "Fizz")
+		} else if u%3 != 0 && u%5 == 0 {
+			result = append(result, "Buzz")
+		} else if u%3 == 0 && u%5 == 0 {
+			result = append(result, "FizzBuzz")
+		} else {
+			result = append(result, fmt.Sprintf("%d", u))
+		}
+	}
+	return strings.Join(result, " ")
+}
+
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", FizzBuzz(8))
+	return
 
 	fmt.Printf("%v\n", StringChanges("MNMNjMa"))
 	fmt.Printf("%v\n", StringChanges("MrtyNNgMM"))
