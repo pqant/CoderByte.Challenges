@@ -2188,17 +2188,6 @@ func MatrixMultiply(m1, m2 [][]float32) ([][]float32, error) {
 	return res, nil
 }
 
-/*
-
-1. It needs to contain three sets each with three digits (1 through 9) separated by a period.
-2. The first set of digits must add up to an even number.
-3. The second set of digits must add up to an odd number.
-4. The last digit in each set must be larger than the two previous digits in the same set.
-
-If all the above constraints are met within the string, the your program should return the string true, otherwise your program should return the string false. For example: if str is "224.315.218" then your program should return "true".
-
-*/
-
 func SerialNumber(str string) string {
 	if len(str) == 0 {
 		return "false"
@@ -2256,8 +2245,42 @@ func SerialNumber(str string) string {
 	return "true"
 }
 
+func StringChanges(str string) string {
+	if len(str) == 0 {
+		return ""
+	}
+	deleteNext := false
+	var text []string
+	for u := 0; u < len(str); u++ {
+		if string(str[u]) == "M" {
+			deleteNext = false
+			if len(text) != 0 {
+				text = append(text, text[len(text)-1:][0])
+			}
+			continue
+		} else if string(str[u]) == "N" {
+			if u != 0 && string(str[u-1]) != "N" {
+				deleteNext = true
+			} else {
+				deleteNext = false
+			}
+			continue
+		} else {
+			if !deleteNext {
+				text = append(text, strings.ToLower(string(str[u])))
+			}
+			deleteNext = false
+		}
+	}
+	return strings.Join(text, "")
+}
+
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", StringChanges("oMoMkkNrrN"))
+	fmt.Printf("%v\n", StringChanges("MrtyNNgMM"))
+	return
 
 	fmt.Printf("%v\n", SerialNumber("11.124.667"))
 	return
