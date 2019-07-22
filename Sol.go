@@ -2591,8 +2591,117 @@ func TriangleRow(num int) int {
 	return sum
 }
 
+func TimeDifference(strArr []string) int {
+	if len(strArr) < 2 {
+		return 0
+	}
+	padLeft := func(base string, what string, count int) string {
+		if len(base) >= count {
+			return base
+		}
+		add := ""
+		for u := len(base); u < count; u++ {
+			add += what
+		}
+		return add + base
+	}
+	hourAsMinute := 60
+	dayAsHour := 24
+	suffixAm, suffixPm := "am", "pm"
+	timeIndexGenerator := func() map[int]string {
+		hour := 12
+		minute := 0
+		timeIndex := make(map[int]string, hourAsMinute*dayAsHour)
+		for u := 0; u < hourAsMinute*dayAsHour; u++ {
+			if u%hourAsMinute == 0 {
+				minute = 0
+				if u == 0 {
+					hour = dayAsHour / 2
+					timeIndex[u] = fmt.Sprintf("%v:%v%v", padLeft(strconv.Itoa(hour), "0", 2), padLeft(strconv.Itoa(minute), "0", 2), suffixAm)
+				} else if u == hourAsMinute {
+					hour = 1
+					timeIndex[u] = fmt.Sprintf("%v:%v%v", padLeft(strconv.Itoa(hour), "0", 2), padLeft(strconv.Itoa(minute), "0", 2), suffixAm)
+				} else {
+					hour++
+					suffix := suffixAm
+					if u >= hourAsMinute*(dayAsHour/2) {
+						suffix = suffixPm
+					}
+					if u == hourAsMinute*(dayAsHour/2) {
+						hour = dayAsHour / 2
+					} else if u == (hourAsMinute*(dayAsHour/2))+hourAsMinute {
+						hour = 1
+					}
+					timeIndex[u] = fmt.Sprintf("%v:%v%v", padLeft(strconv.Itoa(hour), "0", 2), padLeft(strconv.Itoa(minute), "0", 2), suffix)
+				}
+			} else {
+				minute++
+				suffix := suffixAm
+				if u >= hourAsMinute*(dayAsHour/2) {
+					suffix = suffixPm
+				}
+				timeIndex[u] = fmt.Sprintf("%v:%v%v", padLeft(strconv.Itoa(hour), "0", 2), padLeft(strconv.Itoa(minute), "0", 2), suffix)
+			}
+		}
+		return timeIndex
+	}
+
+	res := timeIndexGenerator()
+	var keys []int
+	for key := range res {
+		keys = append(keys, key)
+	}
+	sort.Slice(keys, func(i, j int) bool {
+		return keys[i] < keys[j]
+	})
+
+	timeIndexFind := func(val string) int {
+		for key, valueOfIndex := range keys {
+			if res[valueOfIndex] == val {
+				return key
+			}
+		}
+		return 0
+	}
+	timeMinuteDiffCalc := func(time []string) int {
+		if len(time) == 0 {
+			return 0
+		}
+		min := hourAsMinute * dayAsHour
+		for u := 0; u < len(time); u++ {
+			for y := 0; y < len(time); y++ {
+				if y != u {
+					suff1Pm := strings.Contains(time[u], suffixPm)
+					suff2Am := strings.Contains(time[y], suffixAm)
+					t1 := timeIndexFind(padLeft(time[u], "0", 7))
+					t2 := timeIndexFind(padLeft(time[y], "0", 7))
+					op := 0
+					diffTwo := 0
+					if suff1Pm && suff2Am {
+						op = hourAsMinute*(dayAsHour) - t1
+						t1 = 0
+						diffTwo = int(math.Abs(float64(t1)+float64(t2))) + op
+					} else {
+						diffTwo = int(math.Abs(float64(t1)-float64(t2))) + op
+					}
+					if diffTwo < min {
+						min = diffTwo
+					}
+				}
+			}
+		}
+		return min
+	}
+	return timeMinuteDiffCalc(strArr)
+}
+
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", TimeDifference([]string{"10:00am", "11:45pm", "5:00am", "12:01am"}))
+	fmt.Printf("%v\n", TimeDifference([]string{"1:10pm", "4:40am", "5:00pm"}))
+
+	return
 
 	fmt.Printf("%v\n", TriangleRow(1))
 	fmt.Printf("%v\n", TriangleRow(2))
