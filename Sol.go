@@ -2695,8 +2695,48 @@ func TimeDifference(strArr []string) int {
 	return timeMinuteDiffCalc(strArr)
 }
 
+func MovingMedian(arr []int) string {
+	if len(arr) == 0 {
+		return "0"
+	}
+	medianFinder := func(array []int) (result int) {
+		result = 0
+		sort.Slice(array, func(i, j int) bool {
+			return array[i] < array[j]
+		})
+		if len(array)%2 != 0 {
+			result = array[len(array)/2]
+		} else {
+			result = (array[len(array)/2-1] + array[len(array)/2]) / 2
+		}
+		return
+	}
+
+	var result []string
+	if len(arr) < 2 {
+		return strconv.Itoa(arr[0])
+	}
+	first := arr[0]
+	arr = arr[1:]
+	for u := 0; u < len(arr); u++ {
+		var subset []int
+		for j := u; j >= 0 && j > (u-first); j-- {
+			if j < len(arr) {
+				subset = append(subset, arr[j])
+			}
+		}
+		result = append(result, fmt.Sprintf("%v", medianFinder(subset)))
+	}
+	return strings.Join(result, ",")
+}
+
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", MovingMedian([]int{3, 1, 3, 5, 10, 6, 4, 3, 1}))
+
+	//fmt.Printf("%v\n", MovingMedian([]int{5, 2, 4, 6}))
+	return
 
 	fmt.Printf("%v\n", TimeDifference([]string{"10:00am", "11:45pm", "5:00am", "12:01am"}))
 	fmt.Printf("%v\n", TimeDifference([]string{"1:10pm", "4:40am", "5:00pm"}))
