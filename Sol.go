@@ -2730,72 +2730,8 @@ func MovingMedian(arr []int) string {
 	return strings.Join(result, ",")
 }
 
-// "[3, 4]", "[1, 2, 7, 7]
-func ScaleBalancing(strArr []string) string {
-	notPossible := "not possible"
-	if len(strArr) != 2 {
-		return notPossible
-	}
-	index := 0
-	var pool []int
-	var left int
-	var right int
-	for _, value := range strArr {
-		value = strings.Replace(value, "[", "", -1)
-		value = strings.Replace(value, "]", "", -1)
-		values := strings.Split(value, ",")
-		if index == 0 {
-			if len(values) != 2 {
-				return notPossible
-			}
-			var errLeft error
-			var errRight error
-			left, errLeft = strconv.Atoi(values[0])
-			if errLeft != nil {
-				return notPossible
-			}
-			right, errRight = strconv.Atoi(values[1])
-			if errRight != nil {
-				return notPossible
-			}
-		} else {
-			for _, value := range values {
-				val, errInt := strconv.Atoi(value)
-				if errInt != nil {
-					return notPossible
-				}
-				pool = append(pool, val)
-			}
-		}
-		index++
-	}
-	bckLeft := left
-	bckRight := right
-	_, _ = bckLeft, bckRight
-	u := 0
-check:
-	for {
-		if left == right {
-			break
-		} else if left > right {
-			for u = 0; u < len(pool); {
-				right += pool[u]
-				u++
-				goto check
-			}
-		} else if right > left {
-			for u = 0; u < len(pool); {
-				left += pool[u]
-				u++
-				goto check
-			}
-		}
-	}
-	//return value must be sorted!
-	return notPossible
-}
 
-func MoneyDistribution(money float64,maxDistributionCount int) (float64, map[int]float64, error) {
+func MoneyDistribution(money float64, maxDistributionCount int) (float64, map[int]float64, error) {
 	if money <= 0 {
 		return -1, nil, errors.New("There is no money to share!")
 	}
@@ -2821,10 +2757,183 @@ func MoneyDistribution(money float64,maxDistributionCount int) (float64, map[int
 	return max, people, nil
 }
 
+
+// "[3, 4]", "[1, 2, 7, 7]
+func ScaleBalancing(strArr []string) string {
+	notPossible := "not possible"
+	if len(strArr) != 2 {
+		return notPossible
+	}
+	index := 0
+	var pool []int
+	var left int
+	var right int
+	var maxSelectionCount = 2
+	for _, value := range strArr {
+		value = strings.Replace(value, "[", "", -1)
+		value = strings.Replace(value, "]", "", -1)
+		values := strings.Split(value, ",")
+		if index == 0 {
+			if len(values) != 2 {
+				return notPossible
+			}
+			var errLeft error
+			var errRight error
+			left, errLeft = strconv.Atoi(strings.TrimSpace(values[0]))
+			if errLeft != nil {
+				return notPossible
+			}
+			right, errRight = strconv.Atoi(strings.TrimSpace(values[1]))
+			if errRight != nil {
+				return notPossible
+			}
+		} else {
+			for _, value := range values {
+				val, errInt := strconv.Atoi(strings.TrimSpace(value))
+				if errInt != nil {
+					return notPossible
+				}
+				pool = append(pool, val)
+			}
+		}
+		index++
+	}
+	binarySearch := func(items []int, search int) (isFound bool, itemIndex int) {
+		itemIndex = -1
+		isFound = false
+		left := 0
+		right := len(items) - 1
+		for left <= right {
+			middle := (left + right) / 2
+			if items[middle] == search {
+				itemIndex = middle
+				isFound = true
+				break
+			} else if items[middle] > search {
+				right = middle - 1
+			} else {
+				left = middle + 1
+			}
+		}
+		return
+	}
+	var limitedPowerSet func([]int, int, []int, *[][]int, int)
+	limitedPowerSet = func(subset []int, breakPoint int, selectedFar []int, result *[][]int, maxSliceLen int) {
+		if len(subset) == breakPoint {
+			if len(selectedFar) == maxSliceLen {
+				clone := make([]int, len(selectedFar))
+				copy(clone, selectedFar)
+				*result = append(*result, clone)
+			}
+			return
+		} else {
+			selectedFar = append(selectedFar, subset[breakPoint])
+			limitedPowerSet(subset, breakPoint+1, selectedFar, result, maxSliceLen)
+			selectedFar = selectedFar[:len(selectedFar)-1]
+			limitedPowerSet(subset, breakPoint+1, selectedFar, result, maxSliceLen)
+		}
+	}
+	index = 0
+	sort.Slice(pool, func(i, j int) bool {
+		return pool[i] < pool[j]
+	})
+	var selected []string
+	selectedSoFar := make([]int, 0)
+	results := make([][]int, 0)
+out:
+	for {
+		if left == right {
+			break
+		} else if left > right {
+			if index == 0 {
+				diff := left - right
+				isFound, itemIndex := binarySearch(pool, diff)
+				if isFound {
+					selected = append(selected, strconv.Itoa(pool[itemIndex]))
+					break
+				}
+			} else if index == 1 {
+				limitedPowerSet(pool, 0, selectedSoFar, &results, maxSelectionCount)
+				for _, value := range results {
+					sum := 0
+					for _, inValue := range value {
+						sum += inValue
+					}
+					if sum+right == left {
+						for _, inValue := range value {
+							selected = append(selected, strconv.Itoa(inValue))
+						}
+						break out
+					}
+				}
+			}
+		} else if right > left {
+			if index == 0 {
+				diff := right - left
+				isFound, itemIndex := binarySearch(pool, diff)
+				if isFound {
+					selected = append(selected, strconv.Itoa(pool[itemIndex]))
+					break
+				}
+			} else if index == 1 {
+				limitedPowerSet(pool, 0, selectedSoFar, &results, maxSelectionCount)
+				for _, value := range results {
+					sum := 0
+					for _, inValue := range value {
+						sum += inValue
+					}
+					if sum+left == right {
+						for _, inValue := range value {
+							selected = append(selected, strconv.Itoa(inValue))
+						}
+						break out
+					}
+				}
+			}
+		}
+		if index == 2 {
+			var leftSideItems, rightSideItems []int
+			for _, value := range pool {
+				leftSideItems = append(leftSideItems, left+value)
+			}
+			for _, value := range pool {
+				rightSideItems = append(rightSideItems, right+value)
+			}
+			for u := 0; u < len(leftSideItems); u++ {
+				for y := 0; y < len(rightSideItems); y++ {
+					if leftSideItems[u] == rightSideItems[y] {
+						selected = append(selected, strconv.Itoa(pool[u]), strconv.Itoa(pool[y]))
+						break out
+					}
+				}
+			}
+		} else {
+			if index>2 {
+				break out
+			}
+		}
+		index++
+	}
+	if len(selected) != 0 {
+		sort.Slice(selected, func(i, j int) bool {
+			val1, _ := strconv.Atoi(selected[i])
+			val2, _ := strconv.Atoi(selected[j])
+			return val1 < val2
+		})
+		return strings.Join(selected, ",")
+	}
+	return notPossible
+}
+
 //noinspection ALL
 func main() {
+	fmt.Printf("%v\n", ScaleBalancing([]string{"[13, 4]", "[1, 2, 3, 3, 4]"}))
+	fmt.Printf("%v\n", ScaleBalancing([]string{"[5, 9]", "[1, 2, 6, 7]"}))
+	fmt.Printf("%v\n", ScaleBalancing([]string{"[3, 4]", "[1, 2, 7, 7]"}))
+	fmt.Printf("%v\n", ScaleBalancing([]string{"[13, 4]", "[1, 2, 3, 6, 14]"}))
+	return
 
-	getMax, people, _ := MoneyDistribution(100,2)
+	getMax, people, _ := MoneyDistribution(100, 2)
 	who := 0
 	for key, value := range people {
 		if value == getMax {
