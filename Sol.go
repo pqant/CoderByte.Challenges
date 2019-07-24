@@ -2730,8 +2730,111 @@ func MovingMedian(arr []int) string {
 	return strings.Join(result, ",")
 }
 
+// "[3, 4]", "[1, 2, 7, 7]
+func ScaleBalancing(strArr []string) string {
+	notPossible := "not possible"
+	if len(strArr) != 2 {
+		return notPossible
+	}
+	index := 0
+	var pool []int
+	var left int
+	var right int
+	for _, value := range strArr {
+		value = strings.Replace(value, "[", "", -1)
+		value = strings.Replace(value, "]", "", -1)
+		values := strings.Split(value, ",")
+		if index == 0 {
+			if len(values) != 2 {
+				return notPossible
+			}
+			var errLeft error
+			var errRight error
+			left, errLeft = strconv.Atoi(values[0])
+			if errLeft != nil {
+				return notPossible
+			}
+			right, errRight = strconv.Atoi(values[1])
+			if errRight != nil {
+				return notPossible
+			}
+		} else {
+			for _, value := range values {
+				val, errInt := strconv.Atoi(value)
+				if errInt != nil {
+					return notPossible
+				}
+				pool = append(pool, val)
+			}
+		}
+		index++
+	}
+	bckLeft := left
+	bckRight := right
+	_, _ = bckLeft, bckRight
+	u := 0
+check:
+	for {
+		if left == right {
+			break
+		} else if left > right {
+			for u = 0; u < len(pool); {
+				right += pool[u]
+				u++
+				goto check
+			}
+		} else if right > left {
+			for u = 0; u < len(pool); {
+				left += pool[u]
+				u++
+				goto check
+			}
+		}
+	}
+	//return value must be sorted!
+	return notPossible
+}
+
+func MoneyDistribution(money float64,maxDistributionCount int) (float64, map[int]float64, error) {
+	if money <= 0 {
+		return -1, nil, errors.New("There is no money to share!")
+	}
+	if maxDistributionCount <= 0 {
+		return -1, nil, errors.New("There is no one to share the money!")
+	}
+	round := func(x, unit float64) float64 {
+		return math.Round(x/unit) * unit
+	}
+	_ = round
+	max := 0.0
+	percent := 1.0
+	people := make(map[int]float64, maxDistributionCount)
+	for u := 1; u <= maxDistributionCount; u++ {
+		allowance := money * float64(u) / float64(maxDistributionCount)
+		people[u] = allowance
+		if allowance > max {
+			max = allowance
+		}
+		money -= allowance
+		percent += 1.0
+	}
+	return max, people, nil
+}
+
 //noinspection ALL
 func main() {
+
+	getMax, people, _ := MoneyDistribution(100,2)
+	who := 0
+	for key, value := range people {
+		if value == getMax {
+			who = key
+			break
+		}
+	}
+	fmt.Printf("Max Money Owner : %v - Person Queue Index :%v", getMax, who)
+
+	return
 
 	fmt.Printf("%v\n", MovingMedian([]int{3, 1, 3, 5, 10, 6, 4, 3, 1}))
 
