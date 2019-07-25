@@ -2730,7 +2730,6 @@ func MovingMedian(arr []int) string {
 	return strings.Join(result, ",")
 }
 
-
 func MoneyDistribution(money float64, maxDistributionCount int) (float64, map[int]float64, error) {
 	if money <= 0 {
 		return -1, nil, errors.New("There is no money to share!")
@@ -2756,7 +2755,6 @@ func MoneyDistribution(money float64, maxDistributionCount int) (float64, map[in
 	}
 	return max, people, nil
 }
-
 
 // "[3, 4]", "[1, 2, 7, 7]
 func ScaleBalancing(strArr []string) string {
@@ -2908,7 +2906,7 @@ out:
 				}
 			}
 		} else {
-			if index>2 {
+			if index > 2 {
 				break out
 			}
 		}
@@ -2925,8 +2923,104 @@ out:
 	return notPossible
 }
 
+func PalindromeCreator(str string) string {
+	notPossible := "not possible"
+	if len(str) == 0 {
+		return notPossible
+	}
+	minLength := 3
+	var all []string
+	for _, value := range str {
+		all = append(all, string(value))
+	}
+	reverse := func(text string) string {
+		if len(text) == 0 {
+			return ""
+		}
+		var allInside []string
+		for _, value := range text {
+			allInside = append(allInside, string(value))
+		}
+		MAX := len(allInside) / 2
+		for u := 0; u < MAX; u++ {
+			temp := allInside[u]
+			allInside[u] = allInside[len(allInside)-u-1]
+			allInside[len(allInside)-u-1] = temp
+		}
+		return strings.Join(allInside, "")
+	}
+
+	chars := make([]string, 0)
+	index := 0
+	isDone := false
+do:
+	for u := 0; u < len(all); u++ {
+		if index == 0 {
+			newText := strings.Join(all, "")
+			if u > 0 {
+				newText = strings.Join(all[:u], "") + strings.Join(all[u+1:], "")
+			} else {
+				newText = strings.Join(all[1:], "")
+			}
+			if len(newText) >= minLength && newText == reverse(newText) {
+				chars = append(chars, all[u])
+				isDone = true
+				break do
+			}
+			if u == len(all)-1 {
+				index++
+			}
+		} else if index == 1 {
+			for y := u + 1; y < len(all); y++ {
+				if u != y {
+					newText := ""
+					for j := 0; j < len(all); j++ {
+						if j != u && j != y {
+							newText += all[j]
+						}
+					}
+					if len(newText) >= minLength && newText == reverse(newText) {
+						chars = append(chars, all[u], all[y])
+						isDone = true
+						break do
+					}
+				}
+			}
+			if u == len(all)-1 {
+				index++
+			}
+		}
+	}
+	if !isDone {
+		if index < 2 {
+			goto do
+		}
+		return notPossible
+	} else {
+		if len(chars) != 0 {
+			return strings.Join(chars, "")
+		}
+		return notPossible
+	}
+}
+
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", PalindromeCreator("vhhgghhgghhk"))
+	fmt.Printf("%v\n", PalindromeCreator("aajgmaa"))
+	fmt.Printf("%v\n", PalindromeCreator("racecar"))
+	fmt.Printf("%v\n", PalindromeCreator("aaabaaaj"))
+	fmt.Printf("%v\n", PalindromeCreator("annak"))
+	fmt.Printf("%v\n", PalindromeCreator("lolkm"))
+	fmt.Printf("%v\n", PalindromeCreator("aaaaaa"))
+
+
+	fmt.Printf("%v\n", PalindromeCreator("mmjmmhmm"))
+	fmt.Printf("%v\n", PalindromeCreator("mmop"))
+	fmt.Printf("%v\n", PalindromeCreator("kjjjhjjj"))
+
+	return
 	fmt.Printf("%v\n", ScaleBalancing([]string{"[13, 4]", "[1, 2, 3, 3, 4]"}))
 	fmt.Printf("%v\n", ScaleBalancing([]string{"[5, 9]", "[1, 2, 6, 7]"}))
 	fmt.Printf("%v\n", ScaleBalancing([]string{"[3, 4]", "[1, 2, 7, 7]"}))
