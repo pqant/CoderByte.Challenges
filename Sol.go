@@ -2929,10 +2929,6 @@ func PalindromeCreator(str string) string {
 		return notPossible
 	}
 	minLength := 3
-	var all []string
-	for _, value := range str {
-		all = append(all, string(value))
-	}
 	reverse := func(text string) string {
 		if len(text) == 0 {
 			return ""
@@ -2948,6 +2944,13 @@ func PalindromeCreator(str string) string {
 			allInside[len(allInside)-u-1] = temp
 		}
 		return strings.Join(allInside, "")
+	}
+	if len(str) >= minLength && reverse(str)==str {
+		return "palindrome"
+	}
+	var all []string
+	for _, value := range str {
+		all = append(all, string(value))
 	}
 
 	chars := make([]string, 0)
@@ -3007,15 +3010,16 @@ do:
 //noinspection ALL
 func main() {
 
-	fmt.Printf("%v\n", PalindromeCreator("vhhgghhgghhk"))
+	fmt.Printf("%v\n", PalindromeCreator("annak"))
+
+	return
+
 	fmt.Printf("%v\n", PalindromeCreator("aajgmaa"))
 	fmt.Printf("%v\n", PalindromeCreator("racecar"))
 	fmt.Printf("%v\n", PalindromeCreator("aaabaaaj"))
 	fmt.Printf("%v\n", PalindromeCreator("annak"))
 	fmt.Printf("%v\n", PalindromeCreator("lolkm"))
 	fmt.Printf("%v\n", PalindromeCreator("aaaaaa"))
-
-
 	fmt.Printf("%v\n", PalindromeCreator("mmjmmhmm"))
 	fmt.Printf("%v\n", PalindromeCreator("mmop"))
 	fmt.Printf("%v\n", PalindromeCreator("kjjjhjjj"))
