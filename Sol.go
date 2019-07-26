@@ -2945,7 +2945,7 @@ func PalindromeCreator(str string) string {
 		}
 		return strings.Join(allInside, "")
 	}
-	if len(str) >= minLength && reverse(str)==str {
+	if len(str) >= minLength && reverse(str) == str {
 		return "palindrome"
 	}
 	var all []string
@@ -3007,8 +3007,81 @@ do:
 	}
 }
 
+func ClosestEnemyII(strArr []string) int {
+	if len(strArr) == 0 {
+		return 0
+	}
+	type Coordinate struct {
+		X, Y int
+	}
+	transposition := func(rawMatrix []string) (allMatrix [][]string, firsts []Coordinate, seconds []Coordinate) {
+		allMatrix = make([][]string, len(rawMatrix[0]))
+		firsts = make([]Coordinate, 0)
+		seconds = make([]Coordinate, 0)
+		if len(rawMatrix) == 0 {
+			return
+		}
+		for u := 0; u < len(rawMatrix[0]); u++ {
+			newLine := make([]string, len(rawMatrix))
+			for y := 0; y < len(rawMatrix); y++ {
+				val := string(rawMatrix[y][u])
+				if val == "1" {
+					firsts = append(firsts, Coordinate{X: u, Y: y})
+				} else if val == "2" {
+					seconds = append(seconds, Coordinate{X: u, Y: y})
+				}
+				newLine[y] = val
+			}
+			allMatrix[u] = newLine
+		}
+		return
+	}
+
+	result, firsts, seconds := transposition(strArr)
+	if len(result) != 0 {
+		if len(firsts) != 1 {
+			return 0
+		}
+
+		if len(seconds) == 0 {
+			return 0
+		}
+		var distance []int
+		action := 0
+		once := false
+		for _, second := range seconds {
+			if firsts[0].X+len(strArr[0])-1 == second.X && !once {
+				action++
+				action += int(math.Abs(float64(firsts[0].Y) - float64(second.Y)))
+				once = true
+				distance = append(distance, action)
+				action = 0
+				distance = append(distance, int(math.Abs(float64(firsts[0].X)-float64(second.X)))+int(math.Abs(float64(
+					firsts[0].Y)-float64(second.Y))))
+				continue
+			}
+			distance = append(distance, int(math.Abs(float64(firsts[0].X)-float64(second.X)))+int(math.Abs(float64(
+				firsts[0].Y)-float64(second.Y))))
+		}
+		if len(distance) != 0 {
+			sort.Slice(distance, func(i, j int) bool {
+				return distance[i] < distance[j]
+			})
+			return distance[0]
+		}
+		return 0
+	}
+	return 0
+}
+
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", ClosestEnemyII([]string{"000", "100", "200"}))
+	fmt.Printf("%v\n", ClosestEnemyII([]string{"0000", "1000", "0002", "0002"}))
+	fmt.Printf("%v\n", ClosestEnemyII([]string{"0000", "2010", "0000", "2002"}))
+
+	return
 
 	fmt.Printf("%v\n", PalindromeCreator("annak"))
 
