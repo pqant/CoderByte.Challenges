@@ -1046,7 +1046,7 @@ func StringPeriods(str string) string {
 	}
 }
 
-func VowelSquare(strArr []string) string {
+func VowelSquare_OLD(strArr []string) string {
 	if len(strArr) < 2 {
 		return "not found"
 	}
@@ -3145,8 +3145,107 @@ func ClosestEnemyII(strArr []string) int {
 	return result
 }
 
+func VowelSquare(strArr []string) string {
+	notFound := "not found"
+	if len(strArr) < 2 {
+		return notFound
+	}
+	lenBase := len(strArr[0])
+	for u := 1; u < len(strArr); u++ {
+		if len(strArr[u]) != lenBase {
+			return notFound
+		}
+	}
+	var vowels = []rune{'a', 'e', 'i', 'o', 'u'}
+	isVowel := func(val rune) bool {
+		for u := 0; u < len(vowels); u++ {
+			if vowels[u] == val {
+				return true
+			}
+		}
+		return false
+	}
+	indexer := make([]string, 0)
+	kv := make(map[string][]int, 0)
+	for u := 0; u < len(strArr); u++ {
+		blockSize := 0
+		startIndex := -1
+		lineCount := 0
+		for y := 0; y < len(strArr[u]); y++ {
+			if isVowel(rune(strArr[u][y])) {
+				if startIndex == -1 {
+					startIndex = y
+				}
+				blockSize++
+			} else {
+				if startIndex != -1 {
+					if blockSize >= 2 {
+						text := fmt.Sprintf("%v#%v", u, lineCount)
+						kv[text] = []int{startIndex, blockSize}
+						indexer = append(indexer, text)
+						lineCount++
+					}
+					startIndex = -1
+					blockSize = 0
+				} else {
+					continue
+				}
+			}
+		}
+		if blockSize > 0 {
+			text := fmt.Sprintf("%v#%v", u, lineCount)
+			kv[text] = []int{startIndex, blockSize}
+			indexer = append(indexer, text)
+		}
+	}
+	before := -1
+	lineCheck := 0
+	result := ""
+	if len(indexer)<2 {
+		return notFound
+	}
+	for _, value := range indexer {
+		if points, isOk := kv[value]; isOk {
+			splitter := strings.Split(value, "#")
+			if len(splitter) == 2 {
+				if before == -1 {
+					var err error
+					before, err = strconv.Atoi(splitter[0])
+					if err != nil {
+						return notFound
+					}
+					lineCheck++
+					result=fmt.Sprintf("%v-%v",splitter[0],points[0])
+				} else {
+					newVal, err := strconv.Atoi(splitter[0])
+					if err != nil {
+						return notFound
+					}
+					if newVal-before != 1 {
+						lineCheck = 0
+					} else {
+						lineCheck++
+
+					}
+				}
+			}
+		}
+	}
+	if lineCheck<2 {
+		return notFound
+	}
+	return result
+}
+
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", VowelSquare([]string{"abcd", "eikr", "oufj"}))
+
+	fmt.Printf("%v\n", VowelSquare([]string{"gg", "ff"}))
+
+	fmt.Printf("%v\n", VowelSquare([]string{"aqrst", "ukaei", "ffooo"}))
+	return
 
 	fmt.Printf("%v\n", ClosestEnemyII([]string{"0000", "1000", "0002", "0002"}))
 	fmt.Printf("%v\n", ClosestEnemyII([]string{"01000", "00020", "00000", "00002", "02002"}))
