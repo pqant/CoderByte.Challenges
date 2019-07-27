@@ -3192,19 +3192,22 @@ func VowelSquare(strArr []string) string {
 				}
 			}
 		}
-		if blockSize > 0 {
+		if blockSize >= 2 {
 			text := fmt.Sprintf("%v#%v", u, lineCount)
 			kv[text] = []int{startIndex, blockSize}
 			indexer = append(indexer, text)
 		}
 	}
-	before := -1
+	beforePoint := -1
+	before,beforeMe := -1,-1
 	lineCheck := 0
 	result := ""
-	if len(indexer)<2 {
+	if len(indexer) < 2 {
 		return notFound
 	}
-	for _, value := range indexer {
+	lock := false
+	kvCheck := make(map[int][]int, 0)
+	for key, value := range indexer {
 		if points, isOk := kv[value]; isOk {
 			splitter := strings.Split(value, "#")
 			if len(splitter) == 2 {
@@ -3214,24 +3217,86 @@ func VowelSquare(strArr []string) string {
 					if err != nil {
 						return notFound
 					}
+					beforeMe = before
 					lineCheck++
-					result=fmt.Sprintf("%v-%v",splitter[0],points[0])
+					beforePoint = points[0]
+					result = fmt.Sprintf("%v-%v", splitter[0], points[0])
+					var add []int
+					for n := points[0]; n < points[0]+points[1]; n++ {
+						add = append(add, n)
+					}
+					kvCheck[key] = add
 				} else {
 					newVal, err := strconv.Atoi(splitter[0])
 					if err != nil {
 						return notFound
 					}
-					if newVal-before != 1 {
+					if newVal-beforeMe != 1 {
 						lineCheck = 0
 					} else {
 						lineCheck++
-
 					}
+					if points[0] > beforePoint && !lock {
+						result = fmt.Sprintf("%v-%v", before, points[0])
+					} else {
+						lock = true
+					}
+					beforeMe = newVal
+					var add []int
+					for n := points[0]; n < points[0]+points[1]; n++ {
+						add = append(add, n)
+					}
+					kvCheck[key] = add
 				}
 			}
 		}
 	}
-	if lineCheck<2 {
+	if lineCheck < 2 {
+		return notFound
+	}
+
+	cpy := make([]int, 0)
+	index := 0
+	isOk := false
+outx:
+	for _, value := range kvCheck {
+		if index == 0 {
+			cpy = make([]int, len(value))
+			copy(cpy, value)
+		} else {
+			matchCount := 0
+			if len(cpy) > len(value) {
+				for _, out := range cpy {
+					for _, in := range value {
+						if out == in {
+							matchCount++
+							if matchCount == 2 {
+								isOk = true
+								break outx
+							}
+							break
+						}
+					}
+				}
+			} else if len(cpy) <= len(value) {
+				for _, out := range value {
+					for _, in := range cpy {
+						if out == in {
+							matchCount++
+							if matchCount == 2 {
+								isOk = true
+								break outx
+							}
+							break
+						}
+					}
+				}
+			}
+
+		}
+		index++
+	}
+	if !isOk {
 		return notFound
 	}
 	return result
@@ -3240,12 +3305,17 @@ func VowelSquare(strArr []string) string {
 //noinspection ALL
 func main() {
 
+	fmt.Printf("%v\n", VowelSquare([]string{"aeeekmoo", "kmnouvoo", "frrsfsto"}))
+
+	return
+	fmt.Printf("%v\n", VowelSquare([]string{"fghik", "mnoos", "tueae", "ffgei"}))
+
+	fmt.Printf("%v\n", VowelSquare([]string{"aqrst", "ukaei", "fanuo"}))
+	return
+
 	fmt.Printf("%v\n", VowelSquare([]string{"abcd", "eikr", "oufj"}))
 
 	fmt.Printf("%v\n", VowelSquare([]string{"gg", "ff"}))
-
-	fmt.Printf("%v\n", VowelSquare([]string{"aqrst", "ukaei", "ffooo"}))
-	return
 
 	fmt.Printf("%v\n", ClosestEnemyII([]string{"0000", "1000", "0002", "0002"}))
 	fmt.Printf("%v\n", ClosestEnemyII([]string{"01000", "00020", "00000", "00002", "02002"}))
