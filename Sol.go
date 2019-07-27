@@ -3007,9 +3007,15 @@ do:
 	}
 }
 
-func ClosestEnemyII(strArr []string) int {
+func ClosestEnemyII_old(strArr []string) int {
 	if len(strArr) == 0 {
 		return 0
+	}
+	lengthOfOne := len(strArr[0])
+	for u := 1; u < len(strArr); u++ {
+		if len(strArr[u]) != lengthOfOne {
+			return 0
+		}
 	}
 	type Coordinate struct {
 		X, Y int
@@ -3042,27 +3048,36 @@ func ClosestEnemyII(strArr []string) int {
 		if len(firsts) != 1 {
 			return 0
 		}
-
 		if len(seconds) == 0 {
 			return 0
 		}
 		var distance []int
 		action := 0
-		once := false
+		sort.Slice(seconds, func(i, j int) bool {
+			return seconds[i].X < seconds[j].X
+		})
 		for _, second := range seconds {
-			if firsts[0].X+len(strArr[0])-1 == second.X && !once {
-				action++
-				action += int(math.Abs(float64(firsts[0].Y) - float64(second.Y)))
-				once = true
-				distance = append(distance, action)
-				action = 0
-				distance = append(distance, int(math.Abs(float64(firsts[0].X)-float64(second.X)))+int(math.Abs(float64(
-					firsts[0].Y)-float64(second.Y))))
-				continue
+			if second.X != 0 && second.X != len(result)-1 && firsts[0].X != 0 && firsts[0].X != len(result)-1 {
+				action = int(math.Abs(float64(firsts[0].X) - float64(second.X)))
 			}
-			distance = append(distance, int(math.Abs(float64(firsts[0].X)-float64(second.X)))+int(math.Abs(float64(
-				firsts[0].Y)-float64(second.Y))))
+			if firsts[0].Y != second.Y {
+				actionFirst := int(math.Abs(float64(firsts[0].Y) - float64(second.Y)))
+				actionSecondOne := firsts[0].Y
+				actionSecondTwo := len(result) - second.Y - 1
+				actionFinal := actionSecondOne + actionSecondTwo
+				if actionFirst == len(result)-1 && actionFinal == 0 {
+					action = 1
+				}
+				if actionFinal <= actionFirst {
+					action += actionFinal
+				} else {
+					action += actionFirst
+				}
+			}
+			distance = append(distance, action)
+			break
 		}
+
 		if len(distance) != 0 {
 			sort.Slice(distance, func(i, j int) bool {
 				return distance[i] < distance[j]
@@ -3074,11 +3089,69 @@ func ClosestEnemyII(strArr []string) int {
 	return 0
 }
 
+func ClosestEnemyII(strArr []string) int {
+	result := 1000
+	pos1X, pos1Y := -1, -1
+	distanceCalc := func(pos1X, pos1Y, pos2X, pos2Y, height, width int) int {
+		movesX, movesX2, movesY, movesY2 := 0, 0, 0, 0
+		if pos1X != pos2X {
+			movesX = pos1X - pos2X
+			if movesX < 0 {
+				movesX = movesX * -1
+			}
+			movesX2 = pos1X + (width - pos2X)
+			if movesX > movesX2 {
+				movesX = movesX2
+			}
+		}
+		if pos1Y != pos2Y {
+			movesY = pos1Y - pos2Y
+			if movesY < 0 {
+				movesY = movesY * -1
+			}
+			movesY2 = pos1Y + (height - pos2Y)
+			if movesY > movesY2 {
+				movesY = movesY2
+			}
+		}
+		return movesX + movesY
+	}
+	var pos2 = make(map[int][]int)
+	for index, value := range strArr {
+		if pos1X < 0 {
+			index1 := strings.Index(string(value), "1")
+			if index1 >= 0 {
+				pos1X = index1
+				pos1Y = index
+			}
+		}
+		for i, v := range string(value) {
+			if string(v) == "2" {
+				pos2[i] = append(pos2[i], index)
+			}
+		}
+	}
+	if len(pos2) < 1 {
+		return 0
+	}
+	for index, value := range pos2 {
+		for _, v := range value {
+			moves := distanceCalc(pos1X, pos1Y, index, v, len(strArr), len(strArr[0]))
+			if moves < result {
+				result = moves
+			}
+		}
+	}
+	return result
+}
+
 //noinspection ALL
 func main() {
 
-	fmt.Printf("%v\n", ClosestEnemyII([]string{"000", "100", "200"}))
 	fmt.Printf("%v\n", ClosestEnemyII([]string{"0000", "1000", "0002", "0002"}))
+	fmt.Printf("%v\n", ClosestEnemyII([]string{"01000", "00020", "00000", "00002", "02002"}))
+	fmt.Printf("%v\n", ClosestEnemyII([]string{"00000", "10020", "00000", "00002", "02002"}))
+	fmt.Printf("%v\n", ClosestEnemyII([]string{"000", "100", "200"}))
 	fmt.Printf("%v\n", ClosestEnemyII([]string{"0000", "2010", "0000", "2002"}))
 
 	return
