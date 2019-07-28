@@ -3335,11 +3335,11 @@ func main() {
 	return
 
 	fmt.Printf("%v\n", VowelSquare([]string{"aeeekmoo", "kmnouvoo", "frrsfsto"}))
-
-	return
 	fmt.Printf("%v\n", VowelSquare([]string{"fghik", "mnoos", "tueae", "ffgei"}))
 
 	fmt.Printf("%v\n", VowelSquare([]string{"aqrst", "ukaei", "fanuo"}))
+	return
+
 	return
 
 	fmt.Printf("%v\n", VowelSquare([]string{"abcd", "eikr", "oufj"}))
