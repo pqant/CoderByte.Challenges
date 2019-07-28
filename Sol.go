@@ -3342,9 +3342,9 @@ func main() {
 
 	return
 
+	fmt.Printf("%v\n", VowelSquare([]string{"gg", "ff"}))
 	fmt.Printf("%v\n", VowelSquare([]string{"abcd", "eikr", "oufj"}))
 
-	fmt.Printf("%v\n", VowelSquare([]string{"gg", "ff"}))
 
 	fmt.Printf("%v\n", ClosestEnemyII([]string{"0000", "1000", "0002", "0002"}))
 	fmt.Printf("%v\n", ClosestEnemyII([]string{"01000", "00020", "00000", "00002", "02002"}))
