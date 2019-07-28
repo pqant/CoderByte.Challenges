@@ -3199,7 +3199,7 @@ func VowelSquare(strArr []string) string {
 		}
 	}
 	beforePoint := -1
-	before,beforeMe := -1,-1
+	before, beforeMe := -1, -1
 	lineCheck := 0
 	result := ""
 	if len(indexer) < 2 {
@@ -3302,8 +3302,37 @@ outx:
 	return result
 }
 
+func TestX(all []string, maxLength int) {
+	var permx func([]string, int, []string, *[][]string, int)
+	permx = func(subset []string, breakPoint int, selectedSoFar []string, results *[][]string, maxLen int) {
+		if len(subset) == breakPoint {
+			if maxLen == len(selectedSoFar) {
+				res := make([]string, len(selectedSoFar))
+				copy(res, selectedSoFar)
+				*results = append(*results, res)
+			}
+			return
+		}
+		selectedSoFar = append(selectedSoFar, subset[breakPoint])
+		permx(subset, breakPoint+1, selectedSoFar, results, maxLength)
+		selectedSoFar = selectedSoFar[:len(selectedSoFar)-1]
+		permx(subset, breakPoint+1, selectedSoFar, results, maxLength)
+	}
+
+	selectedSF := make([]string, 0)
+	resultAll := make([][]string, 0)
+	permx(all, 0, selectedSF, &resultAll, 2)
+	for _, value := range resultAll {
+		fmt.Printf("%v\n", value)
+	}
+
+}
+
 //noinspection ALL
 func main() {
+
+	TestX([]string{"r", "d", "u", "l"}, 3)
+	return
 
 	fmt.Printf("%v\n", VowelSquare([]string{"aeeekmoo", "kmnouvoo", "frrsfsto"}))
 
