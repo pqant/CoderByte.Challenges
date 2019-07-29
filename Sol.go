@@ -3405,7 +3405,6 @@ func main2() {
 
 	return
 
-
 	fmt.Printf("%v\n", PalindromeCreator("aajgmaa"))
 	fmt.Printf("%v\n", PalindromeCreator("racecar"))
 	fmt.Printf("%v\n", PalindromeCreator("aaabaaaj"))
@@ -3416,11 +3415,13 @@ func main2() {
 	fmt.Printf("%v\n", PalindromeCreator("mmop"))
 	fmt.Printf("%v\n", PalindromeCreator("kjjjhjjj"))
 
-	return
+
 	fmt.Printf("%v\n", ScaleBalancing([]string{"[13, 4]", "[1, 2, 3, 3, 4]"}))
 	fmt.Printf("%v\n", ScaleBalancing([]string{"[5, 9]", "[1, 2, 6, 7]"}))
 	fmt.Printf("%v\n", ScaleBalancing([]string{"[3, 4]", "[1, 2, 7, 7]"}))
 	fmt.Printf("%v\n", ScaleBalancing([]string{"[13, 4]", "[1, 2, 3, 6, 14]"}))
+	return
+
 	return
 
 	getMax, people, _ := MoneyDistribution(100, 2)
