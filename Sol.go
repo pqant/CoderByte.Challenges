@@ -8,6 +8,12 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+
+	"bufio"
+	"context"
+	"log"
+	"os"
+	"time"
 )
 
 var vowels = []rune{'a', 'e', 'i', 'o', 'u'}
@@ -3328,8 +3334,49 @@ func TestX(all []string, maxLength int) {
 
 }
 
-//noinspection ALL
+func withTimeOut() {
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, time.Second)
+	defer cancel()
+
+	sleepAndTalk(ctx, 5*time.Second, "Hello withTimeOut!")
+}
+
+func withCancel() {
+	ctx := context.Background()
+	ctx, cancel := context.WithCancel(ctx)
+
+	go func() {
+		s := bufio.NewScanner(os.Stdin)
+		s.Scan()
+		cancel()
+	}()
+
+	sleepAndTalk(ctx, 5*time.Second, "Hello withCancel!")
+}
+
+func background() {
+	ctx := context.Background()
+	sleepAndTalk(ctx, 5*time.Second, "Hello background!")
+}
+
+func sleepAndTalk(ctx context.Context, d time.Duration, s string) {
+	select {
+	case <-time.After(d):
+		fmt.Println(s)
+	case <-ctx.Done():
+		log.Println(ctx.Err())
+	}
+}
+
 func main() {
+	background()
+	withCancel()
+	withTimeOut()
+}
+
+//noinspection ALL
+func main2() {
 
 	TestX([]string{"r", "d", "u", "l"}, 3)
 	return
@@ -3344,7 +3391,6 @@ func main() {
 
 	fmt.Printf("%v\n", VowelSquare([]string{"gg", "ff"}))
 	fmt.Printf("%v\n", VowelSquare([]string{"abcd", "eikr", "oufj"}))
-
 
 	fmt.Printf("%v\n", ClosestEnemyII([]string{"0000", "1000", "0002", "0002"}))
 	fmt.Printf("%v\n", ClosestEnemyII([]string{"01000", "00020", "00000", "00002", "02002"}))
