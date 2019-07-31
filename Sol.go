@@ -3525,8 +3525,27 @@ func PalindromeTwo(str string) string {
 	return "false"
 }
 
+func Division(num1 int, num2 int) int {
+	max := num1
+	if num2 > max {
+		max = num2
+	}
+	result := 1
+	for u := 1; u <= max; u++ {
+		if num1%u == 0 && num2%u == 0 {
+			result = u
+		}
+	}
+	return result
+}
+
 //noinspection ALL
 func main() {
+	fmt.Printf("%v\n", Division(7, 3))
+	fmt.Printf("%v\n", Division(36, 54))
+	fmt.Printf("%v\n", Division(12, 16))
+
+	return
 	fmt.Printf("%v\n", PalindromeTwo("Noel - sees Leon"))
 	fmt.Printf("%v\n", PalindromeTwo("Anne, I vote more cars race Rome-to-Vienna"))
 	fmt.Printf("%v\n", PalindromeTwo("A war at Tarawa!"))
