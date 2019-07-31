@@ -3412,8 +3412,44 @@ func PrimeNew(num int) string {
 	return "true"
 }
 
+func RunLength(str string) string {
+	if len(str) == 0 {
+		return ""
+	}
+	result := ""
+	first := string(str[0])
+	index := 1
+	inside := false
+	if len(str) == 1 {
+		return fmt.Sprintf("%d%v", len(str), string(str[0]))
+	}
+	for u := 1; u < len(str); u++ {
+		if string(str[u]) == first {
+			index++
+			inside = true
+		} else {
+			result += fmt.Sprintf("%d%v", index, string(str[u-1]))
+			index = 1
+			first = string(str[u])
+			inside = false
+		}
+	}
+	if !inside && string(result[len(result)-1:]) != first {
+		result += fmt.Sprintf("%d%v", index, string(str[len(str)-1]))
+	}
+	return result
+}
+
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", RunLength("aabbcde"))
+
+	fmt.Printf("%v\n", RunLength("wwwbbbw"))
+	fmt.Printf("%v\n", RunLength("f"))
+
+	return
+
 
 	for _, value := range []int{2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 26, 27, 28, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73,
 		79,
