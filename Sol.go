@@ -3440,11 +3440,99 @@ func RunLength(str string) string {
 	return result
 }
 
+func PalindromeTwo(str string) string {
+	var punchItems = []string{
+		" ",
+		"-",
+		"%",
+		"’'",
+		"()[]{}<>",
+		":",
+		",",
+		"+",
+		"‒–—―",
+		"…",
+		"!",
+		".",
+		"«»",
+		"-‐",
+		"?",
+		"‘’“”",
+		";",
+		"/",
+		"⁄",
+		"␠",
+		"·",
+		"&",
+		"@",
+		"*",
+		"\\",
+		"•",
+		"^",
+		"¤¢$€£¥₩₪",
+		"†‡",
+		"°",
+		"¡",
+		"¿",
+		"¬",
+		"#",
+		"№",
+		"%‰‱",
+		"¶",
+		"′",
+		"§",
+		"~",
+		"¨",
+		"_",
+		"|¦",
+		"⁂",
+		"☞",
+		"∴",
+		"‽",
+		"※"}
+	text := ""
+	for _, value := range str {
+		isFound := false
+		for _, char := range punchItems {
+			if string(value) == string(char) {
+				isFound = true
+				break
+			}
+		}
+		if !isFound {
+			text += strings.ToLower(string(value))
+		}
+	}
+	reverse := func(val string) string {
+		if len(val) == 0 {
+			return ""
+		}
+		result := make([]string, len(val))
+		for k := 0; k < len(val); k++ {
+			result[k] = string(val[k])
+		}
+		max := len(val) / 2
+		for u := 0; u < max; u++ {
+			temp := result[u]
+			result[u] = result[len(result)-u-1]
+			result[len(result)-u-1] = temp
+		}
+		return strings.Join(result, "")
+	}
+	if text == reverse(text) {
+		return "true"
+	}
+	return "false"
+}
+
 //noinspection ALL
 func main() {
+	fmt.Printf("%v\n", PalindromeTwo("Noel - sees Leon"))
+	fmt.Printf("%v\n", PalindromeTwo("Anne, I vote more cars race Rome-to-Vienna"))
+	fmt.Printf("%v\n", PalindromeTwo("A war at Tarawa!"))
 
+	return
 	fmt.Printf("%v\n", RunLength("abqq"))
-
 	fmt.Printf("%v\n", RunLength("wwwbbbw"))
 	fmt.Printf("%v\n", RunLength("f"))
 
