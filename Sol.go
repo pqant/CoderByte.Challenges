@@ -3539,8 +3539,44 @@ func Division(num1 int, num2 int) int {
 	return result
 }
 
+func StringScramble(str1 string, str2 string) string {
+	if len(str1) == 0 && len(str2) == 0 {
+		return "false"
+	}
+
+	var findIndexList []int
+	findMe := func(val int) bool {
+		for _, value := range findIndexList {
+			if val == value {
+				return true
+			}
+		}
+		return false
+	}
+	for _, value := range str2 {
+		for index, char := range str1 {
+			if string(char) == string(value) && !findMe(index) {
+				findIndexList = append(findIndexList, index)
+				break
+			}
+		}
+	}
+	if len(str2) == len(findIndexList) {
+		return "true"
+	}
+
+	return "false"
+}
+
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", StringScramble("cdore", "coder"))
+	fmt.Printf("%v\n", StringScramble("h3llko", "hello"))
+	fmt.Printf("%v\n", StringScramble("rkqodlw", "world"))
+
+	return
+
 	fmt.Printf("%v\n", Division(7, 3))
 	fmt.Printf("%v\n", Division(36, 54))
 	fmt.Printf("%v\n", Division(12, 16))
