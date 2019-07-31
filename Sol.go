@@ -3434,7 +3434,7 @@ func RunLength(str string) string {
 			inside = false
 		}
 	}
-	if !inside && string(result[len(result)-1:]) != first {
+	if (!inside && string(result[len(result)-1:]) != first) || (index > 1 && inside) {
 		result += fmt.Sprintf("%d%v", index, string(str[len(str)-1]))
 	}
 	return result
@@ -3443,13 +3443,12 @@ func RunLength(str string) string {
 //noinspection ALL
 func main() {
 
-	fmt.Printf("%v\n", RunLength("aabbcde"))
+	fmt.Printf("%v\n", RunLength("abqq"))
 
 	fmt.Printf("%v\n", RunLength("wwwbbbw"))
 	fmt.Printf("%v\n", RunLength("f"))
 
 	return
-
 
 	for _, value := range []int{2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 26, 27, 28, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73,
 		79,
