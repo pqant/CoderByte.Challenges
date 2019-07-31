@@ -3369,7 +3369,61 @@ func sleepAndTalk(ctx context.Context, d time.Duration, s string) {
 	}
 }
 
+func Calc(values ...int) int {
+	base := 1
+	for _, value := range values {
+		if value != 0 {
+			base *= value
+		}
+	}
+	return base
+}
+
+// N üzeri P  - N  % P == 1
+
+func PrimeTime(num int) string {
+	if num < 2 {
+		return "false"
+	}
+	if num == 2 || num == 3 {
+		return "true"
+	}
+	A := num - 1
+	for A > 2 {
+		calc := int64(math.Pow(float64(A), float64(num))-float64(A)) % int64(num)
+		//fmt.Printf("%v\n", calc)
+		if calc == 0 {
+			return "true"
+		}
+		A--
+	}
+	return "false"
+}
+
+func PrimeNew(num int) string {
+	for i := 2; i <= int(math.Floor(float64(num)/2)); i++ {
+		if num%i == 0 {
+			return "false"
+		}
+	}
+	if num < 1 {
+		return "false"
+	}
+	return "true"
+}
+
+//noinspection ALL
 func main() {
+
+	for _, value := range []int{2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 26, 27, 28, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73,
+		79,
+		83, 89, 97, 98, 99, 100} {
+		fmt.Printf("%v-%v\n", value, PrimeNew(value))
+
+	}
+
+	return
+
 	background()
 	withCancel()
 	withTimeOut()
@@ -3392,7 +3446,6 @@ func main2() {
 	fmt.Printf("%v\n", VowelSquare([]string{"gg", "ff"}))
 	fmt.Printf("%v\n", VowelSquare([]string{"abcd", "eikr", "oufj"}))
 
-
 	fmt.Printf("%v\n", PalindromeCreator("annak"))
 
 	return
@@ -3414,7 +3467,6 @@ func main2() {
 	fmt.Printf("%v\n", PalindromeCreator("mmjmmhmm"))
 	fmt.Printf("%v\n", PalindromeCreator("mmop"))
 	fmt.Printf("%v\n", PalindromeCreator("kjjjhjjj"))
-
 
 	fmt.Printf("%v\n", ScaleBalancing([]string{"[13, 4]", "[1, 2, 3, 3, 4]"}))
 	fmt.Printf("%v\n", ScaleBalancing([]string{"[5, 9]", "[1, 2, 6, 7]"}))
