@@ -3716,28 +3716,31 @@ func DashInsertII(num int) string {
 	}
 	result := ""
 	for u := 1; u < len(numbers); u++ {
+		add := func(char string) {
+			result = fmt.Sprintf("%v%v%v", result, char, string(numbers[u]))
+		}
 		if string(numbers[u]) != "0" {
 			numVal, _ := strconv.Atoi(string(numbers[u]))
 			numValBef, _ := strconv.Atoi(string(numbers[u-1]))
 			if numValBef != 0 {
 				if numVal%2 == 0 {
 					if numValBef%2 == 0 {
-						result = fmt.Sprintf("%v*%v", result, string(numbers[u]))
+						add("*")
 					} else {
-						result = fmt.Sprintf("%v%v", result, string(numbers[u]))
+						add("")
 					}
 				} else {
 					if numValBef%2 != 0 {
-						result = fmt.Sprintf("%v-%v", result, string(numbers[u]))
+						add("-")
 					} else {
-						result = fmt.Sprintf("%v%v", result, string(numbers[u]))
+						add("")
 					}
 				}
 			} else {
-				result = fmt.Sprintf("%v%v", result, string(numbers[u]))
+				add("")
 			}
 		} else {
-			result = fmt.Sprintf("%v%v", result, string(numbers[u]))
+			add("")
 		}
 	}
 	return string(numbers[0]) + result
@@ -3792,9 +3795,27 @@ func ArrayAddition(arr []int) string {
 	return "false"
 }
 
+func BinaryConverter(str string) string {
+	if len(str) == 0 {
+		return "0"
+	}
+	sum := 0.0
+	for u := len(str) - 1; u >= 0; u-- {
+		val, _ := strconv.Atoi(string(str[len(str)-u-1]))
+		if val == 1 {
+			sum += math.Pow(float64(2), float64(u))
+		}
+		fmt.Printf("%v-%v\n", u, val)
+	}
+	return fmt.Sprintf("%v", sum)
+}
+
 //noinspection ALL
 func main() {
-	fmt.Printf("%v\n", ArrayAddition([]int{3,5,-1,8,12}))
+
+	fmt.Printf("%v\n", BinaryConverter("100101"))
+	return
+	fmt.Printf("%v\n", ArrayAddition([]int{3, 5, -1, 8, 12}))
 
 	return
 	fmt.Printf("%v\n", DashInsertII(667488958374553)) // 454*67-9-3
