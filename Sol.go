@@ -3864,12 +3864,45 @@ func SimpleMode(arr []int) int {
 			return value
 		}
 	}
-
 	return -1
+}
+
+func Consecutive(arr []int) int {
+	if len(arr) < 2 {
+		return 0
+	}
+	sort.Slice(arr, func(i, j int) bool {
+		return arr[i] < arr[j]
+	})
+
+	var numbers []int
+	for u := 0; u < len(arr); u++ {
+		numbers = append(numbers, arr[u])
+	}
+
+	index := 0
+	for u := arr[0]; u <= arr[len(arr)-1]; u++ {
+		isFound := false
+		for j := 0; j < len(numbers); j++ {
+			if numbers[j] == u {
+				isFound = true
+				break
+			}
+		}
+		if !isFound {
+			index++
+		}
+	}
+	return index
 }
 
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", Consecutive([]int{5, 10, 15}))
+	fmt.Printf("%v\n", Consecutive([]int{-2, 10, 4}))
+
+	return
 
 	fmt.Printf("%v\n", SimpleMode([]int{10, 4, 5, 2, 4}))
 	return
