@@ -3568,8 +3568,56 @@ func StringScramble(str1 string, str2 string) string {
 	return "false"
 }
 
+func ArithGeoII(arr []int) string {
+	if len(arr) < 2 {
+		return "-1"
+	}
+	first := arr[0]
+	returnMe := true
+	for _, value := range arr {
+		if value == 0 {
+			return "-1"
+		}
+		if value != first {
+			returnMe = false
+		}
+	}
+	if returnMe {
+		return "-1"
+	}
+	diffSub := math.Abs(float64(arr[0]) - float64(arr[1]))
+	diffMul := math.Abs(float64(arr[1]) / float64(arr[0]))
+	isArithmetic, isGeoMetric := true, true
+	for u := 1; u < len(arr); u++ {
+		if isArithmetic && math.Abs(float64(arr[u])-float64(arr[u-1])) != diffSub {
+			isArithmetic = false
+		}
+		if isGeoMetric && math.Abs(float64(arr[u])/float64(arr[u-1])) != diffMul {
+			isGeoMetric = false
+		}
+		if !isGeoMetric && !isArithmetic {
+			return "-1"
+		}
+	}
+	if isArithmetic {
+		return "Arithmetic"
+	}
+	if isGeoMetric {
+		return "Geometric"
+	}
+	return "-1"
+}
+
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", ArithGeoII([]int{5, 10, 15}))
+	fmt.Printf("%v\n", ArithGeoII([]int{5, 10, 11, 20}))
+	fmt.Printf("%v\n", ArithGeoII([]int{2, 4, 6, 8}))
+	fmt.Printf("%v\n", ArithGeoII([]int{2, 6, 18, 54}))
+	fmt.Printf("%v\n", ArithGeoII([]int{2, 4, 16, 24}))
+
+	return
 
 	fmt.Printf("%v\n", StringScramble("cdore", "coder"))
 	fmt.Printf("%v\n", StringScramble("h3llko", "hello"))
