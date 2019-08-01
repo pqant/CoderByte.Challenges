@@ -3810,8 +3810,69 @@ func BinaryConverter(str string) string {
 	return fmt.Sprintf("%v", sum)
 }
 
+func CaesarCipher(str string, num int) string {
+	if len(str) == 0 {
+		return ""
+	}
+	if num <= 0 {
+		return str
+	}
+	var text []string
+	for _, value := range str {
+		text = append(text, string(value))
+	}
+	for u := 0; u < len(text); u++ {
+		charIndex := []rune(text[u])[0]
+		if charIndex >= 65 && charIndex <= 122 {
+			valx := int(charIndex) + num
+			diff := 0
+			if valx > 90 && valx < 97 {
+				diff = valx - 91
+				valx = 65
+			}
+			if valx > 122 {
+				diff = valx - 123
+				valx = 97
+			}
+			text[u] = fmt.Sprintf("%c", valx+diff)
+		}
+	}
+	return strings.Join(text, "")
+}
+
+func SimpleMode(arr []int) int {
+	if len(arr) == 0 {
+		return -1
+	}
+
+	kv := make(map[int]int, 0)
+	max := -1
+
+	for u := 0; u < len(arr); u++ {
+		if val, isOk := kv[arr[u]]; isOk {
+			kv[arr[u]] = val + 1
+			if val+1 > max {
+				max = val + 1
+			}
+		} else {
+			kv[arr[u]] = 1
+		}
+	}
+
+	for _, value := range arr {
+		if kv[value] == max {
+			return value
+		}
+	}
+
+	return -1
+}
+
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", SimpleMode([]int{10, 4, 5, 2, 4}))
+	return
 
 	fmt.Printf("%v\n", BinaryConverter("100101"))
 	return
