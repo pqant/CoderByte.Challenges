@@ -3896,8 +3896,40 @@ func Consecutive(arr []int) int {
 	return index
 }
 
+func NumberSearch(str string) string {
+	if len(str) == 0 {
+		return "0"
+	}
+	roundme := func(x, unit float64) float64 {
+		return math.Round(x/unit) * unit
+	}
+	sum, letterCount := 0, 0
+	words := strings.Split(str, " ")
+	for u := 0; u < len(words); u++ {
+		for j := 0; j < len(words[u]); j++ {
+			if rune(words[u][j]) >= 48 && rune(words[u][j]) <= 57 {
+				sum += int(rune(words[u][j]) - 48)
+			} else if (rune(words[u][j]) >= 65 && rune(words[u][j]) <= 89) ||
+				(rune(words[u][j]) >= 97 && rune(words[u][j]) <= 122) {
+				letterCount++
+			}
+		}
+	}
+	if letterCount == 0 {
+		return "0"
+	}
+	return fmt.Sprintf("%0.f", roundme(float64(sum)/float64(letterCount), 1))
+}
+
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", NumberSearch("Hello6 9World 2, Nic8e D7ay!"))
+	fmt.Printf("%v\n", NumberSearch("H3ello9-9"))
+	fmt.Printf("%v\n", NumberSearch("i love cake 9 8 7"))
+	fmt.Printf("%v\n", NumberSearch("3ko6"))
+
+	return
 
 	fmt.Printf("%v\n", Consecutive([]int{5, 10, 15}))
 	fmt.Printf("%v\n", Consecutive([]int{-2, 10, 4}))
