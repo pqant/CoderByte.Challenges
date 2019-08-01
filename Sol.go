@@ -3679,8 +3679,8 @@ func DashInsertIIRev(num string) string {
 	}
 	result := ""
 	for u := 1; u < len(num); u++ {
-		setVal := func(char string){
-			result = fmt.Sprintf("%v%v%v", result,char ,string(num[u]))
+		setVal := func(char string) {
+			result = fmt.Sprintf("%v%v%v", result, char, string(num[u]))
 		}
 		if string(num[u]) != "0" {
 			numVal, _ := strconv.Atoi(string(num[u]))
@@ -3708,7 +3708,6 @@ func DashInsertIIRev(num string) string {
 	}
 	return string(num[0]) + result
 }
-
 
 func DashInsertII(num int) string {
 	numbers := fmt.Sprintf("%v", num)
@@ -3744,10 +3743,61 @@ func DashInsertII(num int) string {
 	return string(numbers[0]) + result
 }
 
+func ArrayAddition(arr []int) string {
+	if len(arr) == 0 {
+		return "false"
+	}
+	first := arr[0]
+	isOk := false
+	for u := 1; u < len(arr); u++ {
+		if arr[u] != first {
+			isOk = true
+		}
+	}
+	if !isOk {
+		return "false"
+	}
+	sort.Slice(arr, func(i, j int) bool {
+		return arr[i] > arr[j]
+	})
+	max := arr[0]
+	arr = arr[1:]
+	var powerset func([]int, int, []int, *[][]int)
+	powerset = func(subset []int, breakPoint int, selectedSoFar []int, result *[][]int) {
+		if len(subset) == breakPoint {
+			newArr := make([]int, len(selectedSoFar))
+			copy(newArr, selectedSoFar)
+			*result = append(*result, newArr)
+			return
+		} else {
+			selectedSoFar = append(selectedSoFar, subset[breakPoint])
+			powerset(subset, breakPoint+1, selectedSoFar, result)
+			selectedSoFar = selectedSoFar[:len(selectedSoFar)-1]
+			powerset(subset, breakPoint+1, selectedSoFar, result)
+		}
+	}
+
+	resultSet := make([][]int, 0)
+	selectedSoFar := make([]int, 0)
+	powerset(arr, 0, selectedSoFar, &resultSet)
+	for _, value := range resultSet {
+		sum := 0
+		for _, innerValue := range value {
+			sum += innerValue
+		}
+		if sum == max {
+			return "true"
+		}
+	}
+	return "false"
+}
+
 //noinspection ALL
 func main() {
+	fmt.Printf("%v\n", ArrayAddition([]int{3,5,-1,8,12}))
 
-	fmt.Printf("%v\n", DashInsertII(1562)) // 454*67-9-3
+	return
+	fmt.Printf("%v\n", DashInsertII(667488958374553)) // 454*67-9-3
 	fmt.Printf("%v\n", DashInsertII(99946))
 	fmt.Printf("%v\n", DashInsertII(56647304))
 
