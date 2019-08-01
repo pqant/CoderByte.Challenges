@@ -3608,8 +3608,156 @@ func ArithGeoII(arr []int) string {
 	return "-1"
 }
 
+func LetterCount(str string) string {
+	if len(str) == 0 {
+		return "-1"
+	}
+	words := strings.Split(str, " ")
+	kvOut := make(map[int]int, len(words))
+	breakDown := true
+	for key, value := range words {
+		kvIn := make(map[string]int, 0)
+		for u := 0; u < len(value); u++ {
+			if val, isExist := kvIn[string(value[u])]; isExist {
+				kvIn[string(value[u])] = val + 1
+			} else {
+				kvIn[string(value[u])] = 1
+			}
+		}
+		max := 0
+		for _, value := range kvIn {
+			if value > max {
+				max = value
+			}
+		}
+		kvOut[key] = max
+		if breakDown && max != 1 {
+			breakDown = false
+		}
+	}
+	if breakDown {
+		return "-1"
+	}
+	var indexSort []int
+	for key, _ := range kvOut {
+		indexSort = append(indexSort, key)
+	}
+	sort.Slice(indexSort, func(i, j int) bool {
+		return indexSort[i] < indexSort[j]
+	})
+	max := 0
+	keyIndex := 0
+	for key := range indexSort {
+		if kvOut[key] > max {
+			max = kvOut[key]
+			keyIndex = key
+		}
+	}
+	maxCount := 0
+	for _, value := range kvOut {
+		if value == max {
+			maxCount++
+		}
+	}
+	if maxCount == 1 {
+		return words[keyIndex]
+	} else {
+		for key := range indexSort {
+			if kvOut[key] == max {
+				max = kvOut[key]
+				keyIndex = key
+				break
+			}
+		}
+		return words[keyIndex]
+	}
+}
+
+func DashInsertIIRev(num string) string {
+	if len(num) == 0 {
+		return ""
+	}
+	result := ""
+	for u := 1; u < len(num); u++ {
+		setVal := func(char string){
+			result = fmt.Sprintf("%v%v%v", result,char ,string(num[u]))
+		}
+		if string(num[u]) != "0" {
+			numVal, _ := strconv.Atoi(string(num[u]))
+			numValBef, _ := strconv.Atoi(string(num[u-1]))
+			if numValBef != 0 {
+				if numVal%2 == 0 {
+					if numValBef%2 == 0 {
+						setVal("*")
+					} else {
+						setVal("")
+					}
+				} else {
+					if numValBef%2 != 0 {
+						setVal("-")
+					} else {
+						setVal("")
+					}
+				}
+			} else {
+				setVal("")
+			}
+		} else {
+			setVal("")
+		}
+	}
+	return string(num[0]) + result
+}
+
+
+func DashInsertII(num int) string {
+	numbers := fmt.Sprintf("%v", num)
+	if len(numbers) == 0 {
+		return ""
+	}
+	result := ""
+	for u := 1; u < len(numbers); u++ {
+		if string(numbers[u]) != "0" {
+			numVal, _ := strconv.Atoi(string(numbers[u]))
+			numValBef, _ := strconv.Atoi(string(numbers[u-1]))
+			if numValBef != 0 {
+				if numVal%2 == 0 {
+					if numValBef%2 == 0 {
+						result = fmt.Sprintf("%v*%v", result, string(numbers[u]))
+					} else {
+						result = fmt.Sprintf("%v%v", result, string(numbers[u]))
+					}
+				} else {
+					if numValBef%2 != 0 {
+						result = fmt.Sprintf("%v-%v", result, string(numbers[u]))
+					} else {
+						result = fmt.Sprintf("%v%v", result, string(numbers[u]))
+					}
+				}
+			} else {
+				result = fmt.Sprintf("%v%v", result, string(numbers[u]))
+			}
+		} else {
+			result = fmt.Sprintf("%v%v", result, string(numbers[u]))
+		}
+	}
+	return string(numbers[0]) + result
+}
+
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", DashInsertII(1562)) // 454*67-9-3
+	fmt.Printf("%v\n", DashInsertII(99946))
+	fmt.Printf("%v\n", DashInsertII(56647304))
+
+	return
+
+	fmt.Printf("%v\n", LetterCount("Today, is the greatest day ever!"))
+	fmt.Printf("%v\n", LetterCount("Hello apple pie!"))
+	fmt.Printf("%v\n", LetterCount("No Words"))
+
+	return
 
 	fmt.Printf("%v\n", ArithGeoII([]int{5, 10, 15}))
 	fmt.Printf("%v\n", ArithGeoII([]int{5, 10, 11, 20}))
