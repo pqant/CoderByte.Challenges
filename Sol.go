@@ -3921,9 +3921,24 @@ func NumberSearch(str string) string {
 	return fmt.Sprintf("%0.f", roundme(float64(sum)/float64(letterCount), 1))
 }
 
+func ThreeFiveMultiples(num int) int {
+	if num == 0 {
+		return num
+	}
+	sum := 0
+	for u := 0; u < num; u++ {
+		if u%3 == 0 || u%5 == 0 {
+			sum += u
+		}
+	}
+	return sum
+}
+
 //noinspection ALL
 func main() {
 
+	fmt.Printf("%v\n", ThreeFiveMultiples(1))
+	return
 	fmt.Printf("%v\n", NumberSearch("Hello6 9World 2, Nic8e D7ay!"))
 	fmt.Printf("%v\n", NumberSearch("H3ello9-9"))
 	fmt.Printf("%v\n", NumberSearch("i love cake 9 8 7"))
