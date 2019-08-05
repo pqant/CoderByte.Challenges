@@ -3934,9 +3934,137 @@ func ThreeFiveMultiples(num int) int {
 	return sum
 }
 
+func StringReduction(str string) int {
+	if len(str) == 0 {
+		return 0
+	}
+	letters := []rune{'a', 'b', 'c'}
+	for _, value := range str {
+		hasFound := false
+		for _, letter := range letters {
+			if value == letter {
+				hasFound = true
+				break
+			}
+		}
+		if !hasFound {
+			return 0
+		}
+	}
+	check := func(where string, what []string) bool {
+		for _, value := range what {
+			if strings.Index(where, value) != -1 {
+				return true
+			}
+		}
+		return false
+	}
+	reverse := func(data string) string {
+		if len(data) == 0 {
+			return ""
+		}
+		dataBody := make([]string, len(data))
+		for key, value := range data {
+			dataBody[key] = string(value)
+		}
+		MAX := len(dataBody) / 2
+		for u := 0; u < MAX; u++ {
+			temp := dataBody[u]
+			dataBody[u] = dataBody[len(dataBody)-u-1]
+			dataBody[len(dataBody)-u-1] = temp
+		}
+		return strings.Join(dataBody, "")
+	}
+	bodyGenerator := func(letters []rune) []string {
+		if len(letters) == 0 {
+			return []string{}
+		}
+		var result []string
+		for _, letter := range letters {
+			replaceBody := ""
+			for _, value := range letters {
+				if string(letter) != string(value) {
+					replaceBody += string(value)
+				}
+			}
+			result = append(result, replaceBody, reverse(replaceBody))
+		}
+		return result
+	}
+	replacer := func(what, text string) string {
+		if len(what) != 1 {
+			return ""
+		}
+		replaceBody := ""
+		for _, value := range letters {
+			if what != string(value) {
+				replaceBody += string(value)
+			}
+		}
+		text = strings.Replace(text, replaceBody, what, 1)
+		text = strings.Replace(text, reverse(replaceBody), what, 1)
+		return text
+	}
+	text := make([]string, len(str))
+	for key, value := range str {
+		text[key] = string(value)
+	}
+	lBlockMaxCount := func(letter string) int {
+		max, count := 0, 0
+		for u := 1; u < len(str); u++ {
+			if string(str[u]) == letter {
+				if string(str[u-1]) == letter {
+					if u == 0 {
+						count = 1
+					}
+					count++
+				} else {
+					count = 1
+				}
+				if count > max {
+					max = count
+				}
+			}
+		}
+		return max
+	}
+	var letterList []string
+	var values []int
+	a := lBlockMaxCount("a")
+	b := lBlockMaxCount("b")
+	c := lBlockMaxCount("c")
+	values = append(values, a, b, c)
+	sort.Slice(values, func(i, j int) bool {
+		return values[i] > values[j]
+	})
+	if a == values[0] {
+		letterList = append(letterList, "a", "b", "c")
+	} else if b == values[0] {
+		letterList = append(letterList, "b", "a", "c")
+	} else {
+		letterList = append(letterList, "c", "a", "b")
+	}
+do:
+	for _, letter := range letterList {
+		str = replacer(letter, str)
+	}
+	if check(str, bodyGenerator(letters)) {
+		goto do
+	}
+	return len(str)
+}
+
 //noinspection ALL
 func main() {
 
+	//fmt.Printf("%v\n", StringReduction("bcab"))
+	//fmt.Printf("%v\n", StringReduction("cab"))
+	//fmt.Printf("%v\n", StringReduction("bcab"))
+	//fmt.Printf("%v\n", StringReduction("abcabc"))
+	//fmt.Printf("%v\n", StringReduction("cccc"))
+	fmt.Printf("%v\n", StringReduction("cccab"))
+
+	return
 	fmt.Printf("%v\n", ThreeFiveMultiples(1))
 	return
 	fmt.Printf("%v\n", NumberSearch("Hello6 9World 2, Nic8e D7ay!"))
