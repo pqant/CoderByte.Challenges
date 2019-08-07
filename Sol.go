@@ -4230,8 +4230,51 @@ func PermutationStep(num int) int {
 	return -1
 }
 
+func FormattedDivision(num1 int, num2 int) string {
+	if num2 == 0 {
+		return fmt.Sprintf("0.0000")
+	}
+	roundme := func(x, unit float64) float64 {
+		return math.Round(x/unit) * unit
+	}
+	text := fmt.Sprintf("%0.4f", roundme(float64(num1)/float64(num2), 0.0001))
+	parts := strings.Split(text, ".")
+	if len(parts)!=2 {
+		return fmt.Sprintf("0.0000")
+	}
+	first := ""
+	index := 0
+	reverse := func(text string) string {
+		var str []string
+		for _, value := range text {
+			str = append(str, string(value))
+		}
+		MAX := len(str) / 2
+		for u := 0; u < MAX; u++ {
+			temp := str[u]
+			str[u] = str[len(str)-1-u]
+			str[len(str)-1-u] = temp
+		}
+		return strings.Join(str, "")
+	}
+	info := parts[0]
+	for u := len(info) - 1; u >= 0; u-- {
+		if index%3 == 0 && index!=0 {
+			first += fmt.Sprintf(",%v", string(info[u]))
+		} else {
+			first += fmt.Sprintf("%v", string(info[u]))
+		}
+		index++
+	}
+	return fmt.Sprintf("%v.%v", reverse(first), parts[1])
+}
+
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", FormattedDivision(101077282, 21123))
+
+	return
 
 	fmt.Printf("%v\n", PermutationStep(23514))
 	fmt.Printf("%v\n", PermutationStep(897654321))
