@@ -4178,8 +4178,65 @@ index:
 	return lenList[0]
 }
 
+func PermutationStep(num int) int {
+	var helper func([]int, int)
+	var results [][]int
+	helper = func(items []int, n int) {
+		if n == 1 {
+			temp := make([]int, len(items))
+			copy(temp, items)
+			results = append(results, temp)
+		} else {
+			for i := 0; i < n; i++ {
+				helper(items, n-1)
+				if n%2 == 1 {
+					temp := items[i]
+					items[i] = items[n-1]
+					items[n-1] = temp
+				} else {
+					temp := items[0]
+					items[0] = items[n-1]
+					items[n-1] = temp
+				}
+			}
+		}
+	}
+
+	var numLetters []int
+	text := strconv.Itoa(num)
+	for _, value := range text {
+		val, _ := strconv.Atoi(string(value))
+		numLetters = append(numLetters, val)
+	}
+	helper(numLetters, len(numLetters))
+
+	var itemsAll []int
+	for _, value := range results {
+		number := ""
+		for _, val := range value {
+			number += strconv.Itoa(val)
+		}
+		digits, _ := strconv.Atoi(number)
+		itemsAll = append(itemsAll, digits)
+	}
+	sort.Slice(itemsAll, func(i, j int) bool {
+		return itemsAll[i] < itemsAll[j]
+	})
+	for _, value := range itemsAll {
+		if value > num {
+			return value
+		}
+	}
+	return -1
+}
+
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", PermutationStep(23514))
+	fmt.Printf("%v\n", PermutationStep(897654321))
+
+	return
 
 	fmt.Printf("%v\n", StringReduction("aaa"))
 	fmt.Printf("%v\n", StringReduction("abc"))
