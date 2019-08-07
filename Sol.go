@@ -3934,7 +3934,7 @@ func ThreeFiveMultiples(num int) int {
 	return sum
 }
 
-func StringReduction(str string) int {
+func StringReductionOld(str string) int {
 	if len(str) == 0 {
 		return 0
 	}
@@ -4054,15 +4054,141 @@ do:
 	return len(str)
 }
 
+func StringReduction(str string) int {
+	if len(str) == 0 {
+		return 0
+	}
+	letters := []rune{'a', 'b', 'c'}
+	for _, value := range str {
+		hasFound := false
+		for _, letter := range letters {
+			if value == letter {
+				hasFound = true
+				break
+			}
+		}
+		if !hasFound {
+			return 0
+		}
+	}
+	check := func(where string, what []string) bool {
+		for _, value := range what {
+			if strings.Index(where, value) != -1 {
+				return true
+			}
+		}
+		return false
+	}
+	reverse := func(data string) string {
+		if len(data) == 0 {
+			return ""
+		}
+		dataBody := make([]string, len(data))
+		for key, value := range data {
+			dataBody[key] = string(value)
+		}
+		MAX := len(dataBody) / 2
+		for u := 0; u < MAX; u++ {
+			temp := dataBody[u]
+			dataBody[u] = dataBody[len(dataBody)-u-1]
+			dataBody[len(dataBody)-u-1] = temp
+		}
+		return strings.Join(dataBody, "")
+	}
+	bodyGenerator := func(letters []rune) []string {
+		if len(letters) == 0 {
+			return []string{}
+		}
+		var result []string
+		for _, letter := range letters {
+			replaceBody := ""
+			for _, value := range letters {
+				if string(letter) != string(value) {
+					replaceBody += string(value)
+				}
+			}
+			result = append(result, replaceBody, reverse(replaceBody))
+		}
+		return result
+	}
+	replacer := func(what, text string) string {
+		if len(what) != 1 {
+			return ""
+		}
+		replaceBody := ""
+		for _, value := range letters {
+			if what != string(value) {
+				replaceBody += string(value)
+			}
+		}
+		text = strings.Replace(text, replaceBody, what, 1)
+		text = strings.Replace(text, reverse(replaceBody), what, 1)
+		return text
+	}
+	text := make([]string, len(str))
+	for key, value := range str {
+		text[key] = string(value)
+	}
+
+	var helper func([]rune, int)
+	var resultSet [][]rune
+
+	helper = func(arr []rune, n int) {
+		if n == 1 {
+			tmp := make([]rune, len(arr))
+			copy(tmp, arr)
+			resultSet = append(resultSet, tmp)
+		} else {
+			for i := 0; i < n; i++ {
+				helper(arr, n-1)
+				if n%2 == 1 {
+					tmp := arr[i]
+					arr[i] = arr[n-1]
+					arr[n-1] = tmp
+				} else {
+					tmp := arr[0]
+					arr[0] = arr[n-1]
+					arr[n-1] = tmp
+				}
+			}
+		}
+	}
+	helper(letters, len(letters))
+
+	var lenList []int
+	index := 0
+	strBackup := str
+index:
+	for _, letter := range resultSet[index] {
+		str = replacer(string(letter), str)
+	}
+	if check(str, bodyGenerator(letters)) {
+		goto index
+	}
+	lenList = append(lenList, len(str))
+	if index < len(letters) {
+		str = strBackup
+		index++
+		goto index
+	}
+	sort.Slice(lenList, func(i, j int) bool {
+		return lenList[i] < lenList[j]
+
+	})
+	return lenList[0]
+}
+
 //noinspection ALL
 func main() {
 
-	//fmt.Printf("%v\n", StringReduction("bcab"))
-	//fmt.Printf("%v\n", StringReduction("cab"))
-	//fmt.Printf("%v\n", StringReduction("bcab"))
-	//fmt.Printf("%v\n", StringReduction("abcabc"))
-	//fmt.Printf("%v\n", StringReduction("cccc"))
-	fmt.Printf("%v\n", StringReduction("cccab"))
+	fmt.Printf("%v\n", StringReduction("aaa"))
+	fmt.Printf("%v\n", StringReduction("abc"))
+	fmt.Printf("%v\n", StringReduction("bcab"))
+	fmt.Printf("%v\n", StringReduction("aabc"))
+	fmt.Printf("%v\n", StringReduction("abcabc"))
+	fmt.Printf("%v\n", StringReduction("abb"))
+	fmt.Printf("%v\n", StringReduction("aa"))
+	fmt.Printf("%v\n", StringReduction("ccaa"))
 
 	return
 	fmt.Printf("%v\n", ThreeFiveMultiples(1))
