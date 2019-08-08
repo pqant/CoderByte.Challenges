@@ -4239,7 +4239,7 @@ func FormattedDivision(num1 int, num2 int) string {
 	}
 	text := fmt.Sprintf("%0.4f", roundme(float64(num1)/float64(num2), 0.0001))
 	parts := strings.Split(text, ".")
-	if len(parts)!=2 {
+	if len(parts) != 2 {
 		return fmt.Sprintf("0.0000")
 	}
 	first := ""
@@ -4259,7 +4259,7 @@ func FormattedDivision(num1 int, num2 int) string {
 	}
 	info := parts[0]
 	for u := len(info) - 1; u >= 0; u-- {
-		if index%3 == 0 && index!=0 {
+		if index%3 == 0 && index != 0 {
 			first += fmt.Sprintf(",%v", string(info[u]))
 		} else {
 			first += fmt.Sprintf("%v", string(info[u]))
@@ -4269,8 +4269,101 @@ func FormattedDivision(num1 int, num2 int) string {
 	return fmt.Sprintf("%v.%v", reverse(first), parts[1])
 }
 
+//"Hello -5LOL6"    ->     hELLO -6lol5
+//"2S 6 du5d4e"     ->     2s 6 DU4D5E
+func SwapII(str string) string {
+	if len(str) == 0 {
+		return ""
+	}
+	isNumber := func(val rune) (int, bool) {
+		if val >= 48 && val <= 57 {
+			return int(val) - 48, true
+		}
+		return -1, false
+	}
+
+	changer := func(strValue, with string) string {
+		formatted := ""
+		if strings.Contains(strValue, with) || len(strValue)!=0 {
+			values := strings.Split(str, with)
+			index := 0
+			for _, value := range values {
+				var text []string
+				for _, in := range value {
+					text = append(text, string(in))
+				}
+				firstIndex := 0
+				firstF := false
+				newVal := ""
+				isCharDetected := 0
+				for u := 0; u < len(text); u++ {
+					addValue := ""
+					add:=func(){
+						if []rune((text[u]))[0] >= 65 && []rune((text[u]))[0] < 97 {
+							addValue = strings.ToLower(text[u])
+						} else {
+							addValue = strings.ToUpper(text[u])
+						}
+					}
+					if _, isNum := isNumber([]rune((text[u]))[0]); isNum {
+						if !firstF {
+							firstF = true
+							firstIndex = u
+							addValue = text[u]
+							isCharDetected = 1
+						} else {
+							if isCharDetected == 2 {
+								temp := text[u]
+								text[u] = text[firstIndex]
+								var forNewVal []string
+								for _, char := range newVal {
+									forNewVal = append(forNewVal, string(char))
+								}
+								forNewVal = append(forNewVal, text[u])
+								forNewVal[u] = text[firstIndex]
+								text[firstIndex] = temp
+								forNewVal[firstIndex] = temp
+								newVal = strings.Join(forNewVal, "")
+								firstF = false
+								isCharDetected = 0
+								continue
+							} else {
+								add()
+							}
+						}
+					} else {
+						if isCharDetected == 1 {
+							isCharDetected = 2
+						}
+						add()
+					}
+					newVal += addValue
+				}
+				if index == len(values)-1 {
+					formatted += newVal
+				} else {
+					formatted += fmt.Sprintf("%v%v", newVal, with)
+				}
+				index++
+			}
+			return formatted
+		} else {
+			return strValue
+		}
+	}
+	result := changer(str, " ")
+	return result
+}
+
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", SwapII("123gg))(("))
+	fmt.Printf("%v\n", SwapII("2S 6 du5d4e"))
+	fmt.Printf("%v\n", SwapII("6coderbyte5"))
+
+
+	return
 
 	fmt.Printf("%v\n", FormattedDivision(101077282, 21123))
 
