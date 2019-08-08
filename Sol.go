@@ -4458,8 +4458,47 @@ func BracketMatcher(str string) string {
 	return "0"
 }
 
+func TripleDouble(num1 int, num2 int) int {
+	kvGen := func(num int) map[int]int {
+		kv := make(map[int]int, 0)
+		index := 0
+		strVal := strconv.Itoa(num)
+		for _, value := range strVal {
+			val, _ := strconv.Atoi(string(value))
+			if valInKv, isExist := kv[val]; isExist {
+				if string(strVal[index-1]) == string(value) {
+					kv[val] = valInKv + 1
+				}
+			} else {
+				kv[val] = 1
+			}
+			index++
+		}
+		return kv
+	}
+	kvFirst := kvGen(num1)
+	kvSecond := kvGen(num2)
+	for key, value := range kvFirst {
+		if value >= 3 {
+			for keyIn, valueIn := range kvSecond {
+				if valueIn >= 2 && key == keyIn {
+					return 1
+				}
+			}
+		}
+	}
+	return 0
+}
+
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", TripleDouble(451999277, 41177722899))
+	fmt.Printf("%v\n", TripleDouble(465555, 5579))
+	fmt.Printf("%v\n", TripleDouble(67844, 66237))
+	fmt.Printf("%v\n", TripleDouble(556668, 556886))
+
+	return
 
 	fmt.Printf("%v\n", BracketMatcher("(coder)(byte))"))
 	fmt.Printf("%v\n", BracketMatcher("(c(oder)) b(yte)"))
