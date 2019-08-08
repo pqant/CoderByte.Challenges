@@ -4431,9 +4431,40 @@ func DistinctList(arr []int) int {
 	return duplicateCount
 }
 
+//"(coder)(byte))" ->  "0"
+func BracketMatcher(str string) string {
+	if len(str) == 0 {
+		return "0"
+	}
+	chars := []string{"(", ")"}
+	var temp []string
+	for _, value := range str {
+		val := string(value)
+		if val == chars[0] || val == chars[1] {
+			temp = append(temp, val)
+		}
+	}
+	valOfString := strings.Join(temp, "")
+	for {
+		if strings.Index(valOfString, strings.Join(chars, "")) != -1 {
+			valOfString = strings.Replace(valOfString, strings.Join(chars, ""), "", -1)
+		} else {
+			break
+		}
+	}
+	if len(valOfString) == 0 {
+		return "1"
+	}
+	return "0"
+}
+
 //noinspection ALL
 func main() {
 
+	fmt.Printf("%v\n", BracketMatcher("(coder)(byte))"))
+	fmt.Printf("%v\n", BracketMatcher("(c(oder)) b(yte)"))
+
+	return
 	fmt.Printf("%v\n", DistinctList([]int{0, -2, -2, 5, 5, 5}))
 	fmt.Printf("%v\n", DistinctList([]int{1, 2, 2, 2, 3}))
 	fmt.Printf("%v\n", DistinctList([]int{100, 2, 101, 4}))
