@@ -4269,6 +4269,7 @@ func FormattedDivision(num1 int, num2 int) string {
 	return fmt.Sprintf("%v.%v", reverse(first), parts[1])
 }
 
+
 //"Hello -5LOL6"    ->     hELLO -6lol5
 //"2S 6 du5d4e"     ->     2s 6 DU4D5E
 func SwapII(str string) string {
@@ -4284,7 +4285,7 @@ func SwapII(str string) string {
 
 	changer := func(strValue, with string) string {
 		formatted := ""
-		if strings.Contains(strValue, with) || len(strValue)!=0 {
+		if strings.Contains(strValue, with) || len(strValue) != 0 {
 			values := strings.Split(str, with)
 			index := 0
 			for _, value := range values {
@@ -4298,7 +4299,7 @@ func SwapII(str string) string {
 				isCharDetected := 0
 				for u := 0; u < len(text); u++ {
 					addValue := ""
-					add:=func(){
+					add := func() {
 						if []rune((text[u]))[0] >= 65 && []rune((text[u]))[0] < 97 {
 							addValue = strings.ToLower(text[u])
 						} else {
@@ -4355,13 +4356,77 @@ func SwapII(str string) string {
 	return result
 }
 
+/*
+input:[]string {"baseball", "a,all,b,ball,bas,base,cat,code,d,e,quit,z"}
+
+Output:"base,ball"
+
+
+*/
+func WordSplit(strArr []string) string {
+	var powerGenerator func([]string, int, []string, *[][]string, int)
+	powerGenerator = func(subset []string, breakPoint int, selectedSoFar []string, results *[][]string, maxLength int) {
+		if len(subset) == breakPoint {
+			if len(selectedSoFar) == maxLength {
+				arr := make([]string, maxLength)
+				copy(arr, selectedSoFar)
+				*results = append(*results, arr)
+			}
+			return
+		}
+		selectedSoFar = append(selectedSoFar, subset[breakPoint])
+		powerGenerator(subset, breakPoint+1, selectedSoFar, results, maxLength)
+		selectedSoFar = selectedSoFar[:len(selectedSoFar)-1]
+		powerGenerator(subset, breakPoint+1, selectedSoFar, results, maxLength)
+	}
+
+	results := make([][]string, 0)
+	selectedSoFar := make([]string, 0)
+	items := strings.Split(strArr[1], ",")
+	powerGenerator(items, 0, selectedSoFar, &results, 2)
+	reverse := func(text string) string {
+		var arrStr []string
+		for _, value := range text {
+			arrStr = append(arrStr, string(value))
+		}
+		MAX := len(arrStr) / 2
+		for u := 0; u < MAX; u++ {
+			temp := arrStr[u]
+			arrStr[u] = arrStr[len(arrStr)-1-u]
+			arrStr[len(arrStr)-1-u] = temp
+		}
+		return strings.Join(arrStr, "")
+	}
+	for _, value := range results {
+		tempVal := ""
+		var reverseEdition []string
+		for _, val := range value {
+			tempVal += val
+			reverseEdition = append(reverseEdition, val)
+		}
+		if strArr[0] == tempVal {
+			return strings.Join(value, ",")
+		}
+		if strArr[0] == reverse(tempVal) {
+			MAX := len(reverseEdition) / 2
+			for u := 0; u < MAX; u++ {
+				temp := reverseEdition[u]
+				reverseEdition[u] = reverseEdition[len(reverseEdition)-1-u]
+				reverseEdition[len(reverseEdition)-1-u] = temp
+			}
+			return strings.Join(reverseEdition, ",")
+		}
+	}
+
+	return "not possible"
+}
+
 //noinspection ALL
 func main() {
 
 	fmt.Printf("%v\n", SwapII("123gg))(("))
 	fmt.Printf("%v\n", SwapII("2S 6 du5d4e"))
 	fmt.Printf("%v\n", SwapII("6coderbyte5"))
-
 
 	return
 
