@@ -4410,9 +4410,35 @@ func WordSplit(strArr []string) string {
 	return "not possible"
 }
 
+func DistinctList(arr []int) int {
+	duplicateCount := 0
+	sort.Slice(arr, func(i, j int) bool {
+		return arr[i] < arr[j]
+	})
+	kv := make(map[int]int, 0)
+	for u := 0; u < len(arr); u++ {
+		if val, isExist := kv[arr[u]]; isExist {
+			kv[arr[u]] = val + 1
+		} else {
+			kv[arr[u]] = 1
+		}
+	}
+	for _, value := range kv {
+		if value != 1 {
+			duplicateCount += value - 1
+		}
+	}
+	return duplicateCount
+}
+
 //noinspection ALL
 func main() {
 
+	fmt.Printf("%v\n", DistinctList([]int{0, -2, -2, 5, 5, 5}))
+	fmt.Printf("%v\n", DistinctList([]int{1, 2, 2, 2, 3}))
+	fmt.Printf("%v\n", DistinctList([]int{100, 2, 101, 4}))
+
+	return
 	fmt.Printf("%v\n", WordSplit([]string{"baseball", "a,all,b,ball,bas,base,cat,code,d,e,quit,z"}))
 	fmt.Printf("%v\n", WordSplit([]string{"abcgefd", "a,ab,abc,abcg,b,c,dog,e,efd,zzzz"}))
 
