@@ -4269,7 +4269,6 @@ func FormattedDivision(num1 int, num2 int) string {
 	return fmt.Sprintf("%v.%v", reverse(first), parts[1])
 }
 
-
 //"Hello -5LOL6"    ->     hELLO -6lol5
 //"2S 6 du5d4e"     ->     2s 6 DU4D5E
 func SwapII(str string) string {
@@ -4358,12 +4357,12 @@ func SwapII(str string) string {
 
 /*
 input:[]string {"baseball", "a,all,b,ball,bas,base,cat,code,d,e,quit,z"}
-
 Output:"base,ball"
-
-
 */
 func WordSplit(strArr []string) string {
+	if len(strArr) != 2 || (len(strArr[0]) == 0 || len(strArr[1]) == 0) {
+		return "not possible"
+	}
 	var powerGenerator func([]string, int, []string, *[][]string, int)
 	powerGenerator = func(subset []string, breakPoint int, selectedSoFar []string, results *[][]string, maxLength int) {
 		if len(subset) == breakPoint {
@@ -4384,19 +4383,6 @@ func WordSplit(strArr []string) string {
 	selectedSoFar := make([]string, 0)
 	items := strings.Split(strArr[1], ",")
 	powerGenerator(items, 0, selectedSoFar, &results, 2)
-	reverse := func(text string) string {
-		var arrStr []string
-		for _, value := range text {
-			arrStr = append(arrStr, string(value))
-		}
-		MAX := len(arrStr) / 2
-		for u := 0; u < MAX; u++ {
-			temp := arrStr[u]
-			arrStr[u] = arrStr[len(arrStr)-1-u]
-			arrStr[len(arrStr)-1-u] = temp
-		}
-		return strings.Join(arrStr, "")
-	}
 	for _, value := range results {
 		tempVal := ""
 		var reverseEdition []string
@@ -4407,23 +4393,30 @@ func WordSplit(strArr []string) string {
 		if strArr[0] == tempVal {
 			return strings.Join(value, ",")
 		}
-		if strArr[0] == reverse(tempVal) {
-			MAX := len(reverseEdition) / 2
-			for u := 0; u < MAX; u++ {
-				temp := reverseEdition[u]
-				reverseEdition[u] = reverseEdition[len(reverseEdition)-1-u]
-				reverseEdition[len(reverseEdition)-1-u] = temp
-			}
+		MAX := len(reverseEdition) / 2
+		for u := 0; u < MAX; u++ {
+			temp := reverseEdition[u]
+			reverseEdition[u] = reverseEdition[len(reverseEdition)-1-u]
+			reverseEdition[len(reverseEdition)-1-u] = temp
+		}
+		tempVal = ""
+		for _, val := range reverseEdition {
+			tempVal += val
+		}
+		if strArr[0] == tempVal {
 			return strings.Join(reverseEdition, ",")
 		}
 	}
-
 	return "not possible"
 }
 
 //noinspection ALL
 func main() {
 
+	fmt.Printf("%v\n", WordSplit([]string{"baseball", "a,all,b,ball,bas,base,cat,code,d,e,quit,z"}))
+	fmt.Printf("%v\n", WordSplit([]string{"abcgefd", "a,ab,abc,abcg,b,c,dog,e,efd,zzzz"}))
+
+	return
 	fmt.Printf("%v\n", SwapII("123gg))(("))
 	fmt.Printf("%v\n", SwapII("2S 6 du5d4e"))
 	fmt.Printf("%v\n", SwapII("6coderbyte5"))
