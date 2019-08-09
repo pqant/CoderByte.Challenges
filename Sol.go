@@ -4652,8 +4652,15 @@ func MissingDigit(str string) string {
 		return numValL1
 	}
 	if right == math.MinInt32 {
+		eq := ""
 		for _, values := range parts {
-			if values != "x" {
+			if strings.Contains(values, "x") {
+				eq = values
+				break
+			}
+		}
+		for _, values := range parts {
+			if !strings.Contains(values, "x") {
 				splitter := splitterFind(values)
 				if len(splitter) != 0 {
 					data := strings.Split(values, splitter)
@@ -4663,7 +4670,12 @@ func MissingDigit(str string) string {
 					numValL1, _ := strconv.Atoi(data[0])
 					numValL2, _ := strconv.Atoi(data[1])
 					numValL1 = splitOp(numValL1, numValL2, splitter)
-					return fmt.Sprintf("%v", numValL1)
+					numValL1Str := fmt.Sprintf("%v", numValL1)
+					for u := 0; u < len(eq); u++ {
+						if string(eq[u]) == "x" {
+							return string(numValL1Str[u])
+						}
+					}
 				} else {
 					return ""
 				}
@@ -4682,9 +4694,13 @@ func MissingDigit(str string) string {
 				if len(data) != 2 {
 					return ""
 				}
+				neg := false
 				if isNumVal, val := isNumber(data[0]); isNumVal {
 					numVal = val
 					eq = data[1]
+					if splitter == "-" {
+						neg = true
+					}
 				} else {
 					var err error
 					numVal, err = strconv.Atoi(data[1])
@@ -4693,6 +4709,9 @@ func MissingDigit(str string) string {
 					} else {
 						eq = data[0]
 					}
+				}
+				if neg {
+					numVal *= -1
 				}
 				right = splitOpAlt(right, numVal, splitter)
 				rightStr := fmt.Sprintf("%v", right)
@@ -4713,6 +4732,10 @@ func MissingDigit(str string) string {
 //noinspection ALL
 func main() {
 
+	//fmt.Printf("%v\n", MissingDigit("4356 * 23 = 1001x8"))
+	//fmt.Printf("%v\n", MissingDigit("1 + 1111 = x112"))
+	fmt.Printf("%v\n", MissingDigit("2004 / 6 = 33x"))
+	fmt.Printf("%v\n", MissingDigit("10 - x = 10"))
 	fmt.Printf("%v\n", MissingDigit("4 - 2 = x"))
 	fmt.Printf("%v\n", MissingDigit("3x + 12 = 46"))
 	fmt.Printf("%v\n", MissingDigit("10x * 12 = 1200"))
