@@ -4490,8 +4490,166 @@ func TripleDouble(num1 int, num2 int) int {
 	return 0
 }
 
+func CountingMinutes_Old(str string) string {
+	if len(str) == 0 {
+		return "0"
+	}
+	parts := strings.Split(str, "-")
+	if len(parts) != 2 {
+		return "0"
+	}
+	partFirst := strings.Split(parts[0], ":")
+	if len(partFirst) != 2 {
+		return "0"
+	}
+	hFirst, _ := strconv.Atoi(partFirst[0])
+	firstHType := "am"
+	if strings.Contains(partFirst[1], "pm") {
+		firstHType = "pm"
+	}
+	minuteFirst := strings.Replace(partFirst[1], "pm", "", -1)
+	minuteFirst = strings.Replace(minuteFirst, "am", "", -1)
+	mFirst, _ := strconv.Atoi(minuteFirst)
+
+	partSecond := strings.Split(parts[1], ":")
+	if len(partSecond) != 2 {
+		return "0"
+	}
+
+	hSecond, _ := strconv.Atoi(partSecond[0])
+	secondHType := "am"
+	if strings.Contains(partSecond[1], "pm") {
+		secondHType = "pm"
+	}
+	minuteSecond := strings.Replace(partSecond[1], "pm", "", -1)
+	minuteSecond = strings.Replace(minuteSecond, "am", "", -1)
+	mSecond, _ := strconv.Atoi(minuteSecond)
+	time1 := fmt.Sprintf("%02d:%02d%v", hFirst, mFirst, firstHType)
+	time2 := fmt.Sprintf("%02d:%02d%v", hSecond, mSecond, secondHType)
+	ref, _ := time.Parse("03:04pm", time1)
+	t, err := time.Parse("03:04am", time2)
+	if err != nil {
+		return "0"
+	}
+	return fmt.Sprintf("%d", int(t.Sub(ref).Minutes()))
+}
+
+//"12:30pm-12:00am"
+func CountingMinutes(str string) string {
+	if len(str) == 0 {
+		return "0"
+	}
+	parts := strings.Split(str, "-")
+	if len(parts) != 2 {
+		return "0"
+	}
+	partFirst := strings.Split(parts[0], ":")
+	if len(partFirst) != 2 {
+		return "0"
+	}
+	hFirst, _ := strconv.Atoi(partFirst[0])
+	firstHType := "am"
+	if strings.Contains(partFirst[1], "pm") {
+		firstHType = "pm"
+	}
+	minuteFirst := strings.Replace(partFirst[1], "pm", "", -1)
+	minuteFirst = strings.Replace(minuteFirst, "am", "", -1)
+	mFirst, _ := strconv.Atoi(minuteFirst)
+
+	partSecond := strings.Split(parts[1], ":")
+	if len(partSecond) != 2 {
+		return "0"
+	}
+
+	hSecond, _ := strconv.Atoi(partSecond[0])
+	secondHType := "am"
+	if strings.Contains(partSecond[1], "pm") {
+		secondHType = "pm"
+	}
+	minuteSecond := strings.Replace(partSecond[1], "pm", "", -1)
+	minuteSecond = strings.Replace(minuteSecond, "am", "", -1)
+	mSecond, _ := strconv.Atoi(minuteSecond)
+
+	tt := time.Now()
+	if hFirst < 12 && firstHType == "pm" {
+		hFirst += 12
+	}
+	if hSecond < 12 && secondHType == "pm" {
+		hSecond += 12
+	}
+	diffFirst, diffSecond := 0, 0
+	if hFirst == 12 && mFirst == 0 && firstHType == "am" {
+		hFirst = 0
+		diffFirst = 1
+	}
+	if hSecond == 12 && mSecond == 0 && secondHType == "am" {
+		hSecond = 0
+		diffSecond = 1
+	}
+
+	first := time.Date(tt.Year(), tt.Month(), tt.Day()+diffFirst, hFirst, mFirst, 0, 0, time.UTC)
+	second := time.Date(tt.Year(), tt.Month(), tt.Day()+diffSecond, hSecond, mSecond, 0, 0, time.UTC)
+	valFirst, _ := strconv.Atoi(fmt.Sprintf("%02d%02d", hFirst, mFirst))
+	valSecond, _ := strconv.Atoi(fmt.Sprintf("%02d%02d", hSecond, mSecond))
+
+	if firstHType == "pm" && secondHType == "pm" {
+		if valFirst > valSecond {
+			second = second.AddDate(0, 0, 1)
+			return fmt.Sprintf("%v", second.Sub(first).Minutes())
+		} else if valSecond > valFirst {
+			return fmt.Sprintf("%v", second.Sub(first).Minutes())
+		} else {
+			return "0"
+		}
+		/*
+		val := second.Sub(first).Minutes()
+		if val < 0 {
+			val *= -1
+		}
+		return fmt.Sprintf("%v", val)
+		 */
+	}
+	if firstHType == "am" && secondHType == "am" {
+		if valFirst > valSecond {
+			second = second.AddDate(0, 0, 1)
+			return fmt.Sprintf("%v", second.Sub(first).Minutes())
+		} else if valSecond > valFirst {
+			return fmt.Sprintf("%v", second.Sub(first).Minutes())
+		} else {
+			return "0"
+		}
+	}
+	if firstHType == "am" && secondHType == "pm" {
+		return fmt.Sprintf("%v", second.Sub(first).Minutes())
+	}
+	if firstHType == "pm" && secondHType == "am" {
+		if second.Hour() == 0 && second.Minute() == 0 && secondHType == "am" {
+			return fmt.Sprintf("%v", second.Sub(first).Minutes())
+		} else {
+			secondT := second.AddDate(0, 0, 1)
+			secondT = time.Date(secondT.Year(), secondT.Month(), secondT.Day(), 0, 0, 0, 0, time.UTC)
+			firstP := secondT.Sub(first).Minutes()
+			secondT = secondT.AddDate(0, 0, -1)
+			secondP := second.Sub(secondT).Minutes()
+			return fmt.Sprintf("%v", firstP+secondP)
+		}
+	}
+	return "0"
+}
+
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", CountingMinutes("11:00am-2:10pm"))
+	fmt.Printf("%v\n", CountingMinutes("5:00pm-5:01pm"))
+	fmt.Printf("%v\n", CountingMinutes("5:01pm-5:00pm"))
+	fmt.Printf("%v\n", CountingMinutes("2:00pm-3:00pm"))
+	fmt.Printf("%v\n", CountingMinutes("2:03pm-1:39pm"))
+	fmt.Printf("%v\n", CountingMinutes("12:30pm-12:00am"))
+	fmt.Printf("%v\n", CountingMinutes("1:00pm-11:00am"))
+	fmt.Printf("%v\n", CountingMinutes("1:23am-1:08am"))
+
+	return
 
 	fmt.Printf("%v\n", TripleDouble(451999277, 41177722899))
 	fmt.Printf("%v\n", TripleDouble(465555, 5579))
