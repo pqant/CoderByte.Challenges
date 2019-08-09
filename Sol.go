@@ -4729,9 +4729,93 @@ func MissingDigit(str string) string {
 	return ""
 }
 
+func PrimeChecker(num int) int {
+	isPrime := func(num int) bool {
+		for i := 2; i <= int(math.Floor(float64(num)/2)); i++ {
+			if num%i == 0 {
+				return false
+			}
+		}
+		if num <= 1 {
+			return false
+		}
+		return true
+	}
+	reverse := func(text string) string {
+		var str []string
+		for _, value := range text {
+			str = append(str, string(value))
+		}
+		MAX := len(str) / 2
+		for u := 0; u < MAX; u++ {
+			temp := str[u]
+			str[u] = str[len(str)-1-u]
+			str[len(str)-1-u] = temp
+		}
+		return strings.Join(str, "")
+	}
+	result := make([][]int, 0)
+	var perm func([]int, int)
+	perm = func(arr []int, n int) {
+		if n == 1 {
+			temp := make([]int, len(arr))
+			copy(temp, arr)
+			result = append(result, temp)
+		} else {
+			for i := 0; i < n; i++ {
+				perm(arr, n-1)
+				if n%2 == 1 {
+					temp := arr[i]
+					arr[i] = arr[n-1]
+					arr[n-1] = temp
+				} else {
+					temp := arr[0]
+					arr[0] = arr[n-1]
+					arr[n-1] = temp
+				}
+			}
+		}
+	}
+	var nums []int
+	for _, value := range fmt.Sprintf("%v", num) {
+		val, err := strconv.Atoi(string(value))
+		if err != nil {
+			return 0
+		}
+		nums = append(nums, val)
+	}
+
+	perm(nums, len(nums))
+
+	for _, value := range result {
+		norVal := ""
+		for _, val := range value {
+			norVal += fmt.Sprintf("%v", val)
+		}
+		valNor, errNor := strconv.Atoi(norVal)
+		if errNor != nil {
+			return 0
+		}
+		valRev, errRev := strconv.Atoi(reverse(norVal))
+		if errRev != nil {
+			return 0
+		}
+		if isPrime(valNor) || isPrime(valRev) {
+			return 1
+		}
+	}
+	return 0
+}
+
 //noinspection ALL
 func main() {
 
+	fmt.Printf("%v\n", PrimeChecker(100))
+	fmt.Printf("%v\n", PrimeChecker(98))
+	fmt.Printf("%v\n", PrimeChecker(598))
+	fmt.Printf("%v\n", PrimeChecker(666))
+
+	return
 	//fmt.Printf("%v\n", MissingDigit("4356 * 23 = 1001x8"))
 	//fmt.Printf("%v\n", MissingDigit("1 + 1111 = x112"))
 	fmt.Printf("%v\n", MissingDigit("2004 / 6 = 33x"))
