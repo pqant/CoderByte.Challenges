@@ -4490,50 +4490,6 @@ func TripleDouble(num1 int, num2 int) int {
 	return 0
 }
 
-func CountingMinutes_Old(str string) string {
-	if len(str) == 0 {
-		return "0"
-	}
-	parts := strings.Split(str, "-")
-	if len(parts) != 2 {
-		return "0"
-	}
-	partFirst := strings.Split(parts[0], ":")
-	if len(partFirst) != 2 {
-		return "0"
-	}
-	hFirst, _ := strconv.Atoi(partFirst[0])
-	firstHType := "am"
-	if strings.Contains(partFirst[1], "pm") {
-		firstHType = "pm"
-	}
-	minuteFirst := strings.Replace(partFirst[1], "pm", "", -1)
-	minuteFirst = strings.Replace(minuteFirst, "am", "", -1)
-	mFirst, _ := strconv.Atoi(minuteFirst)
-
-	partSecond := strings.Split(parts[1], ":")
-	if len(partSecond) != 2 {
-		return "0"
-	}
-
-	hSecond, _ := strconv.Atoi(partSecond[0])
-	secondHType := "am"
-	if strings.Contains(partSecond[1], "pm") {
-		secondHType = "pm"
-	}
-	minuteSecond := strings.Replace(partSecond[1], "pm", "", -1)
-	minuteSecond = strings.Replace(minuteSecond, "am", "", -1)
-	mSecond, _ := strconv.Atoi(minuteSecond)
-	time1 := fmt.Sprintf("%02d:%02d%v", hFirst, mFirst, firstHType)
-	time2 := fmt.Sprintf("%02d:%02d%v", hSecond, mSecond, secondHType)
-	ref, _ := time.Parse("03:04pm", time1)
-	t, err := time.Parse("03:04am", time2)
-	if err != nil {
-		return "0"
-	}
-	return fmt.Sprintf("%d", int(t.Sub(ref).Minutes()))
-}
-
 //"12:30pm-12:00am"
 func CountingMinutes(str string) string {
 	if len(str) == 0 {
@@ -4601,13 +4557,6 @@ func CountingMinutes(str string) string {
 		} else {
 			return "0"
 		}
-		/*
-		val := second.Sub(first).Minutes()
-		if val < 0 {
-			val *= -1
-		}
-		return fmt.Sprintf("%v", val)
-		 */
 	}
 	if firstHType == "am" && secondHType == "am" {
 		if valFirst > valSecond {
@@ -4637,8 +4586,138 @@ func CountingMinutes(str string) string {
 	return "0"
 }
 
+//"3x + 12 = 46"
+
+func MissingDigit(str string) string {
+	if len(str) == 0 {
+		return ""
+	}
+	str = strings.Replace(str, " ", "", -1)
+	parts := strings.Split(str, "=")
+	if len(parts) != 2 {
+		return ""
+	}
+	isNumber := func(val string) (bool, int) {
+		for _, value := range val {
+			if !(value >= 48 && value <= 57) {
+				return false, -1
+			}
+		}
+		num, _ := strconv.Atoi(val)
+		return true, num
+	}
+
+	right := math.MinInt32
+	for _, values := range parts {
+		if isNum, val := isNumber(values); isNum {
+			right = val
+			break
+		}
+	}
+	splitterFind := func(valueStr string) string {
+		splitter := ""
+		if strings.Contains(valueStr, "+") {
+			splitter = "+"
+		} else if strings.Contains(valueStr, "-") {
+			splitter = "-"
+		} else if strings.Contains(valueStr, "/") {
+			splitter = "/"
+		} else if strings.Contains(valueStr, "*") {
+			splitter = "*"
+		}
+		return splitter
+	}
+	splitOp := func(numValL1, numValL2 int, splitter string) int {
+		if splitter == "+" {
+			numValL1 += numValL2
+		} else if splitter == "-" {
+			numValL1 -= numValL2
+		} else if splitter == "*" {
+			numValL1 *= numValL2
+		} else if splitter == "/" {
+			numValL1 /= numValL2
+		}
+		return numValL1
+	}
+	splitOpAlt := func(numValL1, numValL2 int, splitter string) int {
+		if splitter == "+" {
+			numValL1 -= numValL2
+		} else if splitter == "-" {
+			numValL1 += numValL2
+		} else if splitter == "*" {
+			numValL1 /= numValL2
+		} else if splitter == "/" {
+			numValL1 *= numValL2
+		}
+		return numValL1
+	}
+	if right == math.MinInt32 {
+		for _, values := range parts {
+			if values != "x" {
+				splitter := splitterFind(values)
+				if len(splitter) != 0 {
+					data := strings.Split(values, splitter)
+					if len(data) != 2 {
+						return ""
+					}
+					numValL1, _ := strconv.Atoi(data[0])
+					numValL2, _ := strconv.Atoi(data[1])
+					numValL1 = splitOp(numValL1, numValL2, splitter)
+					return fmt.Sprintf("%v", numValL1)
+				} else {
+					return ""
+				}
+			}
+		}
+	}
+
+	for _, values := range parts {
+		if isNum, _ := isNumber(values); isNum {
+			continue
+		} else {
+			splitter, eq := splitterFind(values), ""
+			if len(splitter) != 0 {
+				data := strings.Split(values, splitter)
+				numVal := 0
+				if len(data) != 2 {
+					return ""
+				}
+				if isNumVal, val := isNumber(data[0]); isNumVal {
+					numVal = val
+					eq = data[1]
+				} else {
+					var err error
+					numVal, err = strconv.Atoi(data[1])
+					if err != nil {
+						return ""
+					} else {
+						eq = data[0]
+					}
+				}
+				right = splitOpAlt(right, numVal, splitter)
+				rightStr := fmt.Sprintf("%v", right)
+				for u := 0; u < len(eq); u++ {
+					if string(eq[u]) == "x" {
+						return string(rightStr[u])
+					}
+				}
+				return ""
+			} else {
+				return ""
+			}
+		}
+	}
+	return ""
+}
+
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", MissingDigit("4 - 2 = x"))
+	fmt.Printf("%v\n", MissingDigit("3x + 12 = 46"))
+	fmt.Printf("%v\n", MissingDigit("10x * 12 = 1200"))
+	fmt.Printf("%v\n", MissingDigit("1x0 * 10 = 1300"))
+	return
 
 	fmt.Printf("%v\n", CountingMinutes("11:00am-2:10pm"))
 	fmt.Printf("%v\n", CountingMinutes("5:00pm-5:01pm"))
