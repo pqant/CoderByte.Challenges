@@ -4807,9 +4807,35 @@ func PrimeChecker(num int) int {
 	return 0
 }
 
+func PrimeMover(num int) int {
+	isPrime := func(num int) bool {
+		for i := 2; i <= int(math.Floor(float64(num)/2)); i++ {
+			if num%i == 0 {
+				return false
+			}
+		}
+		if num <= 1 {
+			return false
+		}
+		return true
+	}
+	index := 0
+	result := 0
+	for u := 0; u < math.MaxInt32 && index != num; u++ {
+		if isPrime(u) {
+			index++
+			result = u
+		}
+	}
+	return result
+}
+
 //noinspection ALL
 func main() {
-
+	fmt.Printf("%v\n", PrimeMover(9))
+	fmt.Printf("%v\n", PrimeMover(16))
+	fmt.Printf("%v\n", PrimeMover(100))
+	return
 	fmt.Printf("%v\n", PrimeChecker(30))
 	fmt.Printf("%v\n", PrimeChecker(98))
 	fmt.Printf("%v\n", PrimeChecker(598))
