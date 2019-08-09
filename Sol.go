@@ -4810,7 +4810,7 @@ func PrimeChecker(num int) int {
 //noinspection ALL
 func main() {
 
-	fmt.Printf("%v\n", PrimeChecker(100))
+	fmt.Printf("%v\n", PrimeChecker(30))
 	fmt.Printf("%v\n", PrimeChecker(98))
 	fmt.Printf("%v\n", PrimeChecker(598))
 	fmt.Printf("%v\n", PrimeChecker(666))
