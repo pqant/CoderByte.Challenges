@@ -4830,8 +4830,146 @@ func PrimeMover(num int) int {
 	return result
 }
 
+func PairSearching_OLD(num int) int {
+	generate := func(numVal int) []int {
+		var result []int
+		var temp []int
+		for _, value := range fmt.Sprintf("%v", numVal) {
+			val, _ := strconv.Atoi(string(value))
+			temp = append(temp, val)
+		}
+		for u := 0; u < len(temp); u++ {
+			result = append(result, temp[u]*numVal)
+		}
+		return result
+	}
+
+	var first []int
+	for _, value := range fmt.Sprintf("%v", num) {
+		val, _ := strconv.Atoi(string(value))
+		first = append(first, val)
+	}
+	index := 1
+	firstCpy := make([]int, len(first))
+	copy(firstCpy, first)
+	kv := make(map[int]int, 0)
+	f := -1
+do:
+	resultList := generate(num)
+	for j := 0; j < len(resultList); j++ {
+		value := resultList[j]
+		if _, isExist := kv[value]; isExist {
+			continue
+		} else {
+			kv[value] = 1
+		}
+		first = make([]int, len(firstCpy))
+		copy(first, firstCpy)
+		for _, val := range fmt.Sprintf("%v", value) {
+			valIn, _ := strconv.Atoi(string(val))
+			first = append(first, valIn)
+		}
+		for u := 1; u < len(first); u++ {
+			if first[u-1] == first[u] {
+				fmt.Printf("-->>%v[*]\n", first)
+				if f == -1 {
+					if len(resultList) == 1 {
+						return index
+					} else {
+						f = index
+						index = 1
+						num = resultList[1]
+						goto do
+					}
+				} else {
+					if index < f {
+						return index
+					}
+					return f
+				}
+			}
+		}
+		fmt.Printf("%v\n", first)
+		if j == len(resultList)-1 {
+			temp := generate(resultList[0])
+			for _, value := range temp {
+				if resultList[0] == value {
+					continue
+				} else {
+					num = value
+					break
+				}
+			}
+		}
+		index++
+		goto do
+	}
+	return 0
+}
+
+func PairSearching(num int) int {
+	var first []int
+	for _, value := range fmt.Sprintf("%v", num) {
+		val, _ := strconv.Atoi(string(value))
+		first = append(first, val)
+	}
+	index := 1
+	firstCpy := make([]int, len(first))
+	copy(firstCpy, first)
+	kv := make(map[int]int, 0)
+	isDone := false
+	var generate func(int)
+	generate = func(numVal int) {
+		var resultList []int
+		var temp []int
+		for _, value := range fmt.Sprintf("%v", numVal) {
+			val, _ := strconv.Atoi(string(value))
+			temp = append(temp, val)
+		}
+		for u := 0; u < len(temp); u++ {
+			resultList = append(resultList, temp[u]*numVal)
+		}
+		sort.Slice(resultList, func(i, j int) bool {
+			return resultList[i] < resultList[j]
+		})
+		for j := 0; j < len(resultList) && !isDone; j++ {
+			value := resultList[j]
+			if _, isExist := kv[value]; isExist {
+				continue
+			} else {
+				kv[value] = 1
+			}
+			first = make([]int, len(firstCpy))
+			copy(first, firstCpy)
+			for _, val := range fmt.Sprintf("%v", value) {
+				valIn, _ := strconv.Atoi(string(val))
+				first = append(first, valIn)
+			}
+			for u := 2; u < len(first); u++ {
+				if first[u-2] == first[u-1] &&  first[u-1] == first[u] {
+					fmt.Printf("%v[*]---[%v]\n", first,num)
+					isDone = true
+					return
+				}
+			}
+			fmt.Printf("%v\n", first)
+			generate(resultList[j])
+		}
+		index++
+	}
+	generate(num)
+	return index
+}
+
 //noinspection ALL
 func main() {
+	fmt.Printf("%v\n", PairSearching(46)) // 2
+	return
+	fmt.Printf("%v\n", PairSearching(134)) // 1
+	fmt.Printf("%v\n", PairSearching(8))   // 3
+	fmt.Printf("%v\n", PairSearching(198)) // 2
+	return
+
 	fmt.Printf("%v\n", PrimeMover(9))
 	fmt.Printf("%v\n", PrimeMover(16))
 	fmt.Printf("%v\n", PrimeMover(100))
