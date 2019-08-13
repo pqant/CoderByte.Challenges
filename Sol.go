@@ -4961,6 +4961,8 @@ func PairSearching(num int) int {
 	return index
 }
 
+//fff
+
 //noinspection ALL
 func main() {
 	fmt.Printf("%v\n", PairSearching(46)) // 2
