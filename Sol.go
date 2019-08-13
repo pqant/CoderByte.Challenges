@@ -4961,7 +4961,7 @@ func PairSearching(num int) int {
 	return index
 }
 
-//fff1-2-3-4
+//fff1-2-3-4-5
 
 //noinspection ALL
 func main() {
