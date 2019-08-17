@@ -4969,30 +4969,14 @@ func PairSearching(num int) int {
 	}
 	firstCpy := make([]int, len(first))
 	copy(firstCpy, first)
-	kv := make(map[int]int, 0)
+	index := 1
 	list := make([][]string, 0)
-	var generate func(int, *[][] string)
-	generate = func(numVal int, items *[][]string) {
-		var resultList []int
-		var temp []int
-		for _, value := range fmt.Sprintf("%v", numVal) {
-			val, _ := strconv.Atoi(string(value))
-			temp = append(temp, val)
+	checkMe := func(results []int, breakMe bool) bool {
+		if breakMe {
+			return true
 		}
-		for u := 0; u < len(temp); u++ {
-			resultList = append(resultList, temp[u]*numVal)
-		}
-		sort.Slice(resultList, func(i, j int) bool {
-			return resultList[i] < resultList[j]
-		})
-		index := 0
-		for j := 0; j < len(resultList); j++ {
-			value := resultList[j]
-			if _, isExist := kv[value]; isExist {
-				continue
-			} else {
-				kv[value] = 1
-			}
+		for j := 0; j < len(results); j++ {
+			value := results[j]
 			first = make([]int, len(firstCpy))
 			copy(first, firstCpy)
 			for _, val := range fmt.Sprintf("%v", value) {
@@ -5001,35 +4985,56 @@ func PairSearching(num int) int {
 			}
 			for u := 1; u < len(first); u++ {
 				if first[u-1] == first[u] {
-					//fmt.Printf("%v[*]---[%v]\n", first, num)
-					tArr := make([]string, 1)
-					tArr[0] = fmt.Sprintf("%v", first)
-					list = append(list, tArr)
-					return
+					fmt.Printf("%v[*]---[%v]----[%v]\n", first, num, index)
+					list = append(list, []string{fmt.Sprintf("%v", first)})
+					return true
 				}
 			}
-			index++
-			fmt.Printf("-->> %v - %v\n", numVal,index)
-			//fmt.Printf("%v\n", first)
-			generate(resultList[j], &list)
 		}
+		index++
+		return false
+	}
+	j := 0
+	breaker := false
+	var generate func(int, *[][] string)
+	generate = func(numVal int, items *[][]string) {
+		fmt.Printf("NUM : %v\n", numVal)
+		var resultList []int
+		var temp []int
+		for _, value := range fmt.Sprintf("%v", numVal) {
+			val, _ := strconv.Atoi(string(value))
+			temp = append(temp, val)
+		}
+		for u := 0; u < len(temp); u++ {
+			if temp[u] != 1 {
+				resultList = append(resultList, temp[u]*numVal)
+			}
+		}
+		if checkMe(resultList, breaker) {
+			breaker = true
+			return
+		} else {
+			j++
+		}
+		if len(resultList) == j {
+			j--
+			index--
+		}
+		generate(resultList[j], &list)
 	}
 	generate(num, &list)
-	for _, value := range list {
-		fmt.Printf("%v\n",value)
-	}
-	return 0
+	return index
 }
 
 //fff1-2-3-4-5-6
 
 //noinspection ALL
 func main() {
+	fmt.Printf("%v\n", PairSearching(134)) // 3
+	fmt.Printf("%v\n", PairSearching(8)) // 3
 	fmt.Printf("%v\n", PairSearching(46)) // 2
-	fmt.Printf("%v\n", PairSearching(134)) // 1
-	return
-	fmt.Printf("%v\n", PairSearching(8))   // 3
 	fmt.Printf("%v\n", PairSearching(198)) // 2
+	//fmt.Printf("%v\n", PairSearching(134)) // 1
 	return
 
 	fmt.Printf("%v\n", PrimeMover(9))
