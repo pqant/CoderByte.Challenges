@@ -5050,23 +5050,140 @@ func PairSearching(num int) int {
 	return index
 }
 
-func PlusMinus(num int) int {
+func PlusMinus(num int) string {
+	notPossible := "not possible"
+	numStr := fmt.Sprintf("%v", num)
+	if len(numStr) < 2 {
+		return notPossible
+	}
+	allItems := make([][]string, 0)
+	var perm func([]string, int)
+	perm = func(items []string, n int) {
+		if n == 1 {
+			isFound := false
+			temp := make([]string, len(items))
+			copy(temp, items)
+			for _, value := range allItems {
+				if fmt.Sprintf("%v", value) == fmt.Sprintf("%v", temp) {
+					isFound = true
+					break
+				}
+			}
+			if !isFound {
+				allItems = append(allItems, temp)
+			}
+		} else {
+			for i := 0; i < n; i++ {
+				perm(items, n-1)
+				if n%2 == 1 {
+					temp := items[i]
+					items[i] = items[n-1]
+					items[n-1] = temp
+				} else {
+					temp := items[0]
+					items[0] = items[n-1]
+					items[n-1] = temp
+				}
+			}
+		}
+	}
 
-	// code goes here
-	// Note: feel free to modify the return type of this function
-	return num
+	str := make([]string, 0)
+	for _, value := range numStr {
+		str = append(str, string(value))
+	}
+	charGenerator := func(val string, count int) string {
+		result := ""
+		for u := 0; u < count; u++ {
+			result += val
+		}
+		return result
+	}
 
+	minSign, plusSign := "-", "+"
+	generator := func(minVal, plusVal int, up bool) []string {
+		minCount := minVal
+		plusCount := plusVal
+		list := make([]string, 0)
+		for u := 0; u < len(numStr); u++ {
+			minStr := charGenerator(minSign, minCount)
+			plusStr := charGenerator(plusSign, plusCount)
+			if up {
+				list = append(list, fmt.Sprintf("%v%v", minStr, plusStr))
+				minCount++
+				plusCount--
+			} else {
+				list = append(list, fmt.Sprintf("%v%v", plusStr, minStr))
+				minCount--
+				plusCount++
+			}
+		}
+		list = list[1:]
+		list = list[:len(list)-1]
+		return list
+	}
+
+	opListPlusFirst := generator(0, len(numStr)-1, true)
+	opListMinFirst := generator(len(numStr)-1, 0, false)
+
+	list := make([]string, 0)
+	for _, value := range opListPlusFirst {
+		list = append(list, value)
+	}
+	for _, value := range opListMinFirst {
+		list = append(list, value)
+	}
+
+	for _, value := range list {
+		perm(strings.Split(value, ""), len(value))
+	}
+	allItems = append(allItems, strings.Split(charGenerator(minSign, len(numStr)-1), ""))
+	allItems = append(allItems, strings.Split(charGenerator(plusSign, len(numStr)-1), ""))
+	for _, signs := range allItems {
+		index, a, b, signIndex := 0, 0, 0, 0
+		for _, valueIn := range numStr {
+			valInt, _ := strconv.Atoi(string(valueIn))
+			if index == 0 {
+				a = valInt
+				index++
+			} else if index == 1 {
+				b = valInt
+				val := signs[signIndex]
+				if val == minSign {
+					a -= b
+				} else {
+					a += b
+				}
+				index++
+				signIndex++
+			} else {
+				val := signs[signIndex]
+				if val == minSign {
+					a -= valInt
+				} else {
+					a += valInt
+				}
+				signIndex++
+			}
+		}
+		if a == 0 {
+			fmt.Printf("%v\n",fmt.Sprintf("%v", strings.Join(signs, "")))
+			//return fmt.Sprintf("%v", strings.Join(signs, ""))
+		}
+	}
+	return ""//notPossible
 }
-
-
-//fff1-2-3-4-5-6
 
 //noinspection ALL
 func main() {
+	//fmt.Printf("%v\n", PlusMinus(35132))
+	//fmt.Printf("%v\n", PlusMinus(199))
+	fmt.Printf("%v\n", PlusMinus(26712))
+	return
 	fmt.Printf("%v\n", PairSearching(8))   // 3
-	fmt.Printf("%v\n", PairSearching(15)) // 2
-	fmt.Printf("%v\n", PairSearching(2))  // 5
-	fmt.Printf("%v\n", PairSearching(46)) // 2
+	fmt.Printf("%v\n", PairSearching(15))  // 2
+	fmt.Printf("%v\n", PairSearching(2))   // 5
+	fmt.Printf("%v\n", PairSearching(46))  // 2
 	fmt.Printf("%v\n", PairSearching(5))   // 2
 	fmt.Printf("%v\n", PairSearching(134)) // 1
 	fmt.Printf("%v\n", PairSearching(198)) // 2
