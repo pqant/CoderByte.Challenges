@@ -4969,37 +4969,49 @@ func PairSearching(num int) int {
 	}
 	firstCpy := make([]int, len(first))
 	copy(firstCpy, first)
-	index := 1
+	itemsQ := make([]int, 0)
+	index := 0
 	list := make([][]string, 0)
-	checkMe := func(results []int, breakMe bool) bool {
-		if breakMe {
-			return true
-		}
+	checkMe := func(results []int) bool {
 		for j := 0; j < len(results); j++ {
 			value := results[j]
-			first = make([]int, len(firstCpy))
-			copy(first, firstCpy)
+
+			/* ******** */
+			first = make([]int, 0)
+			for _, q := range itemsQ {
+				for _, value := range fmt.Sprintf("%v", q) {
+					val, _ := strconv.Atoi(string(value))
+					first = append(first, val)
+				}
+			}
+			/* ******** */
+
 			for _, val := range fmt.Sprintf("%v", value) {
 				valIn, _ := strconv.Atoi(string(val))
 				first = append(first, valIn)
 			}
 			for u := 1; u < len(first); u++ {
 				if first[u-1] == first[u] {
-					fmt.Printf("%v[*]---[%v]----[%v]\n", first, num, index)
+					//fmt.Printf("%v[*]---[%v]----[%v]\n", first, num, index)
 					list = append(list, []string{fmt.Sprintf("%v", first)})
 					return true
 				}
 			}
 		}
-		index++
 		return false
 	}
 	j := 0
-	breaker := false
+	check := true
+	var resultList []int
 	var generate func(int, *[][] string)
 	generate = func(numVal int, items *[][]string) {
-		fmt.Printf("NUM : %v\n", numVal)
-		var resultList []int
+	do:
+		itemsQ = append(itemsQ, numVal)
+		if check {
+			resultList = make([]int, 0)
+			index++
+		}
+		resultListIn := make([]int, 0)
 		var temp []int
 		for _, value := range fmt.Sprintf("%v", numVal) {
 			val, _ := strconv.Atoi(string(value))
@@ -5007,20 +5019,32 @@ func PairSearching(num int) int {
 		}
 		for u := 0; u < len(temp); u++ {
 			if temp[u] != 1 {
-				resultList = append(resultList, temp[u]*numVal)
+				resultListIn = append(resultListIn, temp[u]*numVal)
+				if check {
+					resultList = append(resultList, temp[u]*numVal)
+				}
 			}
 		}
-		if checkMe(resultList, breaker) {
-			breaker = true
+		if checkMe(resultListIn) {
+			if !check {
+				index++
+			}
 			return
-		} else {
+		}
+		for k := j; k < len(resultList); {
+			numVal = resultList[j]
 			j++
+			if j == len(resultList) {
+				if j >= 2 {
+					itemsQ = itemsQ[:len(itemsQ)-1]
+				}
+				j = 0
+				check = true
+			} else {
+				check = false
+			}
+			goto do
 		}
-		if len(resultList) == j {
-			j--
-			index--
-		}
-		generate(resultList[j], &list)
 	}
 	generate(num, &list)
 	return index
@@ -5030,11 +5054,13 @@ func PairSearching(num int) int {
 
 //noinspection ALL
 func main() {
-	fmt.Printf("%v\n", PairSearching(134)) // 3
-	fmt.Printf("%v\n", PairSearching(8)) // 3
+	fmt.Printf("%v\n", PairSearching(8))   // 3
+	fmt.Printf("%v\n", PairSearching(15)) // 2
+	fmt.Printf("%v\n", PairSearching(2))  // 5
 	fmt.Printf("%v\n", PairSearching(46)) // 2
+	fmt.Printf("%v\n", PairSearching(5))   // 2
+	fmt.Printf("%v\n", PairSearching(134)) // 1
 	fmt.Printf("%v\n", PairSearching(198)) // 2
-	//fmt.Printf("%v\n", PairSearching(134)) // 1
 	return
 
 	fmt.Printf("%v\n", PrimeMover(9))
