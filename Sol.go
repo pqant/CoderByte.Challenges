@@ -5050,6 +5050,15 @@ func PairSearching(num int) int {
 	return index
 }
 
+func PlusMinus(num int) int {
+
+	// code goes here
+	// Note: feel free to modify the return type of this function
+	return num
+
+}
+
+
 //fff1-2-3-4-5-6
 
 //noinspection ALL
