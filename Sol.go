@@ -5243,8 +5243,78 @@ do:
 	}
 }
 
+func SimpleSwapper(a, b *int) {
+	temp := *a
+	*a = *b
+	*b = temp
+}
+
+func Variadic(values ...int) int {
+	res := 0
+	for _, value := range values {
+		res += value
+	}
+	return res
+}
+
+type LinkNode struct {
+	Value    int
+	Head     *LinkNode
+	Last     *LinkNode
+	NextItem *LinkNode
+}
+
+func NewLinkNode(value int) *LinkNode {
+	return &LinkNode{
+		Value:    value,
+		NextItem: nil,
+	}
+}
+
+func (l *LinkNode) Next() *LinkNode {
+	return l.NextItem
+}
+
+func (l *LinkNode) Add(value int) {
+	element := NewLinkNode(value)
+	if l.Head == nil {
+		l.Head = element
+	} else {
+		l.Last.NextItem = element
+	}
+	l.Last = element
+}
+
+
 //noinspection ALL
 func main() {
+
+	ll := &LinkNode{}
+	ll.Add(1)
+	ll.Add(2)
+	ll.Add(3)
+	item := ll.Head
+	for {
+		fmt.Printf("%v\n",item.Value)
+		if item.Next()!=nil {
+			item = item.Next()
+		} else {
+			break
+		}
+	}
+
+
+
+	return
+
+	fmt.Printf("%v \n", Variadic(1, 2, 3, 4))
+	tempxx := []int{1, 4, 5, 3}
+	fmt.Printf("%v \n", Variadic(tempxx...))
+
+	a, b := 100, 9
+	SimpleSwapper(&a, &b)
+	fmt.Printf("%v %v", a, b)
+	return
 	//fmt.Printf("%v\n", MultipleBrackets("(coder)[byte)]"))
 	fmt.Printf("%v\n", MultipleBrackets("(c([od]er)) b(yt[e])"))
 	return
