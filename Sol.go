@@ -5192,8 +5192,62 @@ func FibonacciChecker(num int) string {
 	return "no"
 }
 
+func MultipleBrackets(str string) string {
+	if len(str) == 0 {
+		return "0"
+	}
+	strArr := strings.Split(str, "")
+	validBrackets := []string{"[", "]", "(", ")"}
+	pruneStr := ""
+	anyFound := false
+	for _, value := range strArr {
+		isFound := false
+		tmpChar := ""
+		for _, char := range validBrackets {
+			if char == value {
+				anyFound = true
+				tmpChar = char
+				isFound = true
+				break
+			}
+		}
+		if isFound {
+			pruneStr += tmpChar
+		}
+	}
+	if !anyFound {
+		return "1"
+	}
+	index := 0
+do:
+	if len(pruneStr) != 0 {
+		changer := fmt.Sprintf("%v%v", validBrackets[0], validBrackets[1])
+		if strings.Count(pruneStr, changer) != 0 {
+			index += strings.Count(pruneStr, changer)
+			pruneStr = strings.Replace(pruneStr, changer, "", -1)
+		}
+		changer = fmt.Sprintf("%v%v", validBrackets[2], validBrackets[3])
+		if strings.Count(pruneStr, changer) != 0 {
+			index += strings.Count(pruneStr, changer)
+			pruneStr = strings.Replace(pruneStr, changer, "", -1)
+		}
+	}
+	if len(pruneStr) != 0 {
+		if strings.Index(pruneStr, fmt.Sprintf("%v%v", validBrackets[0], validBrackets[1])) != -1 ||
+			strings.Index(pruneStr, fmt.Sprintf("%v%v", validBrackets[2], validBrackets[3])) != -1 {
+			goto do
+		}
+		return "0"
+	} else {
+		return fmt.Sprintf("%v %v", "1", index)
+	}
+}
+
 //noinspection ALL
 func main() {
+	//fmt.Printf("%v\n", MultipleBrackets("(coder)[byte)]"))
+	fmt.Printf("%v\n", MultipleBrackets("(c([od]er)) b(yt[e])"))
+	return
 	fmt.Printf("%v\n", FibonacciChecker(34))
 	fmt.Printf("%v\n", FibonacciChecker(54))
 
