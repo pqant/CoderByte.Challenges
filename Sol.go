@@ -5167,15 +5167,37 @@ func PlusMinus(num int) string {
 			}
 		}
 		if a == 0 {
-			fmt.Printf("%v\n",fmt.Sprintf("%v", strings.Join(signs, "")))
+			fmt.Printf("%v\n", fmt.Sprintf("%v", strings.Join(signs, "")))
 			//return fmt.Sprintf("%v", strings.Join(signs, ""))
 		}
 	}
-	return ""//notPossible
+	return "" //notPossible
+}
+
+func FibonacciChecker(num int) string {
+	var fib func(int) int
+	fib = func(num int) int {
+		if num == 0 || num == 1 {
+			return 1
+		}
+		return fib(num-1) + fib(num-2)
+	}
+	result := 0
+	for u := 0; u < math.MaxInt32 && result <= num; u++ {
+		result = fib(u)
+		if result == num {
+			return "yes"
+		}
+	}
+	return "no"
 }
 
 //noinspection ALL
 func main() {
+	fmt.Printf("%v\n", FibonacciChecker(34))
+	fmt.Printf("%v\n", FibonacciChecker(54))
+
+	return
 	//fmt.Printf("%v\n", PlusMinus(35132))
 	//fmt.Printf("%v\n", PlusMinus(199))
 	fmt.Printf("%v\n", PlusMinus(26712))
