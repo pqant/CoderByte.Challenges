@@ -5285,9 +5285,28 @@ func (l *LinkNode) Add(value int) {
 	l.Last = element
 }
 
+func SelectionSort(elements *[]int) {
+	for u := 0; u < len(*elements)-1; u++ {
+		min := u
+		for j:=u+1;j<len(*elements) ;j++  {
+			if (*elements)[j] < (*elements)[min] {
+				min = j
+			}
+		}
+		temp := (*elements)[u]
+		(*elements)[u] = (*elements)[min]
+		(*elements)[min] = temp
+	}
+}
 
 //noinspection ALL
 func main() {
+
+	arrx := []int{5,1,3,2,1}
+	SelectionSort(&arrx)
+	fmt.Printf("%v",arrx)
+	return
+
 
 	ll := &LinkNode{}
 	ll.Add(1)
@@ -5295,15 +5314,13 @@ func main() {
 	ll.Add(3)
 	item := ll.Head
 	for {
-		fmt.Printf("%v\n",item.Value)
-		if item.Next()!=nil {
+		fmt.Printf("%v\n", item.Value)
+		if item.Next() != nil {
 			item = item.Next()
 		} else {
 			break
 		}
 	}
-
-
 
 	return
 
