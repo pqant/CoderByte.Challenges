@@ -5288,7 +5288,7 @@ func (l *LinkNode) Add(value int) {
 func SelectionSort(elements *[]int) {
 	for u := 0; u < len(*elements)-1; u++ {
 		min := u
-		for j:=u+1;j<len(*elements) ;j++  {
+		for j := u + 1; j < len(*elements); j++ {
 			if (*elements)[j] < (*elements)[min] {
 				min = j
 			}
@@ -5299,14 +5299,102 @@ func SelectionSort(elements *[]int) {
 	}
 }
 
+//[]string {"12:15PM-02:00PM","09:00AM-10:00AM","10:30AM-12:00PM"}
+func MostFreeTime(strArr []string) string {
+	if len(strArr) < 3 {
+		return ""
+	}
+	padLeft := func(val string, with string, length int) string {
+		if len(val) >= length {
+			return val
+		}
+		result := val
+		for u := len(val); u < length; u++ {
+			with += result
+		}
+		return with
+	}
+
+	hour := 60
+	dayH := 24
+	day := hour * dayH
+	timeSlotsKV := make(map[string]int, day)
+	hh, mm, suffix := 0, 0, "AM"
+	indexes := make([]string, 0)
+	for u := 0; u < day; u++ {
+		if mm >= hour {
+			mm = 0
+		}
+		if u >= 0 && u < hour || u >= hour*(dayH/2) && u < (hour*(dayH/2))+hour {
+			hh = dayH / 2
+		} else {
+			hh = u / hour
+		}
+		if u >= hour*dayH/2 {
+			suffix = "PM"
+		}
+		if hh > dayH/2 {
+			hh -= dayH / 2
+		}
+		key := fmt.Sprintf("%v:%v%v", padLeft(strconv.Itoa(hh), "0", 2), padLeft(strconv.Itoa(mm), "0", 2), suffix)
+		timeSlotsKV[key] = u
+		indexes = append(indexes, key)
+		mm++
+	}
+	/*
+		for _, value := range indexes {
+			fmt.Printf("%v-%v\n",value,timeSlotsKV[value])
+		}
+	*/
+
+	timeToIndex := func(timeVal string) int {
+		if len(timeVal) == 0 {
+			return 0
+		}
+		if val, exist := timeSlotsKV[timeVal]; exist {
+			return val
+		} else {
+			return 0
+		}
+	}
+
+	var items []int
+	for _, value := range strArr {
+		splitted := strings.Split(value, "-")
+		for _, split := range splitted {
+			items = append(items, timeToIndex(split))
+		}
+	}
+	sort.Slice(items, func(i, j int) bool {
+		return items[i] < items[j]
+	})
+	max := items[2] - items[1]
+	for u := 4; u < len(items); u += 2 {
+		if items[u]-items[u-1] > max {
+			max = items[u] - items[u-1]
+		}
+	}
+	hh,mm = 0,0
+	if max>=hour {
+		hh = max / hour
+		mm = max - (hh*hour)
+		return fmt.Sprintf("%v:%v", padLeft(strconv.Itoa(hh), "0", 2), padLeft(strconv.Itoa(mm), "0", 2))
+	} else{
+		return fmt.Sprintf("00:%v", padLeft(strconv.Itoa(max), "0", 2))
+	}
+}
+
 //noinspection ALL
 func main() {
-
-	arrx := []int{5,1,3,2,1}
-	SelectionSort(&arrx)
-	fmt.Printf("%v",arrx)
+	fmt.Printf("%v \n", MostFreeTime([]string {"10:00AM-12:30PM","02:00PM-02:45PM","09:10AM-09:50AM"}))
+	fmt.Printf("%v \n", MostFreeTime([]string {"12:15PM-02:00PM","09:00AM-12:11PM","02:02PM-04:00PM"}))
+	fmt.Printf("%v \n", MostFreeTime([]string{"12:15PM-02:00PM", "09:00AM-10:00AM", "10:30AM-12:00PM"}))
 	return
 
+	arrx := []int{5, 1, 3, 2, 1}
+	SelectionSort(&arrx)
+	fmt.Printf("%v", arrx)
+	return
 
 	ll := &LinkNode{}
 	ll.Add(1)
