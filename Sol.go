@@ -5481,7 +5481,7 @@ func CoinDeterminer(num int) int {
 			isClean = true
 		}
 	}
-	min,index := 0,0
+	min, index := 0, 0
 	for _, value := range resultsKV {
 		if index == 0 {
 			min = value
@@ -5495,9 +5495,40 @@ func CoinDeterminer(num int) int {
 	return min
 }
 
+func LookSaySequence(num int) int {
+	items := strings.Split(strconv.Itoa(num), "")
+	result := ""
+	for u := 0; u < len(items); u++ {
+		index := 1
+		for j := u + 1; j < len(items); j++ {
+			if items[u] == items[j] {
+				index++
+				u++
+			} else {
+				break
+			}
+		}
+		result += fmt.Sprintf("%v%v",index, items[u])
+	}
+
+	val,err := strconv.Atoi(result)
+	if err == nil {
+		return val
+	}
+	return 0
+}
+
 //noinspection ALL
 func main() {
-
+	fmt.Printf("%v\n", LookSaySequence(110))
+	fmt.Printf("%v\n", LookSaySequence(15))
+	fmt.Printf("%v\n", LookSaySequence(101))
+	fmt.Printf("%v\n", LookSaySequence(1211))
+	fmt.Printf("%v\n", LookSaySequence(2466))
+	fmt.Printf("%v\n", LookSaySequence(1))
+	fmt.Printf("%v\n", LookSaySequence(100))
+	fmt.Printf("%v\n", LookSaySequence(1001))
+	return
 	fmt.Printf("%v\n", CoinDeterminer(100))
 	fmt.Printf("%v\n", CoinDeterminer(14))
 	fmt.Printf("%v\n", CoinDeterminer(37))
