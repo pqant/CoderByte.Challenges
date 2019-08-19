@@ -5302,7 +5302,7 @@ func SelectionSort(elements *[]int) {
 //[]string {"12:15PM-02:00PM","09:00AM-10:00AM","10:30AM-12:00PM"}
 func MostFreeTime(strArr []string) string {
 	if len(strArr) < 3 {
-		return ""
+		return "00:00"
 	}
 	padLeft := func(val string, with string, length int) string {
 		if len(val) >= length {
@@ -5368,26 +5368,63 @@ func MostFreeTime(strArr []string) string {
 	sort.Slice(items, func(i, j int) bool {
 		return items[i] < items[j]
 	})
+	if len(items) < 3 {
+		return "00:00"
+	}
 	max := items[2] - items[1]
 	for u := 4; u < len(items); u += 2 {
 		if items[u]-items[u-1] > max {
 			max = items[u] - items[u-1]
 		}
 	}
-	hh,mm = 0,0
-	if max>=hour {
+	hh, mm = 0, 0
+	if max >= hour {
 		hh = max / hour
-		mm = max - (hh*hour)
+		mm = max - (hh * hour)
 		return fmt.Sprintf("%v:%v", padLeft(strconv.Itoa(hh), "0", 2), padLeft(strconv.Itoa(mm), "0", 2))
-	} else{
+	} else {
 		return fmt.Sprintf("00:%v", padLeft(strconv.Itoa(max), "0", 2))
+	}
+}
+
+func PrintRec(to int) {
+	if to == 0 {
+		return
+	}
+	fmt.Printf("%v\n", to)
+	PrintRec(to - 1)
+}
+
+func SumRec(val int) int {
+	if val == 0 {
+		return val
+	}
+	return val + SumRec(val-1)
+}
+
+func FindMaxValRec(val []int) int {
+	if len(val) < 2 {
+		return val[0]
+	}
+	if val[1] >= val[0] {
+		return FindMaxValRec(val[1:])
+	} else {
+		return FindMaxValRec(append(val[:1], val[2:]...))
 	}
 }
 
 //noinspection ALL
 func main() {
-	fmt.Printf("%v \n", MostFreeTime([]string {"10:00AM-12:30PM","02:00PM-02:45PM","09:10AM-09:50AM"}))
-	fmt.Printf("%v \n", MostFreeTime([]string {"12:15PM-02:00PM","09:00AM-12:11PM","02:02PM-04:00PM"}))
+
+	fmt.Printf("%v", FindMaxValRec([]int{100, 32, 444443, 55, 22, 19999, 43, 2}))
+	return
+
+	fmt.Printf("%v", SumRec(5))
+
+	return
+
+	fmt.Printf("%v \n", MostFreeTime([]string{"10:00AM-12:30PM", "02:00PM-02:45PM", "09:10AM-09:50AM"}))
+	fmt.Printf("%v \n", MostFreeTime([]string{"12:15PM-02:00PM", "09:00AM-12:11PM", "02:02PM-04:00PM"}))
 	fmt.Printf("%v \n", MostFreeTime([]string{"12:15PM-02:00PM", "09:00AM-10:00AM", "10:30AM-12:00PM"}))
 	return
 
