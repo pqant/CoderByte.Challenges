@@ -5413,8 +5413,106 @@ func FindMaxValRec(val []int) int {
 	}
 }
 
+//noinspection ALL,GoUnreachableCode
+func CoinDeterminer(num int) int {
+	coins := []int{1, 5, 7, 9, 11}
+	results := make([][]int, 0)
+	sF := make([]int, 0)
+	var powerSet func([]int, int, []int, *[][]int)
+	powerSet = func(items []int, breakPoint int, selectedSoFar []int, results *[][]int) {
+		if breakPoint == len(items) {
+			temp := make([]int, len(selectedSoFar))
+			copy(temp, selectedSoFar)
+			*results = append(*results, temp)
+			return
+		}
+		selectedSoFar = append(selectedSoFar, items[breakPoint])
+		powerSet(items, breakPoint+1, selectedSoFar, results)
+		selectedSoFar = selectedSoFar[:len(selectedSoFar)-1]
+		powerSet(items, breakPoint+1, selectedSoFar, results)
+	}
+	powerSet(coins, 0, sF, &results)
+
+	sort.Slice(results, func(i, j int) bool {
+		return len(results[i]) < len(results[j])
+	})
+
+	var sumIntsByRec func([]int) int
+	sumIntsByRec = func(arr []int) int {
+		if len(arr) == 0 {
+			return 0
+		}
+		return arr[0] + sumIntsByRec(arr[1:])
+	}
+	for _, value := range results {
+		if sumIntsByRec(value) == num {
+			return len(value)
+		}
+	}
+
+	sort.Slice(coins, func(i, j int) bool {
+		return coins[i] > coins[j]
+	})
+
+	resultsKV := make(map[int]int, len(coins))
+
+	for j := 0; j < len(coins); j++ {
+		val := j
+		isClean := false
+		arrNew := make([]int, 0)
+	do:
+		for u := val; u < len(coins); u++ {
+			if isClean {
+				arrNew = make([]int, 0)
+			}
+			for {
+				tempArr := append(arrNew, coins[u])
+				if sumIntsByRec(tempArr) == num {
+					resultsKV[coins[j]] = len(tempArr)
+					break
+				}
+				if sumIntsByRec(tempArr) > num {
+					val = u + 1
+					isClean = false
+					goto do
+				}
+				arrNew = append(arrNew, coins[u])
+			}
+			isClean = true
+		}
+	}
+	min,index := 0,0
+	for _, value := range resultsKV {
+		if index == 0 {
+			min = value
+			index++
+			continue
+		}
+		if value < min {
+			min = value
+		}
+	}
+	return min
+}
+
 //noinspection ALL
 func main() {
+
+	fmt.Printf("%v\n", CoinDeterminer(100))
+	fmt.Printf("%v\n", CoinDeterminer(14))
+	fmt.Printf("%v\n", CoinDeterminer(37))
+	fmt.Printf("%v\n", CoinDeterminer(34))
+	fmt.Printf("%v\n", CoinDeterminer(2))
+	fmt.Printf("%v\n", CoinDeterminer(5))
+	fmt.Printf("%v\n", CoinDeterminer(4))
+
+	return
+
+	fmt.Printf("%v\n", CoinDeterminer(6))
+	fmt.Printf("%v\n", CoinDeterminer(16))
+	fmt.Printf("%v\n", CoinDeterminer(25))
+
+	return
 
 	fmt.Printf("%v", FindMaxValRec([]int{100, 32, 444443, 55, 22, 19999, 43, 2}))
 	return
