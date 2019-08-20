@@ -5508,18 +5508,170 @@ func LookSaySequence(num int) int {
 				break
 			}
 		}
-		result += fmt.Sprintf("%v%v",index, items[u])
+		result += fmt.Sprintf("%v%v", index, items[u])
 	}
 
-	val,err := strconv.Atoi(result)
+	val, err := strconv.Atoi(result)
 	if err == nil {
 		return val
 	}
 	return 0
 }
 
+//[]string {"(0,0),(0,-2),(3,0),(3,-2),(2,-1),(3,-1),(2,3),(3,3)"}
+func OverlappingRectangles(strArr []string) string {
+	if len(strArr) != 1 {
+		return "0"
+	}
+	points := make([]string, 0)
+	index := 0
+	pos := 0
+	for len(strArr[0]) != 0 {
+		if string(strArr[0][pos]) == "," {
+			if index%2 == 1 {
+				points = append(points, strArr[0][:pos])
+				strArr[0] = strArr[0][pos+1:]
+				pos = 0
+				index++
+				continue
+			} else {
+				if strings.Count(strArr[0], ",") == 1 {
+					points = append(points, strArr[0])
+					break
+				}
+			}
+			index++
+		}
+		pos++
+	}
+	squareMinDotCount := 4
+	type Point struct {
+		x int
+		y int
+	}
+	type Rectangle struct {
+		p1 Point
+		p2 Point
+		p3 Point
+		p4 Point
+	}
+
+	var rect1, rect2 Rectangle
+	for u := 0; u < len(points); u++ {
+		val := strings.Replace(strings.Replace(points[u], "(", "", -1), ")", "", -1)
+		values := strings.Split(val, ",")
+		if len(values) != 2 {
+			return "0"
+		}
+		x, errX := strconv.Atoi(values[0])
+		if errX != nil {
+			return "0"
+		}
+		y, errY := strconv.Atoi(values[1])
+		if errY != nil {
+			return "0"
+		}
+		switch u {
+		case 0:
+			{
+				rect1.p1 = Point{x: x, y: y}
+			}
+		case 1:
+			{
+				rect1.p2 = Point{x: x, y: y}
+
+			}
+		case 2:
+			{
+				rect1.p3 = Point{x: x, y: y}
+
+			}
+		case 3:
+			{
+				rect1.p4 = Point{x: x, y: y}
+
+			}
+		case 4:
+			{
+				rect2.p1 = Point{x: x, y: y}
+
+			}
+		case 5:
+			{
+				rect2.p2 = Point{x: x, y: y}
+
+			}
+		case 6:
+			{
+				rect2.p3 = Point{x: x, y: y}
+
+			}
+		case 7:
+			{
+				rect2.p4 = Point{x: x, y: y}
+			}
+		}
+	}
+	dimensions := func(rect Rectangle) (int, int,Point) {
+		h, w := 0, 0
+		for {
+			if rect.p1.x == rect.p2.x {
+				h = int(math.Abs(float64(rect.p1.y) - float64(rect.p2.y)))
+				w = int(math.Abs(float64(rect.p3.x) - float64(rect.p1.x)))
+				break
+			}
+			if rect.p1.x == rect.p3.x {
+				h = int(math.Abs(float64(rect.p1.y) - float64(rect.p3.y)))
+				w = int(math.Abs(float64(rect.p2.x) - float64(rect.p1.x)))
+				break
+			}
+			if rect.p1.x == rect.p4.x {
+				h = int(math.Abs(float64(rect.p1.y) - float64(rect.p4.y)))
+				w = int(math.Abs(float64(rect.p2.x) - float64(rect.p1.x)))
+				break
+			}
+			break
+		}
+		return h, w,rect.p1
+	}
+	matrixGenerator := func(rect Rectangle) [][]string {
+		h, w,p := dimensions(rect)
+		result := make([][]string, 0)
+		for u := p.y; u <= h; u++ {
+			for j := p.x; j <= w; j++ {
+				result = append(result, []string{fmt.Sprintf("[%v,%v]", j, u)})
+			}
+		}
+		return result
+	}
+	matrisForRect1 := matrixGenerator(rect1)
+	h, w,_ := dimensions(rect1)
+	sofRect1 := h * w
+	matrisForRect2 := matrixGenerator(rect2)
+	fmt.Printf("%v\n",matrisForRect1)
+	fmt.Printf("%v\n",matrisForRect2)
+	count := 0
+	for _, valFor1 := range matrisForRect1 {
+		for _, valFor2 := range matrisForRect2 {
+			if fmt.Sprintf("%v", valFor1) == fmt.Sprintf("%v", valFor2) {
+				count++
+			}
+		}
+	}
+	if count<squareMinDotCount {
+		return "0"
+	} else if count>=squareMinDotCount {
+		return fmt.Sprintf("%v", sofRect1 / count)
+	}
+	return "0"
+}
+
 //noinspection ALL
 func main() {
+	fmt.Printf("%v\n", OverlappingRectangles([]string{"(0,0),(0,-2),(3,0),(3,-2),(2,-1),(3,-1),(2,3),(3,3)"})) // 6
+	//fmt.Printf("%v\n", OverlappingRectangles([]string{"(0,0),(2,2),(2,0),(0,2),(1,0),(1,2),(6,0),(6,2)"})) // 2
+
+	return
 	fmt.Printf("%v\n", LookSaySequence(110))
 	fmt.Printf("%v\n", LookSaySequence(15))
 	fmt.Printf("%v\n", LookSaySequence(101))
