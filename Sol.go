@@ -5612,7 +5612,7 @@ func OverlappingRectangles(strArr []string) string {
 			}
 		}
 	}
-	dimensions := func(rect Rectangle) (int, int,Point) {
+	dimensions := func(rect Rectangle) (int, int, Point) {
 		h, w := 0, 0
 		for {
 			if rect.p1.x == rect.p2.x {
@@ -5632,10 +5632,10 @@ func OverlappingRectangles(strArr []string) string {
 			}
 			break
 		}
-		return h, w,rect.p1
+		return h, w, rect.p1
 	}
 	matrixGenerator := func(rect Rectangle) [][]string {
-		h, w,p := dimensions(rect)
+		h, w, p := dimensions(rect)
 		result := make([][]string, 0)
 		for u := p.y; u <= h; u++ {
 			for j := p.x; j <= w; j++ {
@@ -5645,11 +5645,11 @@ func OverlappingRectangles(strArr []string) string {
 		return result
 	}
 	matrisForRect1 := matrixGenerator(rect1)
-	h, w,_ := dimensions(rect1)
+	h, w, _ := dimensions(rect1)
 	sofRect1 := h * w
 	matrisForRect2 := matrixGenerator(rect2)
-	fmt.Printf("%v\n",matrisForRect1)
-	fmt.Printf("%v\n",matrisForRect2)
+	fmt.Printf("%v\n", matrisForRect1)
+	fmt.Printf("%v\n", matrisForRect2)
 	count := 0
 	for _, valFor1 := range matrisForRect1 {
 		for _, valFor2 := range matrisForRect2 {
@@ -5658,19 +5658,81 @@ func OverlappingRectangles(strArr []string) string {
 			}
 		}
 	}
-	if count<squareMinDotCount {
+	if count < squareMinDotCount {
 		return "0"
-	} else if count>=squareMinDotCount {
-		return fmt.Sprintf("%v", sofRect1 / count)
+	} else if count >= squareMinDotCount {
+		return fmt.Sprintf("%v", sofRect1/count)
 	}
 	return "0"
 }
 
+//3aabacbebebe -> cbebebebe
+func KUniqueCharacters(str string) string {
+	min, max := 1, 6
+	if len(str) == 0 {
+		return ""
+	}
+	count := string(str[0])
+	countInt, err := strconv.Atoi(count)
+	if err != nil {
+		return ""
+	}
+	if countInt > max && countInt < min {
+		return ""
+	}
+	raw := strings.Split(str, "")
+	second := strings.Join(raw[1:], "")
+	items := make([]string, 0)
+	for u := 0; u < len(second); u++ {
+		kvChars := make(map[string]int, 0)
+		word := ""
+		for j := u; j < len(second); j++ {
+			if val, isExist := kvChars[string(second[j])]; isExist {
+				kvChars[string(second[j])] = val + 1
+				word += string(second[j])
+			} else {
+				if len(kvChars) == countInt {
+					break
+				}
+				if len(kvChars) < countInt {
+					kvChars[string(second[j])] = 1
+					word += string(second[j])
+				}
+			}
+		}
+		if len(kvChars) < countInt {
+			continue
+		}
+		items = append(items, word)
+	}
+	backup := make([]string, len(items))
+	copy(backup, items)
+	sort.Slice(items, func(i, j int) bool {
+		return len(items[i]) > len(items[j])
+	})
+	if len(items) != 0 {
+		tempLen := len(items[0])
+		for u := 0; u < len(backup); u++ {
+			if tempLen == len(backup[u]) {
+				return backup[u]
+			}
+		}
+		return items[0]
+	}
+	return ""
+}
+
 //noinspection ALL
 func main() {
+	//fmt.Printf("%v\n", KUniqueCharacters("2aabbaaccbbaaccaabb"))
+	//fmt.Printf("%v\n", KUniqueCharacters("2aabbcbbbadef"))
+	fmt.Printf("%v\n", KUniqueCharacters("1aabb"))
+	fmt.Printf("%v\n", KUniqueCharacters("4aaffaacccerrfffaacca"))
+
+	return
 
 	fmt.Printf("%v\n", OverlappingRectangles([]string{"(0,0),(0,-2),(3,0),(3,-2),(2,-1),(3,-1),(2,3),(3,3)"})) // 6
-	fmt.Printf("%v\n", OverlappingRectangles([]string{"(0,0),(2,2),(2,0),(0,2),(1,0),(1,2),(6,0),(6,2)"})) // 2
+	fmt.Printf("%v\n", OverlappingRectangles([]string{"(0,0),(2,2),(2,0),(0,2),(1,0),(1,2),(6,0),(6,2)"}))     // 2
 	//!!editing
 	return
 	fmt.Printf("%v\n", LookSaySequence(110))
