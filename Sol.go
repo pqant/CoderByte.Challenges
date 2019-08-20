@@ -5721,11 +5721,48 @@ func KUniqueCharacters(str string) string {
 	}
 	return ""
 }
+// "A", "B", "C", "D", "A", "E", "D", "Z"  ----> C-A-E-D-Z
+func LRUCache(strArr []string) string {
+	if len(strArr) == 0 {
+		return ""
+	}
+	cacheLimit := 5
+	items := make([]string, 0)
+	kvItems := make(map[string]int, 0)
+	for u := 0; u < len(strArr); u++ {
+		if _, isExist := kvItems[strArr[u]]; isExist {
+			tmpItems := make([]string, 0)
+			for j := 0; j < len(items); j++ {
+				if items[j] != strArr[u] {
+					tmpItems = append(tmpItems, items[j])
+				}
+			}
+			if len(tmpItems)==cacheLimit {
+				tmpItems = tmpItems[1:]
+			}
+			tmpItems = append(tmpItems, strArr[u])
+			items = make([]string, len(tmpItems))
+			copy(items, tmpItems)
+		} else {
+			if len(items)==cacheLimit {
+				items = items[1:]
+			}
+			items = append(items, strArr[u])
+		}
+		kvItems[strArr[u]] = 1
+	}
+	return strings.Join(items, "-")
+}
 
 //noinspection ALL
 func main() {
 	//fmt.Printf("%v\n", KUniqueCharacters("2aabbaaccbbaaccaabb"))
 	//fmt.Printf("%v\n", KUniqueCharacters("2aabbcbbbadef"))
+	fmt.Printf("%v\n", LRUCache([]string{"A", "B", "C", "D", "A", "E", "D", "Z"}))
+	fmt.Printf("%v\n", LRUCache([]string{"A", "B", "A", "C", "A", "B"}))
+	fmt.Printf("%v\n", LRUCache([]string{"A", "B", "C", "D", "E", "D", "Q", "Z", "C"}))
+
+	return
 	fmt.Printf("%v\n", KUniqueCharacters("1aabb"))
 	fmt.Printf("%v\n", KUniqueCharacters("4aaffaacccerrfffaacca"))
 
