@@ -5992,11 +5992,22 @@ func NearestSmallerValues(arr []int) string {
 	if len(arr) == 0 {
 		return ""
 	}
-	result := []string{"1"}
+	not := "-1"
+	result := make([]string, 0)
+	result = append(result,fmt.Sprintf("%v",not))
 	for u := 1; u < len(arr); u++ {
-
+		isFound := false
+		for j := u-1; j>=0; j-- {
+			if arr[j]<=arr[u] {
+				result = append(result,fmt.Sprintf("%v",arr[j]))
+				isFound = true
+				break
+			}
+		}
+		if !isFound {
+			result = append(result,fmt.Sprintf("%v",not))
+		}
 	}
-
 	return strings.Join(result, " ")
 }
 
@@ -6005,6 +6016,11 @@ func main() {
 	//fmt.Printf("%v\n", KUniqueCharacters("2aabbaaccbbaaccaabb"))
 	//fmt.Printf("%v\n", KUniqueCharacters("2aabbcbbbadef"))
 
+	fmt.Printf("%v\n", NearestSmallerValues([]int{5, 2, 8, 3, 9, 12}))
+	fmt.Printf("%v\n", NearestSmallerValues([]int{5, 3, 1, 9, 7, 3, 4, 1}))
+	fmt.Printf("%v\n", NearestSmallerValues([]int{2,4,5,1,7}))
+
+	return
 	fmt.Printf("%v\n", ArrayMinJumps([]int{4, 5, 2, 1, 5, 3, 1, 4, 6, 2, 1, 0, 1, 0, 4, 3, 0, 1, 2, 4, 5}))
 	fmt.Printf("%v\n", ArrayMinJumps([]int{3, 4, 2, 1, 1, 100}))
 	fmt.Printf("%v\n", ArrayMinJumps([]int{4}))
