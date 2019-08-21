@@ -5721,6 +5721,7 @@ func KUniqueCharacters(str string) string {
 	}
 	return ""
 }
+
 // "A", "B", "C", "D", "A", "E", "D", "Z"  ----> C-A-E-D-Z
 func LRUCache(strArr []string) string {
 	if len(strArr) == 0 {
@@ -5737,14 +5738,14 @@ func LRUCache(strArr []string) string {
 					tmpItems = append(tmpItems, items[j])
 				}
 			}
-			if len(tmpItems)==cacheLimit {
+			if len(tmpItems) == cacheLimit {
 				tmpItems = tmpItems[1:]
 			}
 			tmpItems = append(tmpItems, strArr[u])
 			items = make([]string, len(tmpItems))
 			copy(items, tmpItems)
 		} else {
-			if len(items)==cacheLimit {
+			if len(items) == cacheLimit {
 				items = items[1:]
 			}
 			items = append(items, strArr[u])
@@ -5754,10 +5755,253 @@ func LRUCache(strArr []string) string {
 	return strings.Join(items, "-")
 }
 
+func ArrayMinJumps_V1(arr []int) int {
+	if len(arr) == 0 {
+		return 0
+	}
+	fmt.Printf("\n\n--------- >>>>>>> %v\n\n",arr)
+	hasher := 10000
+	getRealValue := func(val, index int) int {
+		hasherIndex := val / hasher
+		if hasherIndex == 0 {
+			hasherIndex = 1
+		}
+		if val >= hasher*hasherIndex {
+			return val - (hasher * hasherIndex) - (index*index*index)
+		}
+		return val
+	}
+	alter := func(items []int) []int {
+		for u := 0; u < len(items); u++ {
+			foundIndexes := make([]int, 0)
+			for j := u + 1; j < len(items); j++ {
+				if items[u] == items[j] {
+					foundIndexes = append(foundIndexes, j)
+				}
+			}
+			if len(foundIndexes) != 0 {
+				for _, value := range foundIndexes {
+					items[value] = items[value] + hasher + (value * value * value)
+				}
+			}
+		}
+		return items
+	}
+	arr = alter(arr)
+	kv := make(map[string][]string, 0)
+	indexes := make([]int, 0)
+	indexForDones := make(map[int]int, 0)
+	dones := make([]int, 0)
+	isFound := false
+	for u := 0; u < len(arr); u++ {
+		var items []string
+		index := 0
+		j := u + 1
+		for index < getRealValue(arr[u], u) && j < len(arr) {
+			items = append(items, fmt.Sprintf("%v", getRealValue(arr[j], j)))
+			j++
+			index++
+		}
+		if j == len(arr) {
+			dones = append(dones, arr[u])
+			indexForDones[arr[u]] = u
+			items = append(items, "*")
+			isFound = true
+		}
+		kv[fmt.Sprintf("%v", arr[u])] = items
+		indexes = append(indexes, arr[u])
+		fmt.Printf("[%v]-[%v]\n", getRealValue(arr[u], u), items)
+	}
+	if !isFound {
+		return -1
+	}
+
+	fmt.Printf("\n%v\n", "-----------------------------------------")
+
+	kvLock := make(map[int]int, 0)
+	min := make([]int, 0)
+	for u := 0; u < len(dones); u++ {
+		values := kv[fmt.Sprintf("%v", dones[u])]
+		total := 1
+		once := false
+		isKeyUsed := false
+		fmt.Printf("\n***************** %v *********************\n", getRealValue(dones[u], indexForDones[dones[u]]))
+		for y := len(indexes) - 1; y >= 0; y-- {
+			if fmt.Sprintf("%v", kv[fmt.Sprintf("%v", indexes[y])]) != fmt.Sprintf("%v", values) && !once {
+				continue
+			}
+			if !once {
+				once = !once
+				continue
+			}
+
+			fmt.Printf("-->>[%v]-[%v]\n", getRealValue(indexes[y], y), kv[fmt.Sprintf("%v", indexes[y])])
+
+			if !isKeyUsed {
+				isKeyUsed = true
+				for _, valueIn := range kv[fmt.Sprintf("%v", indexes[y])] {
+					if valueIn == fmt.Sprintf("%v", dones[u]) {
+						total++
+						break
+					}
+				}
+				continue
+			} else {
+				isKeyFound := false
+				for _, valueIn := range kv[fmt.Sprintf("%v", indexes[y])] {
+					if valueIn == fmt.Sprintf("%v", dones[u]) {
+						isKeyFound = true
+						break
+					}
+				}
+				if !isKeyFound {
+					total++
+				}
+			}
+		}
+		if _, isExist := kvLock[getRealValue(dones[u], indexForDones[dones[u]])]; !isExist {
+			kvLock[getRealValue(dones[u], indexForDones[dones[u]])] = total
+			min = append(min, total)
+		}
+	}
+	sort.Slice(min, func(i, j int) bool {
+		return min[i] < min[j]
+	})
+	if len(min) != 0 {
+		return min[0]
+	}
+	return -1
+}
+
+
+func ArrayMinJumps(arr []int) int {
+	if len(arr) == 0 {
+		return 0
+	}
+	fmt.Printf("\n\n--------- >>>>>>> %v\n\n",arr)
+	hasher := 10000
+	getRealValue := func(val, index int) int {
+		hasherIndex := val / hasher
+		if hasherIndex == 0 {
+			hasherIndex = 1
+		}
+		if val >= hasher*hasherIndex {
+			return val - (hasher * hasherIndex) - (index*index*index)
+		}
+		return val
+	}
+	alter := func(items []int) []int {
+		for u := 0; u < len(items); u++ {
+			foundIndexes := make([]int, 0)
+			for j := u + 1; j < len(items); j++ {
+				if items[u] == items[j] {
+					foundIndexes = append(foundIndexes, j)
+				}
+			}
+			if len(foundIndexes) != 0 {
+				for _, value := range foundIndexes {
+					items[value] = items[value] + hasher + (value * value * value)
+				}
+			}
+		}
+		return items
+	}
+	arr = alter(arr)
+	kv := make(map[string][]string, 0)
+	indexes := make([]int, 0)
+	indexForDones := make(map[int]int, 0)
+	dones := make([]int, 0)
+	isFound := false
+	for u := 0; u < len(arr); u++ {
+		var items []string
+		index := 0
+		j := u + 1
+		for index < getRealValue(arr[u], u) && j < len(arr) {
+			items = append(items, fmt.Sprintf("%v", getRealValue(arr[j], j)))
+			j++
+			index++
+		}
+		if j == len(arr) {
+			dones = append(dones, arr[u])
+			indexForDones[arr[u]] = u
+			items = append(items, "*")
+			isFound = true
+		}
+		kv[fmt.Sprintf("%v", arr[u])] = items
+		indexes = append(indexes, arr[u])
+		fmt.Printf("[%v]-[%v]\n", getRealValue(arr[u], u), items)
+	}
+	if !isFound {
+		return -1
+	}
+
+	fmt.Printf("\n%v\n", "-----------------------------------------")
+
+	kvLock := make(map[int]int, 0)
+	min := make([]int, 0)
+	for u := 0; u < len(dones); u++ {
+		values := kv[fmt.Sprintf("%v", dones[u])]
+		total := 1
+		once := false
+		isKeyUsed := false
+		fmt.Printf("\n***************** %v *********************\n", getRealValue(dones[u], indexForDones[dones[u]]))
+		for y := len(indexes) - 1; y >= 0; y-- {
+			if fmt.Sprintf("%v", kv[fmt.Sprintf("%v", indexes[y])]) != fmt.Sprintf("%v", values) && !once {
+				continue
+			}
+			if !once {
+				once = !once
+				continue
+			}
+
+			fmt.Printf("-->>[%v]-[%v]\n", getRealValue(indexes[y], y), kv[fmt.Sprintf("%v", indexes[y])])
+
+			if !isKeyUsed {
+				isKeyUsed = true
+				for _, valueIn := range kv[fmt.Sprintf("%v", indexes[y])] {
+					if valueIn == fmt.Sprintf("%v", dones[u]) {
+						total++
+						break
+					}
+				}
+				continue
+			} else {
+				isKeyFound := false
+				for _, valueIn := range kv[fmt.Sprintf("%v", indexes[y])] {
+					if valueIn == fmt.Sprintf("%v", dones[u]) {
+						isKeyFound = true
+						break
+					}
+				}
+				if !isKeyFound {
+					total++
+				}
+			}
+		}
+		if _, isExist := kvLock[getRealValue(dones[u], indexForDones[dones[u]])]; !isExist {
+			kvLock[getRealValue(dones[u], indexForDones[dones[u]])] = total
+			min = append(min, total)
+		}
+	}
+	sort.Slice(min, func(i, j int) bool {
+		return min[i] < min[j]
+	})
+	if len(min) != 0 {
+		return min[0]
+	}
+	return -1
+}
+
 //noinspection ALL
 func main() {
 	//fmt.Printf("%v\n", KUniqueCharacters("2aabbaaccbbaaccaabb"))
 	//fmt.Printf("%v\n", KUniqueCharacters("2aabbcbbbadef"))
+
+	//fmt.Printf("%v\n", ArrayMinJumps([]int{1, 5, 4, 6, 9, 3, 0, 0, 1, 3}))
+	fmt.Printf("%v\n", ArrayMinJumps([]int{1, 3, 6, 8, 2, 7, 1, 2, 1, 2, 6, 1, 2, 1, 2}))
+	//fmt.Printf("%v\n", ArrayMinJumps([]int{3, 4, 2, 1, 1, 100}))
+	return
+
 	fmt.Printf("%v\n", LRUCache([]string{"A", "B", "C", "D", "A", "E", "D", "Z"}))
 	fmt.Printf("%v\n", LRUCache([]string{"A", "B", "A", "C", "A", "B"}))
 	fmt.Printf("%v\n", LRUCache([]string{"A", "B", "C", "D", "E", "D", "Q", "Z", "C"}))
