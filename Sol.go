@@ -5875,6 +5875,9 @@ func ArrayMinJumps_V1(arr []int) int {
 
 func ArrayMinJumps(arr []int) int {
 	if len(arr) == 0 {
+		return -1
+	}
+	if len(arr) == 1 {
 		return 0
 	}
 	//fmt.Printf("\n\n--------- >>>>>>> %v\n\n", arr)
@@ -5953,10 +5956,30 @@ do:
 			realIndex++
 		}
 		max -= sub
+
+		indexList := make([]int, 0)
+		indis := 0
+		for _, valueIn := range kv[fmt.Sprintf("%v", indexes[y])] {
+			if valueIn != "*" {
+				val, _ := strconv.Atoi(valueIn)
+				if val == max {
+					indexList = append(indexList, indis)
+				}
+			}
+			indis++
+		}
+		if max == 0 {
+			return -1
+		}
+		maxCount := len(indexList)
 		for j := 0; j < len(indexes); j++ {
-			if getRealValue(indexes[j], indexForSearch[indexes[j]]) == max && j>index {
-				total++
+			if getRealValue(indexes[j], indexForSearch[indexes[j]]) == max && j > index {
+				if maxCount > 1 {
+					maxCount--
+					continue
+				}
 				index = j
+				total++
 				goto do
 			}
 		}
@@ -5972,11 +5995,12 @@ func main() {
 	//fmt.Printf("%v\n", KUniqueCharacters("2aabbaaccbbaaccaabb"))
 	//fmt.Printf("%v\n", KUniqueCharacters("2aabbcbbbadef"))
 
-	fmt.Printf("%v\n", ArrayMinJumps([]int{1, 5, 4, 6, 9, 3, 0, 0, 1, 3}))
-	fmt.Printf("%v\n", ArrayMinJumps([]int{1, 3, 6, 8, 2, 7, 1, 2, 1, 2, 6, 1, 2, 1, 2}))
+	fmt.Printf("%v\n", ArrayMinJumps([]int{4, 5, 2, 1, 5, 3, 1, 4, 6, 2, 1, 0, 1, 0, 4, 3, 0, 1, 2, 4, 5}))
 	fmt.Printf("%v\n", ArrayMinJumps([]int{3, 4, 2, 1, 1, 100}))
+	fmt.Printf("%v\n", ArrayMinJumps([]int{4}))
+	fmt.Printf("%v\n", ArrayMinJumps([]int{1, 0, 0, 2}))
+	fmt.Printf("%v\n", ArrayMinJumps([]int{1, 3, 6, 8, 2, 7, 1, 2, 1, 2, 6, 1, 2, 1, 2}))
 	return
-
 	fmt.Printf("%v\n", LRUCache([]string{"A", "B", "C", "D", "A", "E", "D", "Z"}))
 	fmt.Printf("%v\n", LRUCache([]string{"A", "B", "A", "C", "A", "B"}))
 	fmt.Printf("%v\n", LRUCache([]string{"A", "B", "C", "D", "E", "D", "Q", "Z", "C"}))
