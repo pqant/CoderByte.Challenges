@@ -5880,7 +5880,6 @@ func ArrayMinJumps(arr []int) int {
 	if len(arr) == 1 {
 		return 0
 	}
-	//fmt.Printf("\n\n--------- >>>>>>> %v\n\n", arr)
 	hasher := 10000
 	getRealValue := func(val, index int) int {
 		hasherIndex := val / hasher
@@ -5912,7 +5911,6 @@ func ArrayMinJumps(arr []int) int {
 	kv := make(map[string][]string, 0)
 	indexes := make([]int, 0)
 	indexForSearch := make(map[int]int, 0)
-	dones := make([]int, 0)
 	isFound := false
 	for u := 0; u < len(arr); u++ {
 		var items []string
@@ -5924,7 +5922,6 @@ func ArrayMinJumps(arr []int) int {
 			index++
 		}
 		if j == len(arr) {
-			dones = append(dones, arr[u])
 			items = append(items, "*")
 			isFound = true
 		}
