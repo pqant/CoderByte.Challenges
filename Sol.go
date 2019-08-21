@@ -5987,6 +5987,19 @@ do:
 	return total
 }
 
+// [5, 2, 8, 3, 9, 12]  - >  -1 -1 2 2 3 9
+func NearestSmallerValues(arr []int) string {
+	if len(arr) == 0 {
+		return ""
+	}
+	result := []string{"1"}
+	for u := 1; u < len(arr); u++ {
+
+	}
+
+	return strings.Join(result, " ")
+}
+
 //noinspection ALL
 func main() {
 	//fmt.Printf("%v\n", KUniqueCharacters("2aabbaaccbbaaccaabb"))
