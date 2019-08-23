@@ -6011,6 +6011,38 @@ func NearestSmallerValues(arr []int) string {
 	return strings.Join(result, " ")
 }
 
+func CharacterRemoval(strArr []string) string {
+	if len(strArr)!=2 {
+		return "-1"
+	}
+
+	var powerSet func([]string,int,[]string,*[][]string)
+	powerSet = func(items []string,breakPoint int,selectedSoFar []string,results *[][]string) {
+		if len(items) == breakPoint {
+			tempSf := make([]string,len(selectedSoFar))
+			copy(tempSf,selectedSoFar)
+			*results = append(*results,tempSf)
+			return
+		}
+		selectedSoFar = append(selectedSoFar,items[breakPoint])
+		powerSet(items,breakPoint+1,selectedSoFar,results)
+		selectedSoFar = selectedSoFar[:len(selectedSoFar)-1]
+		powerSet(items,breakPoint+1,selectedSoFar,results)
+	}
+	search := strArr[0]
+	for {
+		if len(search)!=0 {
+
+			selectedSoFar:=make([]string,0)
+			results := make([][]string,0)
+			powerSet()
+
+
+		}
+	}
+	return ""
+}
+
 //noinspection ALL
 func main() {
 	//fmt.Printf("%v\n", KUniqueCharacters("2aabbaaccbbaaccaabb"))
