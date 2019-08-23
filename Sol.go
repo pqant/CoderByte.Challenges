@@ -5994,53 +5994,96 @@ func NearestSmallerValues(arr []int) string {
 	}
 	not := "-1"
 	result := make([]string, 0)
-	result = append(result,fmt.Sprintf("%v",not))
+	result = append(result, fmt.Sprintf("%v", not))
 	for u := 1; u < len(arr); u++ {
 		isFound := false
-		for j := u-1; j>=0; j-- {
-			if arr[j]<=arr[u] {
-				result = append(result,fmt.Sprintf("%v",arr[j]))
+		for j := u - 1; j >= 0; j-- {
+			if arr[j] <= arr[u] {
+				result = append(result, fmt.Sprintf("%v", arr[j]))
 				isFound = true
 				break
 			}
 		}
 		if !isFound {
-			result = append(result,fmt.Sprintf("%v",not))
+			result = append(result, fmt.Sprintf("%v", not))
 		}
 	}
 	return strings.Join(result, " ")
 }
 
 func CharacterRemoval(strArr []string) string {
-	if len(strArr)!=2 {
+	if len(strArr) != 2 {
 		return "-1"
 	}
 
-	var powerSet func([]string,int,[]string,*[][]string)
-	powerSet = func(items []string,breakPoint int,selectedSoFar []string,results *[][]string) {
+	var powerSet func([]string, int, []string, *[][]string)
+	powerSet = func(items []string, breakPoint int, selectedSoFar []string, results *[][]string) {
 		if len(items) == breakPoint {
-			tempSf := make([]string,len(selectedSoFar))
-			copy(tempSf,selectedSoFar)
-			*results = append(*results,tempSf)
+			tempSf := make([]string, len(selectedSoFar))
+			copy(tempSf, selectedSoFar)
+			*results = append(*results, tempSf)
 			return
 		}
-		selectedSoFar = append(selectedSoFar,items[breakPoint])
-		powerSet(items,breakPoint+1,selectedSoFar,results)
+		selectedSoFar = append(selectedSoFar, items[breakPoint])
+		powerSet(items, breakPoint+1, selectedSoFar, results)
 		selectedSoFar = selectedSoFar[:len(selectedSoFar)-1]
-		powerSet(items,breakPoint+1,selectedSoFar,results)
+		powerSet(items, breakPoint+1, selectedSoFar, results)
 	}
-	search := strArr[0]
-	for {
-		if len(search)!=0 {
-
-			selectedSoFar:=make([]string,0)
-			results := make([][]string,0)
-			powerSet()
-
-
+	var permList [][]string
+	var permutation func([]string, int)
+	permutation = func(arr []string, n int) {
+		if n == 1 {
+			temp := make([]string, len(arr))
+			copy(temp, arr)
+			permList = append(permList, temp)
+		} else {
+			for i := 0; i < n; i++ {
+				permutation(arr, n-1)
+				if n%2 == 1 {
+					temp := arr[i]
+					arr[i] = arr[n-1]
+					arr[n-1] = temp
+				} else {
+					temp := arr[0]
+					arr[0] = arr[n-1]
+					arr[n-1] = temp
+				}
+			}
 		}
 	}
-	return ""
+
+	search := strArr[0]
+	glossaryList := strings.Split(strArr[1], ",")
+	index := 0
+	for {
+		if len(search) != 0 {
+			selectedSoFar := make([]string, 0)
+			results := make([][]string, 0)
+			searchArr := strings.Split(search, "")
+			powerSet(searchArr, 0, selectedSoFar, &results)
+			for _, value := range results {
+				itemIn := strings.Join(value, "")
+				for _, word := range glossaryList {
+					if word == itemIn {
+						return fmt.Sprintf("%v", index)
+					}
+					permList = make([][]string, 0)
+					innerList := strings.Split(itemIn, "")
+					permutation(innerList, len(innerList))
+					for _, permValue := range permList {
+						itemPerm := strings.Join(permValue, "")
+						if word == itemPerm {
+							return fmt.Sprintf("%v", index)
+						}
+					}
+				}
+			}
+		} else {
+			break
+		}
+		index++
+	}
+	return "-1"
 }
 
 //noinspection ALL
@@ -6050,7 +6093,7 @@ func main() {
 
 	fmt.Printf("%v\n", NearestSmallerValues([]int{5, 2, 8, 3, 9, 12}))
 	fmt.Printf("%v\n", NearestSmallerValues([]int{5, 3, 1, 9, 7, 3, 4, 1}))
-	fmt.Printf("%v\n", NearestSmallerValues([]int{2,4,5,1,7}))
+	fmt.Printf("%v\n", NearestSmallerValues([]int{2, 4, 5, 1, 7}))
 
 	return
 	fmt.Printf("%v\n", ArrayMinJumps([]int{4, 5, 2, 1, 5, 3, 1, 4, 6, 2, 1, 0, 1, 0, 4, 3, 0, 1, 2, 4, 5}))
