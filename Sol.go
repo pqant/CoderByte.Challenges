@@ -6274,8 +6274,6 @@ func main() {
 	//fmt.Printf("%v\n", KUniqueCharacters("2aabbcbbbadef"))
 
 	fmt.Printf("%v\n", SimplePassword("!!!!!!+++++++++AMAMAM9"))
-	return
-
 	fmt.Printf("%v\n", SimplePassword("passWord123!!!!"))
 	fmt.Printf("%v\n", SimplePassword("apple!M7"))
 	fmt.Printf("%v\n", SimplePassword("turkey90AAA="))
