@@ -6096,13 +6096,25 @@ func CharacterRemoval(strArr []string) string {
 
 	simple := func() string {
 		for u := 0; u < len(glossaryList); u++ {
-			chars := strings.Split(glossaryList[u], "")
+			item := glossaryList[u]
+			chars := strings.Split(item, "")
 			indexList := make([]int, len(chars))
 			isOk := true
+			lastFound := -1
+			forwardFound := func(value, char string, startIndex int) (bool, int) {
+				if startIndex == -1 {
+					return true,strings.Index(value, char)
+				}
+				index := strings.Index(strings.Join(strings.Split(value, "")[startIndex:], ""), char)
+				if index != -1 {
+					return true, startIndex + index
+				}
+				return false, index
+			}
 			for j := 0; j < len(chars); j++ {
-				indexOfChar := strings.Index(search, chars[j])
-				if indexOfChar != -1 {
-					indexList[j] = indexOfChar
+				isGo,valOfNewIndex:=forwardFound(search, chars[j], lastFound)
+				if isGo && valOfNewIndex != -1 && lastFound != valOfNewIndex {
+					indexList[j], lastFound = valOfNewIndex, valOfNewIndex
 				} else {
 					isOk = false
 					break
@@ -6122,11 +6134,10 @@ func CharacterRemoval(strArr []string) string {
 					}
 				}
 				if isFound {
-					return fmt.Sprintf("%v", len(strArr[0])-len(glossaryList[u]))
+					return fmt.Sprintf("%v", len(strArr[0])-len(item))
 				}
 			}
 		}
-
 		return "-1"
 	}
 	return simple()
@@ -6136,6 +6147,8 @@ func CharacterRemoval(strArr []string) string {
 func main() {
 	//fmt.Printf("%v\n", KUniqueCharacters("2aabbaaccbbaaccaabb"))
 	//fmt.Printf("%v\n", KUniqueCharacters("2aabbcbbbadef"))
+	fmt.Printf("%v\n", CharacterRemoval([]string{"abcdefabcdef", "a,b,bfabcde,c,d,e,ee,eee,eeee,eeeeeeeee,fabc,go,goo,gooo"}))
+	fmt.Printf("%v\n", CharacterRemoval([]string{"abcdefabcdef", "a,b,c,d,e,ee,eee,eeee,eeeeeeeee,fabc,go,goo,gooo"}))
 	fmt.Printf("%v\n", CharacterRemoval([]string{"baseball", "a,all,b,ball,bas,base,cat,code,d,e,quit,z"}))
 	fmt.Printf("%v\n", CharacterRemoval([]string{"apbpleeeef", "a,ab,abc,abcg,b,c,dog,e,efd,zzzz"}))
 	fmt.Printf("%v\n", CharacterRemoval([]string{"worlcde", "apple,bat,cat,goodbye,hello,yellow,why,world"}))
