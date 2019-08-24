@@ -6054,42 +6054,93 @@ func CharacterRemoval(strArr []string) string {
 
 	search := strArr[0]
 	glossaryList := strings.Split(strArr[1], ",")
-	index := 0
-	for {
-		if len(search) != 0 {
-			selectedSoFar := make([]string, 0)
-			results := make([][]string, 0)
-			searchArr := strings.Split(search, "")
-			powerSet(searchArr, 0, selectedSoFar, &results)
-			for _, value := range results {
-				itemIn := strings.Join(value, "")
-				for _, word := range glossaryList {
-					if word == itemIn {
-						return fmt.Sprintf("%v", index)
-					}
-					permList = make([][]string, 0)
-					innerList := strings.Split(itemIn, "")
-					permutation(innerList, len(innerList))
-					for _, permValue := range permList {
-						itemPerm := strings.Join(permValue, "")
-						if word == itemPerm {
-							return fmt.Sprintf("%v", index)
+	sort.Slice(glossaryList, func(i, j int) bool {
+		return len(glossaryList[i]) > len(glossaryList[j])
+	})
+	var _ = func() string {
+		//it's complex edition of it! it works very well if there are limited char count in arr[0]. for ex it's 5.
+		org := search
+		index := 0
+		for {
+			if len(search) != 0 {
+				selectedSoFar := make([]string, 0)
+				results := make([][]string, 0)
+				searchArr := strings.Split(search, "")
+				powerSet(searchArr, 0, selectedSoFar, &results)
+				for _, value := range results {
+					itemIn := strings.Join(value, "")
+					for _, word := range glossaryList {
+						if word == itemIn {
+							return fmt.Sprintf("%v", len(org)-len(word))
+						}
+						permList = make([][]string, 0)
+						innerList := strings.Split(itemIn, "")
+						permutation(innerList, len(innerList))
+						for _, permValue := range permList {
+							itemPerm := strings.Join(permValue, "")
+							if word == itemPerm {
+								return fmt.Sprintf("%v", len(org)-len(word))
+							}
 						}
 					}
 				}
+			} else {
+				break
 			}
-		} else {
-			break
+			index++
+			searchTemp := strings.Split(search, "")
+			search = strings.Join(searchTemp[index:], "")
 		}
-		index++
+		return "-1"
 	}
-	return "-1"
+
+	simple := func() string {
+		for u := 0; u < len(glossaryList); u++ {
+			chars := strings.Split(glossaryList[u], "")
+			indexList := make([]int, len(chars))
+			isOk := true
+			for j := 0; j < len(chars); j++ {
+				indexOfChar := strings.Index(search, chars[j])
+				if indexOfChar != -1 {
+					indexList[j] = indexOfChar
+				} else {
+					isOk = false
+					break
+				}
+			}
+			if isOk {
+				tempList := make([]int, len(chars))
+				copy(tempList, indexList)
+				sort.Slice(tempList, func(i, j int) bool {
+					return tempList[i] < tempList[j]
+				})
+				isFound := true
+				for key, indexValue := range indexList {
+					if indexValue != tempList[key] {
+						isFound = false
+						break
+					}
+				}
+				if isFound {
+					return fmt.Sprintf("%v", len(strArr[0])-len(glossaryList[u]))
+				}
+			}
+		}
+
+		return "-1"
+	}
+	return simple()
 }
 
 //noinspection ALL
 func main() {
 	//fmt.Printf("%v\n", KUniqueCharacters("2aabbaaccbbaaccaabb"))
 	//fmt.Printf("%v\n", KUniqueCharacters("2aabbcbbbadef"))
+	fmt.Printf("%v\n", CharacterRemoval([]string{"baseball", "a,all,b,ball,bas,base,cat,code,d,e,quit,z"}))
+	fmt.Printf("%v\n", CharacterRemoval([]string{"apbpleeeef", "a,ab,abc,abcg,b,c,dog,e,efd,zzzz"}))
+	fmt.Printf("%v\n", CharacterRemoval([]string{"worlcde", "apple,bat,cat,goodbye,hello,yellow,why,world"}))
+
+	return
 
 	fmt.Printf("%v\n", NearestSmallerValues([]int{5, 2, 8, 3, 9, 12}))
 	fmt.Printf("%v\n", NearestSmallerValues([]int{5, 3, 1, 9, 7, 3, 4, 1}))
