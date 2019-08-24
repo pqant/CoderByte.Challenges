@@ -6103,7 +6103,7 @@ func CharacterRemoval(strArr []string) string {
 			lastFound := -1
 			forwardFound := func(value, char string, startIndex int) (bool, int) {
 				if startIndex == -1 {
-					return true,strings.Index(value, char)
+					return true, strings.Index(value, char)
 				}
 				index := strings.Index(strings.Join(strings.Split(value, "")[startIndex:], ""), char)
 				if index != -1 {
@@ -6112,7 +6112,7 @@ func CharacterRemoval(strArr []string) string {
 				return false, index
 			}
 			for j := 0; j < len(chars); j++ {
-				isGo,valOfNewIndex:=forwardFound(search, chars[j], lastFound)
+				isGo, valOfNewIndex := forwardFound(search, chars[j], lastFound)
 				if isGo && valOfNewIndex != -1 && lastFound != valOfNewIndex {
 					indexList[j], lastFound = valOfNewIndex, valOfNewIndex
 				} else {
@@ -6155,7 +6155,7 @@ func SimplePassword(str string) string {
 	if len(str) == 0 {
 		return "false"
 	}
-	illegalWords:= []string{"password"}
+	illegalWords := []string{"password"}
 	var punchItems = []string{
 		" ",
 		"-",
@@ -6205,30 +6205,30 @@ func SimplePassword(str string) string {
 		"∴",
 		"‽",
 		"※"}
-	min,max := 7,31
+	min, max := 7, 31
 	result := false
-	for u:=65;u<97 ;u++  {
-		if strings.ContainsRune(str,rune(u)) {
+	for u := 65; u < 97; u++ {
+		if strings.ContainsRune(str, rune(u)) {
 			result = true
 			break
 		}
 	}
 	if !result {
-		return fmt.Sprintf("%v",result)
+		return fmt.Sprintf("%v", result)
 	}
 
-	for u:=48;u<58 ;u++  {
-		if strings.ContainsRune(str,rune(u)) {
+	for u := 48; u < 58; u++ {
+		if strings.ContainsRune(str, rune(u)) {
 			result = true
 			break
 		}
 	}
 	if !result {
-		return fmt.Sprintf("%v",result)
+		return fmt.Sprintf("%v", result)
 	}
 
-	for _, value := range strings.Split(str,"") {
-		isOk :=false
+	for _, value := range strings.Split(str, "") {
+		isOk := false
 		for _, punch := range punchItems {
 			if value == punch {
 				result = true
@@ -6241,37 +6241,98 @@ func SimplePassword(str string) string {
 		}
 	}
 	if !result {
-		return fmt.Sprintf("%v",result)
+		return fmt.Sprintf("%v", result)
 	}
 
 	result = false
 	for _, word := range illegalWords {
-		if strings.Contains(str,word) || strings.Contains(strings.ToUpper(str),strings.ToUpper(word)) {
+		if strings.Contains(str, word) || strings.Contains(strings.ToUpper(str), strings.ToUpper(word)) {
 			result = true
 			break
 		}
 	}
 
 	if result {
-		return fmt.Sprintf("%v",!result)
+		return fmt.Sprintf("%v", !result)
 	}
 
 	result = false
 
-	if len(str)>min && len(str)<max {
+	if len(str) > min && len(str) < max {
 		result = true
 	}
 	if !result {
-		return fmt.Sprintf("%v",result)
+		return fmt.Sprintf("%v", result)
 	}
 
-	return fmt.Sprintf("%v",result)
+	return fmt.Sprintf("%v", result)
+}
+
+func NextHigherNumber(num int) int {
+	var perm func([]int, int)
+	results := make([][]int, 0)
+	perm = func(arr []int, n int) {
+		if n == 1 {
+			temp := make([]int, len(arr))
+			copy(temp, arr)
+			results = append(results, temp)
+		} else {
+			for i := 0; i < n; i++ {
+				perm(arr, n-1)
+				if n%2 == 1 {
+					temp := arr[i]
+					arr[i] = arr[n-1]
+					arr[n-1] = temp
+				} else {
+					temp := arr[0]
+					arr[0] = arr[n-1]
+					arr[n-1] = temp
+				}
+			}
+		}
+	}
+	numStr := fmt.Sprintf("%v", num)
+	if len(numStr) == 0 {
+		return 1
+	}
+	arrInt := make([]int, len(numStr))
+	index := 0
+	for _, value := range numStr {
+		val, err := strconv.Atoi(string(value))
+		if err != nil {
+			return -1
+		}
+		arrInt[index] = val
+		index++
+	}
+	perm(arrInt, len(arrInt))
+
+	sort.Slice(results, func(i, j int) bool {
+		valI, _ := strconv.Atoi(strings.Replace(strings.Replace(strings.Replace(fmt.Sprintf("%v", results[i]), "[", "", -1),
+			"]", "", -1), " ", "", -1))
+		valJ, _ := strconv.Atoi(strings.Replace(strings.Replace(strings.Replace(fmt.Sprintf("%v", results[j]), "[", "", -1),
+			"]", "", -1), " ", "", -1))
+		return valI < valJ
+	})
+	for _, value := range results {
+		val, _ := strconv.Atoi(strings.Replace(strings.Replace(strings.Replace(fmt.Sprintf("%v", value), "[", "", -1),
+			"]", "", -1), " ", "", -1))
+		if val > num {
+			return val
+		}
+	}
+	return num
 }
 
 //noinspection ALL
 func main() {
 	//fmt.Printf("%v\n", KUniqueCharacters("2aabbaaccbbaaccaabb"))
 	//fmt.Printf("%v\n", KUniqueCharacters("2aabbcbbbadef"))
+
+	fmt.Printf("%v\n", NextHigherNumber(32841))
+	//fmt.Printf("%v\n", NextHigherNumber(2314))
+	//fmt.Printf("%v\n", NextHigherNumber(4321))
+	return
 
 	fmt.Printf("%v\n", SimplePassword("!!!!!!+++++++++AMAMAM9"))
 	fmt.Printf("%v\n", SimplePassword("passWord123!!!!"))
