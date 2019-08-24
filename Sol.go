@@ -6143,10 +6143,145 @@ func CharacterRemoval(strArr []string) string {
 	return simple()
 }
 
+/*
+1. It must have a capital letter.
+2. It must contain at least one number.
+3. It must contain a punctuation mark.
+4. It cannot have the word "password" in the string.
+5. It must be longer than 7 characters and shorter than 31 characters.
+*/
+
+func SimplePassword(str string) string {
+	if len(str) == 0 {
+		return "false"
+	}
+	illegalWords:= []string{"password"}
+	var punchItems = []string{
+		" ",
+		"-",
+		"%",
+		"’'",
+		"()[]{}<>",
+		":",
+		",",
+		"+",
+		"‒–—―",
+		"…",
+		"!",
+		".",
+		"«»",
+		"-‐",
+		"?",
+		"‘’“”",
+		";",
+		"/",
+		"⁄",
+		"␠",
+		"·",
+		"&",
+		"@",
+		"*",
+		"\\",
+		"•",
+		"^",
+		"¤¢$€£¥₩₪",
+		"†‡",
+		"°",
+		"¡",
+		"¿",
+		"¬",
+		"#",
+		"№",
+		"%‰‱",
+		"¶",
+		"′",
+		"§",
+		"~",
+		"¨",
+		"_",
+		"|¦",
+		"⁂",
+		"☞",
+		"∴",
+		"‽",
+		"※"}
+	min,max := 7,31
+	result := false
+	for u:=65;u<97 ;u++  {
+		if strings.ContainsRune(str,rune(u)) {
+			result = true
+			break
+		}
+	}
+	if !result {
+		return fmt.Sprintf("%v",result)
+	}
+
+	for u:=48;u<58 ;u++  {
+		if strings.ContainsRune(str,rune(u)) {
+			result = true
+			break
+		}
+	}
+	if !result {
+		return fmt.Sprintf("%v",result)
+	}
+
+	for _, value := range strings.Split(str,"") {
+		isOk :=false
+		for _, punch := range punchItems {
+			if value == punch {
+				result = true
+				isOk = true
+				break
+			}
+		}
+		if isOk {
+			break
+		}
+	}
+	if !result {
+		return fmt.Sprintf("%v",result)
+	}
+
+	result = false
+	for _, word := range illegalWords {
+		if strings.Contains(str,word) || strings.Contains(strings.ToUpper(str),strings.ToUpper(word)) {
+			result = true
+			break
+		}
+	}
+
+	if result {
+		return fmt.Sprintf("%v",!result)
+	}
+
+	result = false
+
+	if len(str)>min && len(str)<max {
+		result = true
+	}
+	if !result {
+		return fmt.Sprintf("%v",result)
+	}
+
+	return fmt.Sprintf("%v",result)
+}
+
 //noinspection ALL
 func main() {
 	//fmt.Printf("%v\n", KUniqueCharacters("2aabbaaccbbaaccaabb"))
 	//fmt.Printf("%v\n", KUniqueCharacters("2aabbcbbbadef"))
+
+	fmt.Printf("%v\n", SimplePassword("!!!!!!+++++++++AMAMAM9"))
+	return
+
+	fmt.Printf("%v\n", SimplePassword("passWord123!!!!"))
+	fmt.Printf("%v\n", SimplePassword("apple!M7"))
+	fmt.Printf("%v\n", SimplePassword("turkey90AAA="))
+
+	return
+
 	fmt.Printf("%v\n", CharacterRemoval([]string{"abcdefabcdef", "a,b,bfabcde,c,d,e,ee,eee,eeee,eeeeeeeee,fabc,go,goo,gooo"}))
 	fmt.Printf("%v\n", CharacterRemoval([]string{"abcdefabcdef", "a,b,c,d,e,ee,eee,eeee,eeeeeeeee,fabc,go,goo,gooo"}))
 	fmt.Printf("%v\n", CharacterRemoval([]string{"baseball", "a,all,b,ball,bas,base,cat,code,d,e,quit,z"}))
