@@ -6329,7 +6329,7 @@ func main() {
 	//fmt.Printf("%v\n", KUniqueCharacters("2aabbaaccbbaaccaabb"))
 	//fmt.Printf("%v\n", KUniqueCharacters("2aabbcbbbadef"))
 
-	fmt.Printf("%v\n", NextHigherNumber(32841))
+	fmt.Printf("%v\n", NextHigherNumber(331242841))
 	//fmt.Printf("%v\n", NextHigherNumber(2314))
 	//fmt.Printf("%v\n", NextHigherNumber(4321))
 	return
