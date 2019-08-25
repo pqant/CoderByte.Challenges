@@ -17,6 +17,7 @@ import (
 )
 
 var vowels = []rune{'a', 'e', 'i', 'o', 'u'}
+//moment
 
 func DivisionStringified(num1 int, num2 int) string {
 	if num2 == 0 {
@@ -6323,7 +6324,7 @@ func NextHigherNumber(num int) int {
 	}
 	return num
 }
-func FibByChannel(num int) <-chan int64 {
+func FibByChannel(num int64) <-chan int64 {
   result:=make(chan int64)
   go func(){
     defer close(result)
@@ -6342,10 +6343,10 @@ func FactByChannel(num int) <-chan int {
      defer close(result)
      if  num== 0{
         result <- 1
-	return 
+	return
      }
      result <-  num * <-FactByChannel(num-1)
-   }
+   }()
    return result
 }
 
