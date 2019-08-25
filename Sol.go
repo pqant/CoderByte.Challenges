@@ -6336,7 +6336,18 @@ func FibByChannel(num int) <-chan int64 {
   return result
 }
 
-
+func FactByChannel(num int) <-chan int {
+   result:= make(chan int)
+   go func() {
+     defer close(result)
+     if  num== 0{
+        result <- 1
+	return 
+     }
+     result <-  num * <-FactByChannel(num-1)
+   }
+   return result
+}
 
 
 //noinspection ALL
