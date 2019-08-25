@@ -6323,6 +6323,21 @@ func NextHigherNumber(num int) int {
 	}
 	return num
 }
+func FibByChannel(num int) <-chan int64 {
+  result:=make(chan int64)
+  go func(){
+    defer close(result)
+    if num< 2 {
+       result<-num
+       return
+    }
+    result <- <-FibByChannel(num-1) + <-FibByChannel(num-2)
+  }()
+  return result
+}
+
+
+
 
 //noinspection ALL
 func main() {
