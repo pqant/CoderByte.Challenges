@@ -18,7 +18,7 @@ import (
 
 var vowels = []rune{'a', 'e', 'i', 'o', 'u'}
 
-//moment 1-2-3
+//moment 1-2-3-5-6
 
 func DivisionStringified(num1 int, num2 int) string {
 	if num2 == 0 {
