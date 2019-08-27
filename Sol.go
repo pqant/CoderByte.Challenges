@@ -1406,6 +1406,9 @@ func LongestIncreasingSequence(arr []int) int {
 	return max
 }
 
+// test 1-2-3
+
+
 func EvenPairs(str string) string {
 	if len(str) == 0 {
 		return "false"
