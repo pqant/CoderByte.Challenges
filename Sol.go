@@ -6414,7 +6414,7 @@ func main() {
 	return
 
 	myTree := Bts.Tree{}
-	// todo : add multiple items in a once
+	// todo : add multiple items in a once !!!!
 	//myTree.Insert(10).Insert(100).Insert(44).Insert(33).Insert(42).Insert(7)
 	myTree.Insert(6).Insert(14).Insert(3).Insert(4).Insert(9).
 		Insert(15).Insert(19).Insert(1).Insert(7).Insert(9)
