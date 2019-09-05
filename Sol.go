@@ -1,6 +1,7 @@
 package main
 
 import (
+	"CoderByte.Challenges/Medium"
 	"errors"
 	"fmt"
 	"math"
@@ -1408,7 +1409,6 @@ func LongestIncreasingSequence(arr []int) int {
 }
 
 // test 1-2-3
-
 
 func EvenPairs(str string) string {
 	if len(str) == 0 {
@@ -6329,34 +6329,42 @@ func NextHigherNumber(num int) int {
 	return num
 }
 func FibByChannel(num int64) <-chan int64 {
-  result:=make(chan int64)
-  go func(){
-    defer close(result)
-    if num< 2 {
-       result<-num
-       return
-    }
-    result <- <-FibByChannel(num-1) + <-FibByChannel(num-2)
-  }()
-  return result
+	result := make(chan int64)
+	go func() {
+		defer close(result)
+		if num < 2 {
+			result <- num
+			return
+		}
+		result <- <-FibByChannel(num - 1) + <-FibByChannel(num - 2)
+	}()
+	return result
 }
 
 func FactByChannel(num int) <-chan int {
-   result:= make(chan int)
-   go func() {
-     defer close(result)
-     if  num== 0{
-        result <- 1
-	return
-     }
-     result <-  num * <-FactByChannel(num-1)
-   }()
-   return result
+	result := make(chan int)
+	go func() {
+		defer close(result)
+		if num == 0 {
+			result <- 1
+			return
+		}
+		result <- num * <-FactByChannel(num - 1)
+	}()
+	return result
 }
 
 
 //noinspection ALL
 func main() {
+
+	//fmt.Printf("%v\n", Medium.PalindromicSubstring("hellosannasmith"))
+	//fmt.Printf("%v\n", Medium.PalindromicSubstring("abracecars"))
+	//fmt.Printf("%v\n", Medium.PalindromicSubstring("abcdefgg"))
+	fmt.Printf("%v\n", Medium.PalindromicSubstring("aab"))
+
+	return
+
 	//fmt.Printf("%v\n", KUniqueCharacters("2aabbaaccbbaaccaabb"))
 	//fmt.Printf("%v\n", KUniqueCharacters("2aabbcbbbadef"))
 
