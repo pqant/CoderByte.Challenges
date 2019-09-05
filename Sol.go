@@ -6358,6 +6358,9 @@ func FactByChannel(num int) <-chan int {
 //noinspection ALL
 func main() {
 
+	fmt.Printf("%v\n", Medium.PalindromicSubstringRec("hellosannasmith"))
+	fmt.Printf("%v\n", Medium.PalindromicSubstringRec("abracecars"))
+	return
 	//fmt.Printf("%v\n", Medium.PalindromicSubstring("hellosannasmith"))
 	//fmt.Printf("%v\n", Medium.PalindromicSubstring("abracecars"))
 	//fmt.Printf("%v\n", Medium.PalindromicSubstring("abcdefgg"))
