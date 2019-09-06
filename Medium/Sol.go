@@ -8,12 +8,12 @@ func PalindromicSubstringReducingWayRec(str string) string {
 		return result
 	}
 	chars := strings.Split(str, "")
-	reverse := func(val string) string {
-		if len(val) == 0 {
+	reverse := func(val *string) string {
+		if len(*val) == 0 {
 			return ""
 		}
-		MAX := len(val) / 2
-		valChars := strings.Split(val, "")
+		MAX := len(*val) / 2
+		valChars := strings.Split(*val, "")
 		for u := 0; u < MAX; u++ {
 			temp := valChars[u]
 			valChars[u] = valChars[len(valChars)-u-1]
@@ -28,7 +28,7 @@ func PalindromicSubstringReducingWayRec(str string) string {
 	permutation = func(items []string, breakPoint int, selectedSoFar []string, results *[][]string) {
 		if len(items) == breakPoint {
 			str := strings.Join(selectedSoFar, "")
-			if len(selectedSoFar) > 2 && reverse(str) == str && len(str) > len(result) {
+			if len(selectedSoFar) > 2 && len(str) > len(result) && reverse(&str) == str {
 				result = str
 				temp := make([]string, len(selectedSoFar))
 				copy(temp, selectedSoFar)
@@ -58,12 +58,12 @@ func PalindromicSubstring(str string) string {
 		return result
 	}
 	chars := strings.Split(str, "")
-	reverse := func(val string) string {
-		if len(val) == 0 {
+	reverse := func(val *string) string {
+		if len(*val) == 0 {
 			return ""
 		}
-		MAX := len(val) / 2
-		valChars := strings.Split(val, "")
+		MAX := len(*val) / 2
+		valChars := strings.Split(*val, "")
 		for u := 0; u < MAX; u++ {
 			temp := valChars[u]
 			valChars[u] = valChars[len(valChars)-u-1]
@@ -75,7 +75,7 @@ func PalindromicSubstring(str string) string {
 	for u := 0; u < len(chars); u++ {
 		for y := u + 1; y <= len(chars); y++ {
 			temp := strings.Join(chars[u:y], "")
-			if len(temp) > 2 && reverse(temp) == temp {
+			if len(temp) > 2 && reverse(&temp) == temp {
 				if len(temp) > len(result) {
 					result = temp
 				}
