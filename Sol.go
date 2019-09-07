@@ -1,6 +1,7 @@
 package main
 
 import (
+	"CoderByte.Challenges/Bts"
 	"CoderByte.Challenges/Medium"
 	"errors"
 	"fmt"
@@ -6357,6 +6358,13 @@ func FactByChannel(num int) <-chan int {
 
 //noinspection ALL
 func main() {
+
+	myTree := Bts.Tree{}
+	myTree.Insert(10).Insert(100).Insert(44).Insert(33).Insert(42)
+	myTree.PrintNodes()
+
+	return
+
 
 	fmt.Printf("%v\n", Medium.PalindromicSubstringReducingWayRec("hellosannasmith"))
 	fmt.Printf("%v\n", Medium.PalindromicSubstringReducingWayRec("abracecars"))
