@@ -6355,16 +6355,84 @@ func FactByChannel(num int) <-chan int {
 	return result
 }
 
+func Hanoi(s, d, e string, n int) {
+	if n < 0 {
+		return
+	}
+	Hanoi(s, e, d, n-1)
+	fmt.Printf("Disc#%v from %v to %v\n", n, s, d)
+	Hanoi(e, d, s, n-1)
+}
+
+func SomeOps(timeOut time.Duration, toFn func(), funs ...func()) <-chan struct{} {
+	result := make(chan struct{})
+	go func() {
+		defer close(result)
+		i := 0
+		done := make(chan struct{})
+		defer close(done)
+		for _, fn := range funs {
+			go func(fn func(), i *int) {
+				fn()
+				*i++
+				if *i == len(funs) {
+					done <- struct{}{}
+				}
+			}(fn, &i)
+		}
+		for {
+			select {
+			case <-done:
+				log.Printf("done!!\n")
+				return
+			case <-time.After(timeOut):
+				toFn()
+				return
+			}
+		}
+	}()
+	return result
+}
 
 //noinspection ALL
 func main() {
 
-	myTree := Bts.Tree{}
-	myTree.Insert(10).Insert(100).Insert(44).Insert(33).Insert(42)
-	myTree.PrintNodes()
+	<-SomeOps(time.Duration(7)*time.Second, func() {
+		log.Printf("time out!\n")
+	}, func() {
+		time.Sleep(time.Duration(4) * time.Second)
+		log.Printf("Func1\n")
+	}, func() {
+		time.Sleep(time.Duration(5) * time.Second)
+		log.Printf("Func2\n")
+	})
+
+	return
+	Hanoi("A", "B", "C", 3)
 
 	return
 
+	myTree := Bts.Tree{}
+	//myTree.Insert(10).Insert(100).Insert(44).Insert(33).Insert(42).Insert(7)
+	myTree.Insert(6).Insert(14).Insert(3).Insert(4).Insert(9).
+		Insert(15).Insert(19).Insert(1).Insert(7).Insert(9)
+
+	myTree.PrintNodes()
+	fmt.Printf("Finding min node...\n")
+	minNode := myTree.MinNode()
+	if minNode != nil {
+		log.Printf("Min Node Value : %v\n", (*minNode).Value)
+	} else {
+		log.Printf("Min Node didn't find \n")
+	}
+
+	maxNode := myTree.MaxNode()
+	if maxNode != nil {
+		log.Printf("Max Node Value : %v\n", (*maxNode).Value)
+	} else {
+		log.Printf("Max Node didn't find \n")
+	}
+	return
 
 	fmt.Printf("%v\n", Medium.PalindromicSubstringReducingWayRec("hellosannasmith"))
 	fmt.Printf("%v\n", Medium.PalindromicSubstringReducingWayRec("abracecars"))
