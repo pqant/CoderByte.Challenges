@@ -6408,6 +6408,7 @@ func main() {
 	})
 
 	return
+
 	Hanoi("A", "B", "C", 3)
 
 	return
