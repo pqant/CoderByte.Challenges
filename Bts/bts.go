@@ -47,6 +47,13 @@ func (t *Tree) Insert(value int) *Tree {
 	return t
 }
 
+func (t *Tree) InsertMultiple(values ...int) *Tree {
+	for _, value := range values {
+		t.Insert(value)
+	}
+	return t
+}
+
 func (n *Node) Exist(value int) bool {
 	if n == nil {
 		return false
@@ -131,6 +138,5 @@ func (t *Tree) MaxNode() *Node {
 		}
 	}
 }
-
 
 // TODO : Complete delete operation!
