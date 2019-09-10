@@ -79,7 +79,7 @@ func MeanMode(arr []int) int {
 	if len(arr)%2 == 1 {
 		median = float64(arr[len(arr)/2])
 	} else {
-		median = float64(arr[(len(arr)/2)-1]+arr[(len(arr) / 2)]) / 2
+		median = float64(arr[(len(arr)/2)-1]+arr[(len(arr)/2)]) / 2
 	}
 	frequency := make(map[int]int, len(arr))
 	for u := 0; u < len(arr); u++ {
@@ -6337,7 +6337,7 @@ func FibByChannel(num int64) <-chan int64 {
 			result <- num
 			return
 		}
-		result <- <-FibByChannel(num - 1) + <-FibByChannel(num - 2)
+		result <- <-FibByChannel(num-1) + <-FibByChannel(num-2)
 	}()
 	return result
 }
@@ -6350,7 +6350,7 @@ func FactByChannel(num int) <-chan int {
 			result <- 1
 			return
 		}
-		result <- num * <-FactByChannel(num - 1)
+		result <- num * <-FactByChannel(num-1)
 	}()
 	return result
 }
@@ -6394,8 +6394,39 @@ func SomeOps(timeOut time.Duration, toFn func(), funs ...func()) <-chan struct{}
 	return result
 }
 
+func ListMe(values ...**int) {
+	for _, value := range values {
+		log.Printf("%v\n", **value)
+	}
+}
+
 //noinspection ALL
 func main() {
+	//x,w := 100,200
+
+	log.Printf("%v\n", Medium.FindCouple([]int{1,2,3,4,2,5},7,2))
+
+	return
+
+	log.Printf("%v\n", Medium.FindWhichCharInserted("cbadc","acxdcb"))
+
+	log.Printf("%v\n", Medium.FindWhichCharInserted("abcdef","abccdef"))
+
+	return
+
+	log.Printf("%v\n", Medium.WovelReverser("friend"))
+	log.Printf("%v\n", Medium.WovelReverser("apple"))
+
+	return
+
+	x := 1000
+	f := &x
+	g := &f
+	log.Printf("%v %v\n", **g, **(&f))
+
+	ListMe([]**int{g}...)
+
+	return
 
 	<-SomeOps(time.Duration(7)*time.Second, func() {
 		log.Printf("time out!\n")

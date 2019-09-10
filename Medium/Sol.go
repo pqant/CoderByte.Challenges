@@ -1,6 +1,9 @@
 package Medium
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 func PalindromicSubstringReducingWayRec(str string) string {
 	result := string(none)
@@ -24,8 +27,8 @@ func PalindromicSubstringReducingWayRec(str string) string {
 	result = ""
 	results := make([][]string, 0)
 	selectedSoFar := make([]string, 0)
-	var permutation func([]string, int, []string, *[][]string)
-	permutation = func(items []string, breakPoint int, selectedSoFar []string, results *[][]string) {
+	var powers func([]string, int, []string, *[][]string)
+	powers = func(items []string, breakPoint int, selectedSoFar []string, results *[][]string) {
 		if len(items) == breakPoint {
 			str := strings.Join(selectedSoFar, "")
 			if len(selectedSoFar) > 2 && len(str) > len(result) && reverse(&str) == str {
@@ -37,11 +40,11 @@ func PalindromicSubstringReducingWayRec(str string) string {
 			return
 		}
 		selectedSoFar = append(selectedSoFar, items[breakPoint])
-		permutation(items, breakPoint+1, selectedSoFar, results)
+		powers(items, breakPoint+1, selectedSoFar, results)
 		selectedSoFar = selectedSoFar[:len(selectedSoFar)-1]
-		permutation(items, breakPoint+1, selectedSoFar, results)
+		powers(items, breakPoint+1, selectedSoFar, results)
 	}
-	permutation(chars, 0, selectedSoFar, &results)
+	powers(chars, 0, selectedSoFar, &results)
 	if len(results) != 0 {
 		if len(results[0]) != 0 {
 			return strings.Join(results[0], "")
@@ -86,6 +89,89 @@ func PalindromicSubstring(str string) string {
 		result = string(none)
 	}
 	return result
+}
+
+func FindCouple(items []int, max int, coupleLenght int) string {
+	val := "none"
+	if len(items) == 0 {
+		return val
+	}
+	results := make([][]int, 0)
+	selectedSoFar := make([]int, 0)
+	sum := func(all ...int) int {
+		sum := 0
+		for _, value := range all {
+			sum += value
+		}
+		return sum
+	}
+	var powerset func([]int, int, []int, *[][]int, int)
+	powerset = func(arr []int, breakPoint int, selectedSoFar []int, results *[][]int, maxItem int) {
+		if breakPoint == len(arr) {
+			if maxItem == len(selectedSoFar) && sum(selectedSoFar...) == max {
+				temp := make([]int, len(selectedSoFar))
+				copy(temp, selectedSoFar)
+				*results = append(*results, temp)
+			}
+			return
+		}
+		selectedSoFar = append(selectedSoFar, arr[breakPoint])
+		powerset(arr, breakPoint+1, selectedSoFar, results, coupleLenght)
+		selectedSoFar = selectedSoFar[:len(selectedSoFar)-1]
+		powerset(arr, breakPoint+1, selectedSoFar, results, coupleLenght)
+	}
+	powerset(items, 0, selectedSoFar, &results, coupleLenght)
+	if len(results) != 0 {
+		val =""
+		for _, value := range results {
+			val += fmt.Sprintf("%v\n", value)
+		}
+	}
+	return val
+}
+
+func FindWhichCharInserted(first, second string) string {
+	if len(first) >= len(second) {
+		return ""
+	}
+	firstArr := strings.Split(first, "")
+	diff := second
+	for u := 0; u < len(firstArr); u++ {
+		if strings.Index(second, firstArr[u]) != -1 {
+			diff = strings.Replace(diff, firstArr[u], "", 1)
+		} else {
+			return firstArr[u]
+		}
+	}
+	return string(diff[0])
+}
+
+func WovelReverser(text string) string {
+	if len(text) == 0 {
+		return ""
+	}
+	vowels := []string{"a", "u", "i", "ö", "o"}
+	isVowel := func(char string) bool {
+		for _, value := range vowels {
+			if value == strings.ToLower(char) {
+				return true
+			}
+		}
+		return false
+	}
+	reverse := func(val string) string {
+		MAX := len(val) / 2
+		strVal := strings.Split(val, "")
+		for i := 0; i < MAX; i++ {
+			if isVowel(strVal[i]) {
+				temp := strVal[i]
+				strVal[i] = strVal[len(strVal)-i-1]
+				strVal[len(strVal)-i-1] = temp
+			}
+		}
+		return strings.Join(strVal, "")
+	}
+	return reverse(text)
 }
 
 type result string
