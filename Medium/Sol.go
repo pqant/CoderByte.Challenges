@@ -131,6 +131,24 @@ func FindCouple(items []int, max int, coupleLenght int) string {
 }
 
 
+
+func FindWhichCharInserted(first, second string) string {
+	if len(first) >= len(second) {
+		return ""
+	}
+	firstArr := strings.Split(first, "")
+	diff := second
+	for u := 0; u < len(firstArr); u++ {
+		if strings.Index(second, firstArr[u]) != -1 {
+			diff = strings.Replace(diff, firstArr[u], "", 1)
+		} else {
+			return firstArr[u]
+		}
+	}
+	return string(diff[0])
+}
+
+
 func WovelReverser(text string) string {
 	if len(text) == 0 {
 		return ""
@@ -158,23 +176,6 @@ func WovelReverser(text string) string {
 	}
 	return reverse(text)
 }
-
-func FindWhichCharInserted(first, second string) string {
-	if len(first) >= len(second) {
-		return ""
-	}
-	firstArr := strings.Split(first, "")
-	diff := second
-	for u := 0; u < len(firstArr); u++ {
-		if strings.Index(second, firstArr[u]) != -1 {
-			diff = strings.Replace(diff, firstArr[u], "", 1)
-		} else {
-			return firstArr[u]
-		}
-	}
-	return string(diff[0])
-}
-
 
 
 const (
