@@ -175,12 +175,12 @@ func WovelReverser(text string) string {
 	return reverse(text)
 }
 
-const (
-	none result = "none"
-)
 
 type result string
 
+const (
+	none result = "none"
+)
 
 
 
