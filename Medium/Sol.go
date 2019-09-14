@@ -146,10 +146,6 @@ func FindWhichCharInserted(first, second string) string {
 	return string(diff[0])
 }
 
-const (
-	none result = "none"
-)
-
 
 func WovelReverser(text string) string {
 	if len(text) == 0 {
@@ -179,6 +175,9 @@ func WovelReverser(text string) string {
 	return reverse(text)
 }
 
+const (
+	none result = "none"
+)
 
 type result string
 
