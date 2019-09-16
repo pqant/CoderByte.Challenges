@@ -166,12 +166,46 @@ func duplicate_count(s1 string) int {
 	return count
 }
 
+func BinarySearch(arr []int, isArrSorted bool, search int) bool {
+	isFound := false
+	if len(arr) == 0 {
+		return false
+	}
+	if !isArrSorted {
+		sort.Slice(arr, func(i, j int) bool {
+			return arr[i] < arr[j]
+		})
+	}
+	if len(arr) < 2 {
+		if arr[0] == search {
+			return true
+		}
+		return false
+	}
+	left := 0
+	right := len(arr) - 1
+	for left < right {
+		mid := (left + right) / 2
+		if arr[mid] == search {
+			isFound = true
+			break
+		} else if left < search {
+			left += 1
+		} else if right > search {
+			right -= 1
+		}
+	}
+	return isFound
+}
+
+
+
 func TwoNumberSum(array []int, target int) []int {
 	if len(array) < 2 {
 		return make([]int, 0)
 	}
 
-	found := func(arr []int, isArrSorted bool, search int) bool {
+	binarySearch := func(arr []int, isArrSorted bool, search int) bool {
 		isFound := false
 		if len(arr) == 0 {
 			return false
