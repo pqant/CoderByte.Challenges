@@ -6413,6 +6413,13 @@ func main() {
 	//x,w := 100,200
 
 
+	fmt.Printf("%v\n",Medium.BinarySearch([]int{10,3,111,343,43,110,6,34,22,44},false,6))
+
+
+	return
+
+
+
 	fmt.Printf("%v\n",GetNthFib(6))
 
 	return

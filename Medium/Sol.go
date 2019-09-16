@@ -167,7 +167,6 @@ func duplicate_count(s1 string) int {
 }
 
 func BinarySearch(arr []int, isArrSorted bool, search int) bool {
-	isFound := false
 	if len(arr) == 0 {
 		return false
 	}
@@ -184,21 +183,18 @@ func BinarySearch(arr []int, isArrSorted bool, search int) bool {
 	}
 	left := 0
 	right := len(arr) - 1
-	for left < right {
+	for left <= right {
 		mid := (left + right) / 2
 		if arr[mid] == search {
-			isFound = true
-			break
-		} else if left < search {
-			left += 1
-		} else if right > search {
-			right -= 1
+			return true
+		} else if arr[mid] < search {
+			left = mid + 1
+		} else {
+			right = mid + 1
 		}
 	}
-	return isFound
+	return false
 }
-
-
 
 func TwoNumberSum(array []int, target int) []int {
 	if len(array) < 2 {
@@ -206,7 +202,6 @@ func TwoNumberSum(array []int, target int) []int {
 	}
 
 	binarySearch := func(arr []int, isArrSorted bool, search int) bool {
-		isFound := false
 		if len(arr) == 0 {
 			return false
 		}
@@ -223,20 +218,19 @@ func TwoNumberSum(array []int, target int) []int {
 		}
 		left := 0
 		right := len(arr) - 1
-		for left < right {
+		for left <= right {
 			mid := (left + right) / 2
 			if arr[mid] == search {
-				isFound = true
-				break
-			} else if left < search {
-				left += 1
-			} else if right > search {
-				right -= 1
+				return true
+			} else if arr[mid] < search {
+				left = mid + 1
+			} else {
+				right = mid + 1
 			}
 		}
-		return isFound
+		return false
 	}
-	_ = found
+	_ = binarySearch
 	return array
 }
 
