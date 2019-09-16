@@ -6400,9 +6400,24 @@ func ListMe(values ...**int) {
 	}
 }
 
+func GetNthFib(n int) int {
+	if n<2 {
+		return n
+	}
+	return GetNthFib(n-1) + GetNthFib(n-2)
+}
+
+
 //noinspection ALL
 func main() {
 	//x,w := 100,200
+
+
+	fmt.Printf("%v\n",GetNthFib(6))
+
+	return
+
+
 
 	log.Printf("%v\n", Medium.FindCouple([]int{1,2,3,4,2,5},7,2))
 

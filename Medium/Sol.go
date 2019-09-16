@@ -2,6 +2,7 @@ package Medium
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 )
 
@@ -122,7 +123,7 @@ func FindCouple(items []int, max int, coupleLenght int) string {
 	}
 	powerset(items, 0, selectedSoFar, &results, coupleLenght)
 	if len(results) != 0 {
-		val =""
+		val = ""
 		for _, value := range results {
 			val += fmt.Sprintf("%v\n", value)
 		}
@@ -146,6 +147,64 @@ func FindWhichCharInserted(first, second string) string {
 	return string(diff[0])
 }
 
+func duplicate_count(s1 string) int {
+	temp := make(map[string]int, 0)
+	items := strings.Split(s1, "")
+	for _, v := range items {
+		if val, exist := temp[string(v)]; exist {
+			temp[string(v)] = val + 1
+		} else {
+			temp[string(v)] = 1
+		}
+	}
+	count := 0
+	for _, v := range temp {
+		if v > 1 {
+			count++
+		}
+	}
+	return count
+}
+
+func TwoNumberSum(array []int, target int) []int {
+	if len(array) < 2 {
+		return make([]int, 0)
+	}
+
+	found := func(arr []int, isArrSorted bool, search int) bool {
+		isFound := false
+		if len(arr) == 0 {
+			return false
+		}
+		if !isArrSorted {
+			sort.Slice(arr, func(i, j int) bool {
+				return arr[i] < arr[j]
+			})
+		}
+		if len(arr) < 2 {
+			if arr[0] == search {
+				return true
+			}
+			return false
+		}
+		left := 0
+		right := len(arr) - 1
+		for left < right {
+			mid := (left + right) / 2
+			if arr[mid] == search {
+				isFound = true
+				break
+			} else if left < search {
+				left += 1
+			} else if right > search {
+				right -= 1
+			}
+		}
+		return isFound
+	}
+	_ = found
+	return array
+}
 
 func WovelReverser(text string) string {
 	if len(text) == 0 {
@@ -180,5 +239,3 @@ type result string
 const (
 	none result = "none"
 )
-
-
