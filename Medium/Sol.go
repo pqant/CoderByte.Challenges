@@ -234,7 +234,7 @@ func TwoNumberSum(array []int, target int) []int {
 	return array
 }
 
-//1-2
+//1-2-3
 
 func WovelReverser(text string) string {
 	if len(text) == 0 {
