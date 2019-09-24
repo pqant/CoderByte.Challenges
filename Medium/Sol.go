@@ -187,10 +187,10 @@ func BinarySearch(arr []int, isArrSorted bool, search int) bool {
 		mid := (left + right) / 2
 		if arr[mid] == search {
 			return true
-		} else if arr[mid] < search {
-			left = mid + 1
+		} else if arr[mid] > search {
+			right = mid - 1
 		} else {
-			right = mid + 1
+			left = mid + 1
 		}
 	}
 	return false
@@ -202,6 +202,7 @@ func TwoNumberSum(array []int, target int) []int {
 	}
 
 	binarySearch := func(arr []int, isArrSorted bool, search int) bool {
+		//fmt.Printf("%v\n",arr)
 		if len(arr) == 0 {
 			return false
 		}
@@ -222,19 +223,29 @@ func TwoNumberSum(array []int, target int) []int {
 			mid := (left + right) / 2
 			if arr[mid] == search {
 				return true
-			} else if arr[mid] < search {
-				left = mid + 1
+			} else if arr[mid] > search {
+				right = mid - 1
 			} else {
-				right = mid + 1
+				left = mid + 1
 			}
 		}
 		return false
 	}
-	_ = binarySearch
-	return array
+	for i := 0; i < len(array)-1; i++ {
+		newTarget := target - array[i]
+		if newTarget > 0 {
+			if binarySearch(array[i+1:], false, newTarget) {
+				if array[i] > newTarget {
+					return []int{array[i], newTarget}
+				} else {
+					return []int{newTarget, array[i]}
+				}
+			}
+		}
+	}
+	return make([]int, 0)
 }
 
-//1-2-3-5
 
 func WovelReverser(text string) string {
 	if len(text) == 0 {

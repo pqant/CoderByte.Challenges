@@ -6412,6 +6412,10 @@ func GetNthFib(n int) int {
 func main() {
 	//x,w := 100,200
 
+	fmt.Printf("%v\n",Medium.TwoNumberSum([]int{4,6},10))
+
+	return
+
 
 	fmt.Printf("%v\n",Medium.BinarySearch([]int{10,3,111,343,43,110,6,34,22,44},false,6))
 
