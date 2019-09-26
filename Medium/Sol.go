@@ -458,3 +458,139 @@ type result string
 const (
 	none result = "none"
 )
+
+type boolStr string
+
+const (
+	myTrue  boolStr = "true"
+	myFalse boolStr = "false"
+)
+
+func HTMLElements(str string) string {
+	if len(str) == 0 {
+		return string(myTrue)
+	}
+	elements := []string{"b", "i", "em", "div", "p"}
+	wrap := func(end bool, val string, element string) string {
+		if len(val) != 0 {
+			if end {
+				return fmt.Sprintf("<%v>%v</%v>", element, val, element)
+			}
+			return fmt.Sprintf("<%v>%v<%v>", element, val, element)
+		} else {
+			if end {
+				return fmt.Sprintf("</%v>", element)
+			}
+			return fmt.Sprintf("<%v>", element)
+		}
+	}
+	anyElement := func(val string) bool {
+		for _, value := range elements {
+			begin, end := wrap(false, "", value), wrap(true, "", value)
+			if strings.Contains(val, begin) ||
+				strings.Contains(val, end) {
+				return true
+			}
+		}
+		return false
+	}
+	firstElementIndex := func(val string, end bool) (int, string) {
+		min := len(val) - 1
+		element := ""
+		for _, value := range elements {
+			data := wrap(end, "", value)
+			index := strings.Index(val, data)
+			if index != -1 {
+				if index < min {
+					min = index
+					element = value
+				}
+			}
+		}
+		return min, element
+	}
+	findSingleElement := func(val string) string {
+		element := ""
+		for _, value := range elements {
+			beginTag := wrap(true, "", value)
+			endTag := wrap(false, "", value)
+			if strings.Contains(val, beginTag) && strings.Contains(val, endTag) {
+				continue
+			}
+			element = value
+			break
+		}
+		return element
+	}
+
+	reverser := func(val string) string {
+		if len(val) == 0 {
+			return val
+		}
+		MAX := len(val) / 2
+		items := strings.Split(val, "")
+		for i := 0; i < MAX; i++ {
+			temp := items[i]
+			items[i] = items[len(items)-i-1]
+			items[len(items)-i-1] = temp
+		}
+		return strings.Join(items, "")
+	}
+	illegalList := make([]string, 0)
+	for {
+	again:
+		if anyElement(str) {
+			_, firstElement := firstElementIndex(str, false)
+			if len(firstElement) != 0 {
+				if strings.HasPrefix(str, wrap(false, "", firstElement)) &&
+					strings.HasSuffix(str, wrap(true, "", firstElement)) {
+					str = strings.Replace(str, wrap(false, "", firstElement), "", 1)
+					str = reverser(str)
+					wrapStr := fmt.Sprintf(">%v/<", reverser(firstElement))
+					str = strings.Replace(str, wrapStr, "", 1)
+					str = reverser(str)
+				} else {
+					if strings.Contains(str, wrap(false, "", firstElement)) &&
+						strings.Contains(str, wrap(true, "", firstElement)) {
+						strTemp := strings.Replace(str, wrap(false, "", firstElement), "", 1)
+						strTemp = strings.Replace(strTemp, wrap(true, "", firstElement), "", 1)
+						str = strTemp
+					} else {
+						illegalList = append(illegalList, firstElement)
+						strTemp := strings.Replace(str, wrap(false, "", firstElement), "", 1)
+						strTemp = strings.Replace(strTemp, wrap(true, "", firstElement), "", 1)
+						otherSingle := findSingleElement(strTemp)
+						strTemp = strings.Replace(strTemp, wrap(false, "", otherSingle), "", 1)
+						strTemp = strings.Replace(strTemp, wrap(true, "", otherSingle), "", 1)
+						str = strTemp
+						//find another sigle one in strTemp !
+						goto again
+					}
+					/*
+						//just replace and left pure element value !
+						firstLastIndex, _ := firstElementIndex(str, true)
+						if firstLastIndex != -1 {
+							strSlice := strings.Split(str, "")
+							strTemp := strings.Join(strSlice[:firstLastIndex+len(wrap(true, "", firstElement))], "")
+							str = strings.Replace(str, strTemp, "", 1)
+							goto again
+						} else {
+							return firstElement
+						}
+					*/
+				}
+			} else {
+				if len(illegalList) != 0 {
+					return illegalList[0]
+				}
+				return string(myTrue)
+			}
+		} else {
+			break
+		}
+	}
+	if len(illegalList) != 0 {
+		return illegalList[0]
+	}
+	return string(myTrue)
+}
