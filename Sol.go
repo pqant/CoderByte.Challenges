@@ -6401,42 +6401,43 @@ func ListMe(values ...**int) {
 }
 
 func GetNthFib(n int) int {
-	if n<2 {
+	if n < 2 {
 		return n
 	}
 	return GetNthFib(n-1) + GetNthFib(n-2)
 }
 
-
 //noinspection ALL
 func main() {
 	//x,w := 100,200
 
-	fmt.Printf("%v\n",Medium.TwoNumberSum([]int{4,6},10))
+	fmt.Printf("%v\n", Medium.MissingDigitII("56? * 106 = 5?678"))
+	fmt.Printf("%v\n", Medium.MissingDigitII("18?1 + 9 = 189?"))
+	fmt.Printf("%v\n", Medium.MissingDigitII("189? = 18?1 + 9"))
 
 	return
 
+	fmt.Printf("--%v\n", Medium.TwoNumberSum_V2([]int{-7, -5, -3, -1, 0, 1, 3, 5, 7}, -5))
 
-	fmt.Printf("%v\n",Medium.BinarySearch([]int{10,3,111,343,43,110,6,34,22,44},false,6))
-
-
-	return
-
-
-
-	fmt.Printf("%v\n",GetNthFib(6))
+	fmt.Printf("##%v\n", Medium.TwoNumberSum_V3([]int{-7, -5, -3, -1, 0, 1, 3, 5, 7}, -5))
 
 	return
 
-
-
-	log.Printf("%v\n", Medium.FindCouple([]int{1,2,3,4,2,5},7,2))
+	fmt.Printf("%v\n", Medium.BinarySearch([]int{10, 3, 111, 343, 43, 110, 6, 34, 22, 44}, false, 6))
 
 	return
 
-	log.Printf("%v\n", Medium.FindWhichCharInserted("cbadc","acxdcb"))
+	fmt.Printf("%v\n", GetNthFib(6))
 
-	log.Printf("%v\n", Medium.FindWhichCharInserted("abcdef","abccdef"))
+	return
+
+	log.Printf("%v\n", Medium.FindCouple([]int{1, 2, 3, 4, 2, 5}, 7, 2))
+
+	return
+
+	log.Printf("%v\n", Medium.FindWhichCharInserted("cbadc", "acxdcb"))
+
+	log.Printf("%v\n", Medium.FindWhichCharInserted("abcdef", "abccdef"))
 
 	return
 
