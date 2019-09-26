@@ -6411,9 +6411,9 @@ func GetNthFib(n int) int {
 func main() {
 	//x,w := 100,200
 
-	fmt.Printf("%v\n", Medium.HTMLElements("<div><b><p>hello world</p></b></div>"))
-	fmt.Printf("%v\n", Medium.HTMLElements("<div><i>hello</i>world</b>"))
-	fmt.Printf("%v\n", Medium.HTMLElements("<div><div><b></b></div></p>"))
+	//fmt.Printf("%v\n", Medium.HTMLElements("<div><b><p>hello world</p></b></div>"))
+	//fmt.Printf("%v\n", Medium.HTMLElements("<div><i>hello</i>world</b>"))
+	//fmt.Printf("%v\n", Medium.HTMLElements("<div><div><b></b></div></p>"))
 	fmt.Printf("%v\n", Medium.HTMLElements("<div>abc</div><p><em><i>test test test</b></em></p>"))
 
 	return
